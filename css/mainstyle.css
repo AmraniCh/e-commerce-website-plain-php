@@ -1,0 +1,194 @@
+:root{
+    --main-color: #D10024;
+    --second-color: #528BE7;
+    --third-color: #13d0d5;
+    --other1-color: #8862e0;
+}
+
+.btn-primary {
+    background-color: var(--main-color)!important;
+}
+
+.form-check.form-check-flat label input:checked + .input-helper:before {
+    background-color: var(--second-color)!important;
+}
+
+.mdi{
+    font-size: 123%;
+}
+/*********** START login-register pages CSS ***********/
+.left-container {
+    width: 50%;
+    float: left;
+    padding-right: 20px;
+    border-right: 2px solid #97ccff;
+}
+
+.right-container {
+    width: 48%;
+    float: right;
+}
+
+
+/********* SRART media queries CSS ****************/
+
+@media (max-width: 768px) {
+    
+    .auto-form-wrapper{
+        box-shadow: none!important;
+        border: none!important
+    }
+    
+    .left-container, .right-container {
+        width:100%;
+        float: initial;
+        padding: 0;
+        border: none;
+    }
+
+    .btn-primary {
+        width: 45%!important;
+    }
+
+    .auth.theme-one .auto-form-wrapper {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+    }
+
+    .page-body-wrapper.full-page-wrapper{
+        min-height: 0;
+    }
+
+    #login-form-group {
+        text-align:center;
+    }
+
+    .row {
+        margin:0!important;
+    }
+
+    .content-wrapper {
+        padding: 5% 0;
+        text-align: center;
+    }
+}
+
+@media (max-width: 992px) {
+
+    .left-container, .right-container {
+        padding: 0;
+        border: none;
+    }
+    .auth.theme-one .auto-form-wrapper {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+    }
+}
+/********* END media queries CSS ****************/
+
+.text-muted{
+    color: #e28181!important;
+    margin-left: 2%;
+    visibility: hidden;
+}
+
+.left-container > .form-group {
+    margin-bottom: .2%!important;
+}
+.right-container > .form-group {
+    margin-bottom: .5%!important;  
+}
+.auto-form-wrapper > form > .form-group:nth-child(1), .auto-form-wrapper > form > .form-group:nth-child(2){
+   margin-bottom: .5%!important;   
+}
+
+.auto-form-wrapper{
+    background: #ffffff;
+    padding: 40px 40px 10px;
+    border-radius: 7%;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 2px 2px #eee;
+}
+
+.input-group > input{
+    height: 40px;
+}
+
+.form-control:focus {
+    border-color:#CCC;
+    outline:0;
+    -webkit-box-shadow:none;
+    box-shadow:none;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  box-shadow: 0 0 1px 1px #eee
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.form-check:hover input ~ .checkmark {
+  background-color: #eee;
+}
+
+.form-check input:checked ~ .checkmark {
+  background-color: #1d8ede;
+    box-shadow: none;
+}
+
+.form-check input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.form-check .checkmark:after {
+    left: 6px;
+    top: 3px;
+    width: 7px;
+    height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+input[class="form-control"]{
+    border: 1px solid #e5e5e5;
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+      padding: 21px;
+    border-right: 1px solid #e5e5e5;
+}
+
+span[class="input-group-text"]{
+    border-radius: 0 6px 6px 0;
+        border-left: none;
+        color: #b6b6b6; 
+        border-color: #e5e5e5!important
+}
+
+.auto-form-wrapper {
+  background: #ffffff;
+  padding: 30px 30px 10px;
+  border-radius: 7%;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 2px 2px #eee;
+}
+
+/*********** END login-register pages CSS ***********/
+
+/*********** START index page CSS ***********/
+.fa-wifi:before{
+    color: #38ff09;
+}
