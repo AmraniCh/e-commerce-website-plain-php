@@ -1,4 +1,12 @@
 <!DOCTYPE html>
+<?php
+require 'includes/config.php';
+require 'includes/functions.php';
+
+session_start();
+
+?>
+
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
@@ -12,17 +20,28 @@
         <link href="css/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-		<!--[if lt IE 9]>
+		<!--[if lt IE 9]-->
 		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
     </head>
   <body>
   <?php
+      // unset session pseudo
+      unset($_SESSION['user']);
+      // login
       if(isset($_POST['submit']))
-			{
-                header('location: register.php');
-			}
+      {
+          $username = $_POST['username-lg'];
+          $pass = $_POST['password-lg'];
+
+          $res = select_login_query('pseudo_etu','client','email',$username,$pass);
+
+          if(mysqli_num_rows($res)>0){
+              header ('location: index.php?user='.$username);
+              $_SESSION['user'] = $username;
+          }
+      }
     ?>
 <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">
@@ -34,7 +53,7 @@
                 <div class="form-group" style="margin-bottom: 0!important;">
                   <label class="label">Nom d'utilisateur :</label>
                   <div class="input-group">
-                    <input id="username-lg" type="text" class="form-control" placeholder="Nom d'utilisateur" style="border-right:1px solid #e5e5e5">
+                    <input id="username-lg" name="username-lg" type="text" class="form-control" placeholder="Nom d'utilisateur" style="border-right:1px solid #e5e5e5">
                     <div id="username-ic-span" class="input-group-append">
                       <span class="input-group-text">
                         <i id="username-ic-i" class="mdi mdi-check-circle-outline"></i>
@@ -48,7 +67,7 @@
                 <div class="form-group" style="margin-bottom: 0!important;">
                   <label class="label">Mot de passe</label>
                   <div class="input-group">
-                    <input id="password-lg" type="password" class="form-control" placeholder="*********" style="border-right:1px solid #e5e5e5">
+                    <input id="password-lg" name="password-lg" type="password" class="form-control" placeholder="*********" style="border-right:1px solid #e5e5e5">
                     <div id="password-ic-span" class="input-group-append">
                       <span class="input-group-text">
                         <i id="password-ic-i" class="mdi mdi-check-circle-outline"></i>
