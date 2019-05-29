@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 22, 2019 at 08:23 AM
+-- Generation Time: May 29, 2019 at 09:57 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -19,8 +19,25 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `mga.db`
+-- Database: `mga_db`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+DROP PROCEDURE IF EXISTS `getrandom`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getrandom` (OUT `randomNumber` INT)  BEGIN
+  SELECT floor(rand()*100000000) INTO randomNumber;
+end$$
+
+--
+-- Functions
+--
+DROP FUNCTION IF EXISTS `randomNumber`$$
+CREATE DEFINER=`root`@`localhost` FUNCTION `randomNumber` () RETURNS INT(50) RETURN floor(rand()*100000000)$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -84,7 +101,24 @@ CREATE TABLE IF NOT EXISTS `client` (
   `panierID` int(11) DEFAULT NULL,
   PRIMARY KEY (`clientID`),
   KEY `panierID` (`panierID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `client`
+--
+
+INSERT INTO `client` (`clientID`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
+(1, 'kkkk', 'aaaa', 'hahah@gmail.com', 'dsfdsf', 'casa', b'0', '145152', 90000, '0621586898', '123456789', 'aqzrdqfsdf', 'sefsdfefs', 1),
+(2, 'kkkk', 'aaaa', 'hahah@gmail.com', 'dsfdsf', 'casa', b'0', '145152', 90000, '0621586898', '123456789', 'aqzrdqfsdf', 'sefsdfefs', 1);
+
+--
+-- Triggers `client`
+--
+DROP TRIGGER IF EXISTS `randomNumber`;
+DELIMITER $$
+CREATE TRIGGER `randomNumber` BEFORE INSERT ON `client` FOR EACH ROW set new.codeEmail=randomNumber()
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
