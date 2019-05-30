@@ -10,8 +10,8 @@ function validEmail(email) {
 }
 
 // Validate numbers
-function validNumber(number) {
-    var numbers = /[0-9]/g;
+function allNumbers(number) {
+    var numbers = /^[0-9]*$/;
     if (number.val().match(numbers))
         return true;
     else

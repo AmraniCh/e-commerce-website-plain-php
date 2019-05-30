@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 22, 2019 at 08:23 AM
+-- Generation Time: May 30, 2019 at 05:08 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -21,6 +21,23 @@ SET time_zone = "+00:00";
 --
 -- Database: `mga.db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `adminID` int(11) NOT NULL AUTO_INCREMENT,
+  `adminName` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `nom` varchar(100) DEFAULT NULL,
+  `prenom` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`adminID`),
+  UNIQUE KEY `adminName` (`adminName`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -69,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
 DROP TABLE IF EXISTS `client`;
 CREATE TABLE IF NOT EXISTS `client` (
   `clientID` int(11) NOT NULL AUTO_INCREMENT,
+  `clientUserName` varchar(100) NOT NULL,
   `prenom` varchar(100) NOT NULL,
   `nom` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
@@ -83,8 +101,9 @@ CREATE TABLE IF NOT EXISTS `client` (
   `reponseQuestion` varchar(100) NOT NULL,
   `panierID` int(11) DEFAULT NULL,
   PRIMARY KEY (`clientID`),
+  UNIQUE KEY `clientUserName` (`clientUserName`),
   KEY `panierID` (`panierID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 

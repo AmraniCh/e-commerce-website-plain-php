@@ -9,6 +9,10 @@
     background-color: var(--main-color)!important;
 }
 
+.btn-block{
+    width:100%!important
+}
+
 .form-check.form-check-flat label input:checked + .input-helper:before {
     background-color: var(--second-color)!important;
 }
@@ -44,10 +48,6 @@
         float: initial;
         padding: 0;
         border: none;
-    }
-
-    .btn-primary {
-        width: 45%!important;
     }
 
     .auth.theme-one .auto-form-wrapper {

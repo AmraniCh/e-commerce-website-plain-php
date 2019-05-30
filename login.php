@@ -1,12 +1,9 @@
-<!DOCTYPE html>
 <?php
-require 'includes/config.php';
-require 'includes/functions.php';
-
-session_start();
-
+    require 'includes/config.php';
+    require 'includes/functions.php';
+    session_start();
 ?>
-
+<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
@@ -27,20 +24,23 @@ session_start();
     </head>
   <body>
   <?php
-      // unset session pseudo
-      unset($_SESSION['user']);
+      // destroy previous session data
+      session_destroy();
+    
       // login
       if(isset($_POST['submit']))
       {
           $username = $_POST['username-lg'];
           $pass = $_POST['password-lg'];
 
-          $res = select_login_query('pseudo_etu','client','email',$username,$pass);
-
+          $res = mysqli_query($con,"SELECT * FROM client WHERE clientUserName = '$username' AND motdepasse = '$pass'");    
           if(mysqli_num_rows($res)>0){
-              header ('location: index.php?user='.$username);
-              $_SESSION['user'] = $username;
+              echo 'works';
+              /*header ('location: index.php?user='.$username);
+              $_SESSION['user'] = $username;*/
           }
+          else
+            echo 'not';
       }
     ?>
 <div class="container-scroller">
@@ -51,7 +51,7 @@ session_start();
            <form id="login-form" action="login.php" method="post">
             <div class="auto-form-wrapper">
                 <div class="form-group" style="margin-bottom: 0!important;">
-                  <label class="label">Nom d'utilisateur :</label>
+                  <label for="username-lg" class="label">Nom d'utilisateur :</label>
                   <div class="input-group">
                     <input id="username-lg" name="username-lg" type="text" class="form-control" placeholder="Nom d'utilisateur" style="border-right:1px solid #e5e5e5">
                     <div id="username-ic-span" class="input-group-append">
@@ -65,7 +65,7 @@ session_start();
                   </div>
                 </div>
                 <div class="form-group" style="margin-bottom: 0!important;">
-                  <label class="label">Mot de passe</label>
+                  <label for="password-lg" class="label">Mot de passe</label>
                   <div class="input-group">
                     <input id="password-lg" name="password-lg" type="password" class="form-control" placeholder="*********" style="border-right:1px solid #e5e5e5">
                     <div id="password-ic-span" class="input-group-append">

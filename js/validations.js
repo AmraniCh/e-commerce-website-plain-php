@@ -1,4 +1,4 @@
-// register validation
+// register page validation
 $(function () {
 
     // validation variables
@@ -285,7 +285,7 @@ $(function () {
     });
 });
 
-// login validation
+// login page validation
 $(function(){
 
     // validation variables
@@ -357,4 +357,57 @@ $(function(){
             return false;
         }
     });
+});
+
+// emailconfirmation validation
+$(function(){
+    
+    // validation variables
+    var codemail_error = true;
+    
+    // inputs
+    var codemail = $("#codemail");
+    
+    // detect text change 
+    $('#codemail').on('input', function () {
+        check_codemail();
+    });
+    
+    // code email validation
+    function check_codemail() {
+        var icon = $("#codemail-ic-i");
+        var span = $("#codemail-ic-span");
+
+        var l = codemail.val().length;
+        if (l != 6) {
+            $("#codemail_error").css("visibility", "visible");
+            $("#codemail_error").html("* Le code ne doit contenir que 6 chiffres !");
+            codemail_error = true;
+            icon_change_color(span, icon);
+        } else if (!allNumbers(codemail)) {
+            $("#codemail_error").css("visibility", "visible");
+            $("#codemail_error").html("* Le code ne doit contenir que des chiffres !");
+            codemail_error = true;
+            icon_change_color(span, icon);
+        }else{
+            codemail_error = false;
+            $("#codemail_error").css("visibility", "hidden");
+            $("#codemail_error").html("*");
+            // icon change color
+            icon_change_color(span, icon, "true");
+        }
+    }
+    
+    // submit
+    $("#email-conf-form").submit(function () {
+        
+        check_codemail();
+
+        if (codemail_error == false) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+    
 });
