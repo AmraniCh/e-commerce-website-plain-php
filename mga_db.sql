@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 30, 2019 at 05:08 PM
+-- Generation Time: Jun 03, 2019 at 01:47 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -103,7 +103,14 @@ CREATE TABLE IF NOT EXISTS `client` (
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `clientUserName` (`clientUserName`),
   KEY `panierID` (`panierID`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `client`
+--
+
+INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
+(5, 'chou100', 'elaaa', 'chakir', 'elamrani.sv.laza@gmail.com', 'ARD DAOULA RUE 48 N 3, 90002', 'casa', b'0', NULL, 90002, '+212693792055', '$2y$10$GnRAJQUrRnEEF4nQ36td5uQxAkO4477ZgURm4KDbePh5t0L5M9cRe', 'Quel était le nom de votre premier animal ?', 'ddddff', NULL);
 
 -- --------------------------------------------------------
 
@@ -137,11 +144,23 @@ CREATE TABLE IF NOT EXISTS `couleur_article` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `demande`
+-- Table structure for table `livraison`
 --
 
-DROP TABLE IF EXISTS `demande`;
-CREATE TABLE IF NOT EXISTS `demande` (
+DROP TABLE IF EXISTS `livraison`;
+CREATE TABLE IF NOT EXISTS `livraison` (
+  `livraisonID` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`livraisonID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order`
+--
+
+DROP TABLE IF EXISTS `order`;
+CREATE TABLE IF NOT EXISTS `order` (
   `demandeID` int(11) NOT NULL AUTO_INCREMENT,
   `paiementDate` datetime NOT NULL,
   `paye` int(11) DEFAULT NULL,
@@ -156,29 +175,17 @@ CREATE TABLE IF NOT EXISTS `demande` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `demandedetails`
+-- Table structure for table `orderdetails`
 --
 
-DROP TABLE IF EXISTS `demandedetails`;
-CREATE TABLE IF NOT EXISTS `demandedetails` (
+DROP TABLE IF EXISTS `orderdetails`;
+CREATE TABLE IF NOT EXISTS `orderdetails` (
   `demandeDetailsID` int(11) NOT NULL AUTO_INCREMENT,
   `demandeID` int(11) NOT NULL,
   `articleID` int(11) NOT NULL,
   PRIMARY KEY (`demandeDetailsID`),
   KEY `demandeID` (`demandeID`),
   KEY `articleID` (`articleID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `livraison`
---
-
-DROP TABLE IF EXISTS `livraison`;
-CREATE TABLE IF NOT EXISTS `livraison` (
-  `livraisonID` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`livraisonID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
