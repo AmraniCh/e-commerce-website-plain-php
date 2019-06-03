@@ -1,10 +1,10 @@
 <?php
-    require_once 'config.php';
-    require_once 'functions/functions.php';
+    require_once 'public-includes/config.php';
+    require_once 'public-includes/functions.php';
     session_start();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -43,7 +43,7 @@
         if($result)
           $_SESSION['user'] = $username;
         else
-          echo 'Error'.mysqli_error($con);
+          echo 'Error : '.mysqli_error($con);
 
         sendEmail($email,$nom);
 

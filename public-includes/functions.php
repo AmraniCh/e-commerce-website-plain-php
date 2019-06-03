@@ -6,15 +6,16 @@
 
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
-    require '../PHPMailer/src/Exception.php';
-    require '../PHPMailer/src/PHPMailer.php';
-    require '../PHPMailer/src/SMTP.php';
+    require 'PHPMailer/src/Exception.php';
+    require 'PHPMailer/src/PHPMailer.php';
+    require 'PHPMailer/src/SMTP.php';
 
 /**************************************************************
     Email fucntion
 **************************************************************/
 function sendEmail($RecipientEmail,$Nom)
 {
+    global $con;
 // Instantiation and passing `true` enables exceptions
     $mail = new PHPMailer(true);
 
@@ -47,7 +48,7 @@ function sendEmail($RecipientEmail,$Nom)
 
 
         /////////////////////////////////getting code confrmation code and put it on message
-        $result = mysqli_query($con,"select  from client where email=$RecipientEmail");
+        $result = mysqli_query($con,"select * from client where email='$RecipientEmail'");
         $mail->Body    = 'the code is <b> ' . $row["codeEmail"] . ' </b> ';
         //////////////////////////////////////////////////////////////////////////////
 

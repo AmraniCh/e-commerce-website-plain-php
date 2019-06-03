@@ -4,7 +4,7 @@
     session_start();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -30,17 +30,16 @@
       // login
       if(isset($_POST['submit']))
       {
-          $username = $_POST['username-lg'];
+          $adminame = $_POST['username-lg'];
           $pass = $_POST['password-lg'];
 
-          $res = mysqli_query($con,"SELECT * FROM client WHERE clientUserName = '$username' AND motdepasse = '$pass'");    
+          $res = mysqli_query($con,"SELECT * FROM admin WHERE adminName = '$adminame' AND motdepasse = '$pass'");    
           if(mysqli_num_rows($res)>0){
-              echo 'works';
-              /*header ('location: index.php?user='.$username);
-              $_SESSION['user'] = $username;*/
+              header ('location: index.php?user='.$adminame);
+              $_SESSION['admin'] = $adminame;
           }
           else
-            echo 'not';
+            echo 'Error : '.mysqli_error($con);;
       }
     ?>
 <div class="container-scroller">

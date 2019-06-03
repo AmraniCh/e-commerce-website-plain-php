@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="utf-8">
@@ -299,7 +299,6 @@
                 <p>Vous avez 5 nouvelle demande(s) de produit! Voulez-vous les voir maintenant?</p>
                 <a class="btn btn-primary ml-auto download-button d-none d-md-block" href="#">Voir Les Ordres</a>
                 <a class="btn btn-second purchase-button popup-dismiss mt-4 mt-md-0" href="#">Pas Maintenant</a>
-                <a class="btn btn-second purchase-button popup-dismiss mt-4 mt-md-0" href="#">Pas Maintenant</a>
               </span>
             </div>
           </div>
@@ -561,7 +560,7 @@
                             #
                           </th>
                           <th>
-                            First name
+                            nom et prenom
                           </th>
                           <th>
                             Progress
