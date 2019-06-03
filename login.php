@@ -1,6 +1,6 @@
 <?php
-    require 'includes/config.php';
-    require 'includes/functions.php';
+    require_once 'config.php';
+    require_once 'functions/functions.php';
     session_start();
 ?>
 <!DOCTYPE html>
@@ -12,9 +12,9 @@
 		<title>Se connecter</title>
 		<!-- Bootstrap -->
 		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-        <link href="css/main.css" rel="stylesheet" />		
-        <link href="css/mainstyle.css" rel="stylesheet" />		
-        <link href="css/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
+        <link href="index/css/main.css" rel="stylesheet" />		
+        <link href="index/css/mainstyle.css" rel="stylesheet" />		
+        <link href="index/css/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]-->
@@ -60,11 +60,11 @@
                       </span>
                     </div>
                     <div class="container" style="padding:0;text-align:left;margin:0;">
-                        <small id="username_error" class="form-text text-muted">*</small>
+                        <small id="username_error" class="form-text text-error">*</small>
                     </div>
                   </div>
                 </div>
-                <div class="form-group" style="margin-bottom: 0!important;">
+                <div id="fx-firefox-mg" class="form-group" style="margin-bottom: 0!important;">
                   <label for="password-lg" class="label">Mot de passe</label>
                   <div class="input-group">
                     <input id="password-lg" name="password-lg" type="password" class="form-control" placeholder="*********" style="border-right:1px solid #e5e5e5">
@@ -74,7 +74,7 @@
                       </span>
                     </div>
                     <div class="container" style="padding:0;text-align:left;margin:0;">
-                        <small id="password_error" class="form-text text-muted">*</small>
+                        <small id="password_error" class="form-text text-error">*</small>
                     </div>
                   </div>
                 </div>
@@ -107,8 +107,8 @@
     </div>
     <!-- page-body-wrapper ends -->
   </div>
-        <script src="js/jquery-3.3.1.min.js"></script>
-        <script src="js/functions.js"></script>
-        <script src="js/validation.js"></script>
+        <script src="index/js/jquery-3.3.1.min.js"></script>
+        <script src="index/js/functions.js"></script>
+        <script src="index/js/validation.js"></script>
   </body>
 </html>

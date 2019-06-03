@@ -1,6 +1,6 @@
 <?php
-    require 'includes/config.php';
-    require 'includes/functions.php';
+    require_once 'config.php';
+    require_once 'functions/functions.php';
     session_start();
 ?>
 <!DOCTYPE html>
@@ -12,9 +12,9 @@
     <title>Se connecter</title>
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-    <link href="css/main.css" rel="stylesheet" />
-    <link href="css/mainstyle.css" rel="stylesheet" />
-    <link href="css/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="index/css/main.css" rel="stylesheet" />
+    <link href="index/css/mainstyle.css" rel="stylesheet" />
+    <link href="index/css/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -39,7 +39,7 @@
         $reponse = $_POST['reponse'];
         $password = password_hash($_POST['password2'], PASSWORD_BCRYPT, array('cost' => 10)); // Crypt the password
         
-        $result = mysqli_query($con,"INSERT INTO client VALUES(NULL,'$username','$prenom','$nom','$email','$adresse','$ville',default,null,$codepostal,'$tele','$password','$question','$reponse',NULL)");   
+        $result = mysqli_query($con,"INSERT INTO client VALUES(NULL,'$username','$prenom','$nom','$email','$adresse','$ville',default,NULL,$codepostal,'$tele','$password','$question','$reponse',NULL)");   
         if($result)
           $_SESSION['user'] = $username;
         else
@@ -70,7 +70,7 @@
                               </span>
                             </div>
                             <div class="container" style="padding:0;text-align:left;margin:0;">
-                              <small id="username_error" class="form-text text-muted">*</small>
+                              <small id="username_error" class="form-text text-muted text-error">*</small>
                             </div>
                           </div>
                         </div>
@@ -83,7 +83,7 @@
                               </span>
                             </div>
                             <div class="container" style="padding:0;text-align:left;margin:0;">
-                                <small id="email_error" class="form-text text-muted">*</small>
+                                <small id="email_error" class="form-text text-muted text-error">*</small>
                             </div>
                           </div>
                       </div>
@@ -96,7 +96,7 @@
                             </span>
                           </div>
                           <div class="container" style="padding:0;text-align:left;margin:0;">
-                              <small id="prenom_error" class="form-text text-muted">*</small>
+                              <small id="prenom_error" class="form-text text-muted text-error">*</small>
                           </div>
                         </div>
                     </div>
@@ -109,7 +109,7 @@
                           </span>
                         </div>
                         <div class="container" style="padding:0;text-align:left;margin:0;">
-                            <small id="nom_error" class="form-text text-muted">*</small>
+                            <small id="nom_error" class="form-text text-muted text-error">*</small>
                         </div>
                       </div>
                     </div>
@@ -131,7 +131,7 @@
                           </span>
                         </div>
                         <div class="container" style="padding:0;text-align:left;margin:0;">
-                            <small id="adresse_error" class="form-text text-muted">*</small>
+                            <small id="adresse_error" class="form-text text-muted text-error">*</small>
                         </div>
                       </div>
                     </div>
@@ -147,7 +147,7 @@
                           </span>
                         </div>
                         <div class="container" style="padding:0;text-align:left;margin:0;">
-                          <small id="tele_error" class="form-text text-muted">*</small>
+                          <small id="tele_error" class="form-text text-muted text-error">*</small>
                         </div>
                       </div>
                     </div>
@@ -160,7 +160,7 @@
                           </span>
                         </div>
                         <div class="container" style="padding:0;text-align:left;margin:0;">
-                          <small id="code_postal_error" class="form-text text-muted">*</small>
+                          <small id="code_postal_error" class="form-text text-muted text-error">*</small>
                         </div>
                       </div>
                     </div>
@@ -184,7 +184,7 @@
                           </span>
                         </div>
                         <div class="container" style="padding:0;text-align:left;margin:0;">
-                          <small id="reponse_error" class="form-text text-muted">*</small>
+                          <small id="reponse_error" class="form-text text-muted text-error">*</small>
                         </div>
                       </div>
                     </div>
@@ -197,7 +197,7 @@
                           </span>
                         </div>
                         <div class="container" style="padding:0;text-align:left;margin:0;">
-                          <small id="password_error" class="form-text text-muted">*</small>
+                          <small id="password_error" class="form-text text-muted text-error">*</small>
                         </div>
                       </div>
                     </div>
@@ -210,7 +210,7 @@
                           </span>
                         </div>
                         <div class="container" style="padding:0;text-align:left;margin:0;">
-                          <small id="password2_error" class="form-text text-muted">*</small>
+                          <small id="password2_error" class="form-text text-muted text-error">*</small>
                         </div>
                       </div>
                     </div>
@@ -234,8 +234,8 @@
         </div>
       </div>
     </div>
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/functions.js"></script>
-    <script src="js/validation.js"></script>
+    <script src="index/js/jquery-3.3.1.min.js"></script>
+    <script src="index/js/functions.js"></script>
+    <script src="index/js/validation.js"></script>
   </body>
 </html>
