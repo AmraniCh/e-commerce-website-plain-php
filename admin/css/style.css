@@ -10336,6 +10336,7 @@ tbody.collapse.show {
       color: #fff; }
 
 .card {
+  padding: 15px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -16297,9 +16298,4 @@ ul {
   background-color: var(--main-color)!important;
   border-color:#333!important;
   border: none;
-}
-
-.btn-second{
-  background-color: var(--third-color)!important;
-  border:none;
 }

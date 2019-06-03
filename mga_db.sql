@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 03, 2019 at 01:47 AM
+-- Generation Time: Jun 03, 2019 at 09:41 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -31,13 +31,22 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
   `adminID` int(11) NOT NULL AUTO_INCREMENT,
-  `adminName` varchar(100) DEFAULT NULL,
+  `adminName` varchar(100) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `nom` varchar(100) DEFAULT NULL,
-  `prenom` varchar(100) DEFAULT NULL,
+  `nom` varchar(100) NOT NULL,
+  `prenom` varchar(100) NOT NULL,
+  `motdepasse` varchar(100) NOT NULL,
+  `role` varchar(100) NOT NULL,
   PRIMARY KEY (`adminID`),
   UNIQUE KEY `adminName` (`adminName`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`adminID`, `adminName`, `email`, `nom`, `prenom`, `motdepasse`, `role`) VALUES
+(1, 'admin', NULL, 'el amrani', 'chakir', '051487088', 'administrateur');
 
 -- --------------------------------------------------------
 
@@ -103,13 +112,14 @@ CREATE TABLE IF NOT EXISTS `client` (
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `clientUserName` (`clientUserName`),
   KEY `panierID` (`panierID`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `client`
 --
 
 INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
+(6, 'qsdqsdqsd', 'qsdqsd', 'qsdqsd', 'elamrani.sv.laza@gmail.com', 'qsdqsdqs', 'casa', b'0', NULL, 455456, '+212144710547', '$2y$10$kP33I/v0eL0QqFTrjh6Dde9qC844f5Ijps38SuJT2ai8eFOzvrTjC', 'Quel était le nom de votre premier animal ?', 'wdfdsq', NULL),
 (5, 'chou100', 'elaaa', 'chakir', 'elamrani.sv.laza@gmail.com', 'ARD DAOULA RUE 48 N 3, 90002', 'casa', b'0', NULL, 90002, '+212693792055', '$2y$10$GnRAJQUrRnEEF4nQ36td5uQxAkO4477ZgURm4KDbePh5t0L5M9cRe', 'Quel était le nom de votre premier animal ?', 'ddddff', NULL);
 
 -- --------------------------------------------------------

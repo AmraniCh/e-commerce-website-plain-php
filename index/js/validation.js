@@ -70,9 +70,9 @@ $(function () {
         var icon = $("#username-ic-i");
         var span = $("#username-ic-span");
 
-        if (!validLength(username, 2, 20)) {
+        if (!validLength(username, 5, 20)) {
             $("#username_error").css("visibility", "visible");
-            $("#username_error").html("* Nom d'utilisateur faut �tre entre 6-20 catact�res !");
+            $("#username_error").html("* Nom d'utilisateur faut �tre entre 5-20 catact�res !");
             username_error = true;
             icon_change_color(span, icon);
         } else {
@@ -312,9 +312,9 @@ $(function(){
         var span = $("#username-ic-span");
 
         var l = username.val().length;
-        if (l <= 6 || l >= 20) {
+        if (l <= 4 || l >= 20) {
             $("#username_error").css("visibility", "visible");
-            $("#username_error").html("* Nom d'utilisateur faut �tre entre 6-20 catact�res !");
+            $("#username_error").html("* Nom d'utilisateur faut �tre entre 5-20 catact�res !");
             username_error = true;
             icon_change_color(span, icon);
         } else {

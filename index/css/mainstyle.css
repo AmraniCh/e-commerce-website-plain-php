@@ -1,11 +1,22 @@
 :root{
     --main-color: #D10024;
-    --second-color: #528BE7;
+    --second-color: #308ee0;
     --third-color: #106390;
 }
 
 .btn-primary {
     background-color: var(--main-color)!important;
+    color: #fff;
+}
+
+.btn-second{
+    background-color: var(--second-color)!important;
+    color: #fff;
+}
+
+.btn-third {
+   background-color: var(--third-color)!important; 
+    color: #fff;
 }
 
 .btn-block{

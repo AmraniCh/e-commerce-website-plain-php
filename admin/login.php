@@ -1,7 +1,8 @@
 <?php
-    require_once '../config.php';
-    require_once '../functions/functions.php';
+    require_once '../public-includes/config.php';
+    session_name('ad-sess');
     session_start();
+    session_unset();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -23,10 +24,7 @@
 		<![endif]-->
     </head>
   <body>
-  <?php
-      // destroy previous session data
-      session_destroy();
-    
+  <?php  
       // login
       if(isset($_POST['submit']))
       {
@@ -35,11 +33,11 @@
 
           $res = mysqli_query($con,"SELECT * FROM admin WHERE adminName = '$adminame' AND motdepasse = '$pass'");    
           if(mysqli_num_rows($res)>0){
-              header ('location: index.php?user='.$adminame);
               $_SESSION['admin'] = $adminame;
+              header ('location: index.php?admin='.$adminame);
           }
           else
-            echo 'Error : '.mysqli_error($con);;
+            echo 'Compte introuvable';
       }
     ?>
 <div class="container-scroller">

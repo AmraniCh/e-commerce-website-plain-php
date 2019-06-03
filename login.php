@@ -1,6 +1,7 @@
 <?php
     require_once 'public-includes/config.php';
     session_start();
+    session_unset(); 
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -23,9 +24,6 @@
     </head>
   <body>
   <?php
-      // destroy previous session data
-      session_destroy();
-    
       // login
       if(isset($_POST['submit']))
       {
