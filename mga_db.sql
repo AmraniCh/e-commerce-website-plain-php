@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 03, 2019 at 09:41 PM
+-- Generation Time: Jun 06, 2019 at 02:47 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -19,8 +19,25 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `mga.db`
+-- Database: `mga_db`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+DROP PROCEDURE IF EXISTS `getrandom`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getrandom` (OUT `randomNumber` INT)  BEGIN
+  SELECT floor(rand()*100000000) INTO randomNumber;
+end$$
+
+--
+-- Functions
+--
+DROP FUNCTION IF EXISTS `randomNumber`$$
+CREATE DEFINER=`root`@`localhost` FUNCTION `randomNumber` () RETURNS INT(50) RETURN floor(rand()*1000000)$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -112,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `client` (
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `clientUserName` (`clientUserName`),
   KEY `panierID` (`panierID`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `client`
@@ -121,6 +138,15 @@ CREATE TABLE IF NOT EXISTS `client` (
 INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
 (6, 'qsdqsdqsd', 'qsdqsd', 'qsdqsd', 'elamrani.sv.laza@gmail.com', 'qsdqsdqs', 'casa', b'0', NULL, 455456, '+212144710547', '$2y$10$kP33I/v0eL0QqFTrjh6Dde9qC844f5Ijps38SuJT2ai8eFOzvrTjC', 'Quel était le nom de votre premier animal ?', 'wdfdsq', NULL),
 (5, 'chou100', 'elaaa', 'chakir', 'elamrani.sv.laza@gmail.com', 'ARD DAOULA RUE 48 N 3, 90002', 'casa', b'0', NULL, 90002, '+212693792055', '$2y$10$GnRAJQUrRnEEF4nQ36td5uQxAkO4477ZgURm4KDbePh5t0L5M9cRe', 'Quel était le nom de votre premier animal ?', 'ddddff', NULL);
+
+--
+-- Triggers `client`
+--
+DROP TRIGGER IF EXISTS `randomNumber`;
+DELIMITER $$
+CREATE TRIGGER `randomNumber` BEFORE INSERT ON `client` FOR EACH ROW set new.codeEmail=randomNumber()
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -149,6 +175,41 @@ CREATE TABLE IF NOT EXISTS `couleur_article` (
   PRIMARY KEY (`couleur_article`),
   KEY `articleID` (`articleID`),
   KEY `codeCouleur` (`codeCouleur`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `demande`
+--
+
+DROP TABLE IF EXISTS `demande`;
+CREATE TABLE IF NOT EXISTS `demande` (
+  `demandeID` int(11) NOT NULL AUTO_INCREMENT,
+  `paiementDate` datetime NOT NULL,
+  `paye` int(11) DEFAULT NULL,
+  `termine` bit(1) NOT NULL DEFAULT b'0',
+  `dateDemende` datetime NOT NULL,
+  `dateLivraison` datetime DEFAULT NULL,
+  `dateEnvoi` datetime DEFAULT NULL,
+  `poidsTotal` decimal(15,3) DEFAULT NULL,
+  PRIMARY KEY (`demandeID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `demandedetails`
+--
+
+DROP TABLE IF EXISTS `demandedetails`;
+CREATE TABLE IF NOT EXISTS `demandedetails` (
+  `demandeDetailsID` int(11) NOT NULL AUTO_INCREMENT,
+  `demandeID` int(11) NOT NULL,
+  `articleID` int(11) NOT NULL,
+  PRIMARY KEY (`demandeDetailsID`),
+  KEY `demandeID` (`demandeID`),
+  KEY `articleID` (`articleID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
