@@ -53,6 +53,12 @@
             </div>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="pages/tables/basic-table.html">
+              <i class="menu-icon fas fa-th-large"></i>
+              <span class="menu-title">Les Categories</span>
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="pages/charts/chartjs.html">
               <i class="menu-icon fas fa-truck"></i>
               <span class="menu-title">Les Ordres</span>
@@ -62,12 +68,6 @@
             <a class="nav-link" href="pages/forms/basic_elements.html">
               <i class="menu-icon fas fa-users"></i>
               <span class="menu-title">Clients</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/tables/basic-table.html">
-              <i class="menu-icon fas fa-th-large"></i>
-              <span class="menu-title">Les Categories</span>
             </a>
           </li>
           <li class="nav-item">

@@ -162,7 +162,7 @@
                   </div>
                 </div>
               </a>
-              <a class="dropdown-item mt-2" href="preferences.php">
+              <a class="dropdown-item mt-2" href="profile.php">
                 Mon Profil
               </a>
               <a class="dropdown-item">

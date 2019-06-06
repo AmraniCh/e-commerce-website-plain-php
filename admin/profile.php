@@ -6,12 +6,12 @@
 		{
             $result = mysqli_query($con,"SELECT * FROM admin WHERE adminName = '".$_SESSION['admin']."'");
             if(mysqli_num_rows($result)>0){
-            $row = mysqli_fetch_assoc($result);
-            $adminame = $row['adminName'];
-            $prenom = $row['prenom'];
-            $nom = $row['nom'];
-            $role = $row['role'];
-            $motdepasse = $row['motdepasse'];
+                $row = mysqli_fetch_assoc($result);
+                $adminame = $row['adminName'];
+                $prenom = $row['prenom'];
+                $nom = $row['nom'];
+                $role = $row['role'];
+                $motdepasse = $row['motdepasse'];
   ?>
   <div class="container-scroller">
   
@@ -100,6 +100,6 @@
             }
         }
       else
-          header ('location: preferences.php?admin='.$_SESSION['admin']);
+          header ('location: profile.php?admin='.$_SESSION['admin']);
     }
 ?>
