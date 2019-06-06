@@ -26,7 +26,30 @@
     <?php
     
       // email confirmation code here
-    
+
+    $username = $_SESSION['user'];
+
+    if(isset($_POST['submit'])){
+
+        $sql = "select codeEmail from client where clientUserName='$username'";
+        $result = $con->query($sql);
+
+        if ($result->num_rows > 0) {
+            // output data of each row
+            while($row = $result->fetch_assoc()) {
+                $code = $row["codeEmail"];
+            }
+        }
+
+        if ($_POST['codemail']==$code){
+            $sql2 = "UPDATE client SET emailValid = 1 where clientUserName='$username'";
+            $con->query($sql2);
+            header ('location: index/profile.php');
+        }
+        else{
+            echo "your code is wrong";
+        }
+    }
     ?>
     <div class="container-scroller">
         <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">

@@ -45,6 +45,7 @@
         else
           echo 'Error : '.mysqli_error($con);
 
+
         sendEmail($email,$nom);
 
         header ('location: emailconfirmation.php');
