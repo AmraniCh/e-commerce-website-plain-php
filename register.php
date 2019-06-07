@@ -40,15 +40,15 @@
         $password = password_hash($_POST['password2'], PASSWORD_BCRYPT, array('cost' => 10)); // Crypt the password
         
         $result = mysqli_query($con,"INSERT INTO client VALUES(NULL,'$username','$prenom','$nom','$email','$adresse','$ville',default,NULL,$codepostal,'$tele','$password','$question','$reponse',NULL)");   
-        if($result)
+        if($result){
           $_SESSION['user'] = $username;
+          header ('location: emailconfirmation.php');
+        }
         else
           echo 'Error : '.mysqli_error($con);
 
 
         sendEmail($email,$nom);
-
-        header ('location: emailconfirmation.php');
       }
     
     ?>

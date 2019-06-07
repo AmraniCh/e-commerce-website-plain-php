@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 06, 2019 at 02:47 AM
+-- Generation Time: Jun 07, 2019 at 03:46 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `mga_db`
+-- Database: `mga.db`
 --
 
 DELIMITER $$
@@ -77,7 +77,6 @@ CREATE TABLE IF NOT EXISTS `article` (
   `articleNom` varchar(100) NOT NULL,
   `articlePrix` decimal(15,2) NOT NULL,
   `articleDescription` text,
-  `articlePhoto` varchar(255) DEFAULT NULL,
   `remise` int(11) DEFAULT NULL,
   `remiseDisponible` bit(1) NOT NULL DEFAULT b'0',
   `unitesEnStock` int(11) DEFAULT '1',
@@ -92,16 +91,26 @@ CREATE TABLE IF NOT EXISTS `article` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `categories`
+-- Table structure for table `categorie`
 --
 
-DROP TABLE IF EXISTS `categories`;
-CREATE TABLE IF NOT EXISTS `categories` (
+DROP TABLE IF EXISTS `categorie`;
+CREATE TABLE IF NOT EXISTS `categorie` (
   `categorieID` int(11) NOT NULL AUTO_INCREMENT,
   `categorieNom` varchar(100) NOT NULL,
   `description` text,
+  `active` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`categorieID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `categorie`
+--
+
+INSERT INTO `categorie` (`categorieID`, `categorieNom`, `description`, `active`) VALUES
+(22, 'aa', 'dd', b'0'),
+(20, 'aa', 'aa', b'1'),
+(21, 'aa', 'dd', b'1');
 
 -- --------------------------------------------------------
 
@@ -129,15 +138,14 @@ CREATE TABLE IF NOT EXISTS `client` (
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `clientUserName` (`clientUserName`),
   KEY `panierID` (`panierID`)
-) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `client`
 --
 
 INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
-(6, 'qsdqsdqsd', 'qsdqsd', 'qsdqsd', 'elamrani.sv.laza@gmail.com', 'qsdqsdqs', 'casa', b'0', NULL, 455456, '+212144710547', '$2y$10$kP33I/v0eL0QqFTrjh6Dde9qC844f5Ijps38SuJT2ai8eFOzvrTjC', 'Quel était le nom de votre premier animal ?', 'wdfdsq', NULL),
-(5, 'chou100', 'elaaa', 'chakir', 'elamrani.sv.laza@gmail.com', 'ARD DAOULA RUE 48 N 3, 90002', 'casa', b'0', NULL, 90002, '+212693792055', '$2y$10$GnRAJQUrRnEEF4nQ36td5uQxAkO4477ZgURm4KDbePh5t0L5M9cRe', 'Quel était le nom de votre premier animal ?', 'ddddff', NULL);
+(24, 'qsdqsdqsd', 'qsdqsd', 'qsdqsdqsdqs', 'elamrani.sv.laza@gmail.com', 'qsdqsdqs', 'casa', b'0', '73680', 445585, '+212144710547', '$2y$10$6qRjiLP47Vnd8Evob.1qQOj.xwUESYyUUkOhYnl.LItr/UV3CLu.2', 'Quel était le nom de votre premier animal ?', 'ffffffff', NULL);
 
 --
 -- Triggers `client`
@@ -210,6 +218,20 @@ CREATE TABLE IF NOT EXISTS `demandedetails` (
   PRIMARY KEY (`demandeDetailsID`),
   KEY `demandeID` (`demandeID`),
   KEY `articleID` (`articleID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `imagearticle`
+--
+
+DROP TABLE IF EXISTS `imagearticle`;
+CREATE TABLE IF NOT EXISTS `imagearticle` (
+  `imageArticleNom` varchar(100) NOT NULL,
+  `articleID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`imageArticleNom`),
+  KEY `FK_articleID` (`articleID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
