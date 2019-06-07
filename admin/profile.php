@@ -84,7 +84,7 @@
                               <div class="row">
                                  <div class="col-md-12">
                                       <div class="text-left">
-                                            <button href="#" class="btn btn-second">Enregistrer les modifications</button>
+                                            <button href="#" class="btn btn-blue">Enregistrer les modifications</button>
                                       </div>
                                   </div>
                               </div>

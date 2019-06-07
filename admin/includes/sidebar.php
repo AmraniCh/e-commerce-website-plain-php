@@ -24,7 +24,7 @@
                   </div>
                 </div>
               </div>
-              <button class="btn btn-primary btn-block" style="border-color:#333;border-radius:3px">Nouveau Produit
+              <button class="btn btn-red btn-block">Nouveau Produit
                 <i class="mdi mdi-plus"></i>
               </button>
             </div>
@@ -44,7 +44,7 @@
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item">
-                  <a class="nav-link" href="pages/ui-features/buttons.html">Ajouter Produit</a>
+                  <a class="nav-link" href="ajouterproduit">Ajouter Produit</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="pages/ui-features/typography.html">Afficher Les Produits</a>
@@ -53,9 +53,9 @@
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/tables/basic-table.html">
+            <a class="nav-link" href="categories.php">
               <i class="menu-icon fas fa-th-large"></i>
-              <span class="menu-title">Les Categories</span>
+              <span class="menu-title">Les Catégories</span>
             </a>
           </li>
           <li class="nav-item">

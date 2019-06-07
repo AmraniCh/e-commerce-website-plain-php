@@ -76,7 +76,7 @@
                   </div>
                 </div>
                 <div class="form-group text-center" style="margin-top:1.8rem!important">
-                  <input type="submit" name="submit" value="Se connecter" class="btn btn-primary submit-btn btn-block">
+                  <input type="submit" name="submit" value="Se connecter" class="btn btn-dark-red submit-btn btn-block">
                 </div>
                 <div class="form-group d-flex justify-content-between">
                   <div class="form-check form-check-flat mt-0">

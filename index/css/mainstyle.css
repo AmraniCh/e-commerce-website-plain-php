@@ -1,23 +1,30 @@
 :root{
-    --main-color: #D10024;
-    --second-color: #308ee0;
-    --third-color: #106390;
+    --dark-red-color: #d10024;
+    --blue-color: #308ee0;
+    --dark-blue-color: #106390;
+    --red-color: #e65251;
 }
 
-.btn-primary {
-    background-color: var(--main-color)!important;
+.btn-red{
+    background-color: var(--red-color)!important; 
     color: #fff;
 }
 
-.btn-second{
-    background-color: var(--second-color)!important;
+.btn-dark-red {
+    background-color: var(--dark-red-color)!important;
     color: #fff;
 }
 
-.btn-third {
-   background-color: var(--third-color)!important; 
+.btn-blue{
+    background-color: var(--blue-color)!important;
     color: #fff;
 }
+
+.btn-dark-blue {
+   background-color: var(--dark-blue-color)!important; 
+    color: #fff;
+}
+
 
 .btn-block{
     width:100%!important
@@ -27,9 +34,6 @@
     background-color: var(--second-color)!important;
 }
 
-.mdi{
-    font-size: 123%;
-}
 
 .mdi-view-dashboard{
   font-size: 20px!important;
@@ -139,7 +143,7 @@
 
 .checkmark {
   position: absolute;
-  top: 0;
+  top: 1px;
   left: 0;
   height: 18px;
   width: 18px;
@@ -184,6 +188,9 @@ input[class="form-control"]{
       padding: 21px;
     border-right: 1px solid #e5e5e5;
 }
+input[class="form-control"]:focus{
+    border-right:1px solid #e5e5e5;
+}
 
 span[class="input-group-text"]{
     border-radius: 0 6px 6px 0;
@@ -206,7 +213,8 @@ span[class="input-group-text"]{
 
 /*********** END login-register pages CSS ***********/
 
-/*********** START index page CSS ***********/
-.fa-wifi:before{
-    color: #38ff09;
+
+/*********** START dashboard CSS ***********/
+.modal-content{
+    background-color:#fff!important;
 }

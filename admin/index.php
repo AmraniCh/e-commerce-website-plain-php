@@ -22,8 +22,8 @@
             <div class="col-12">
               <span class="d-block d-md-flex align-items-center">
                 <p>Vous avez 5 nouvelle demande(s) de produit! Voulez-vous les voir maintenant?</p>
-                <a class="btn btn-primary ml-auto download-button d-none d-md-block" href="#">Voir Les Ordres</a>
-                <a class="btn btn-third purchase-button popup-dismiss mt-4 mt-md-0" href="#">Pas Maintenant</a>
+                <a class="btn btn-dark-red ml-auto download-button d-none d-md-block" href="#">Voir Les Ordres</a>
+                <a class="btn btn-dark-blue purchase-button popup-dismiss mt-4 mt-md-0" href="#">Pas Maintenant</a>
               </span>
             </div>
           </div>

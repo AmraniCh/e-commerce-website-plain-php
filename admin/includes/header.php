@@ -15,8 +15,10 @@
   <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
   <link rel="stylesheet" href="vendors/css/vendor.bundle.addons.css">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../../index/css/main.css">
   <link rel="stylesheet" href="../../index/css/mainstyle.css">
   <link rel="shortcut icon" href="images/favicon.png" />
+    <script src="../index/js/jquery-3.3.1.min.js"></script>
 </head>
 
 <body>

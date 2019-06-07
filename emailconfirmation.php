@@ -42,8 +42,8 @@
         }
 
         if ($_POST['codemail']==$code){
-            $sql2 = "UPDATE client SET emailValid = 1 where clientUserName='$username'";
-            $con->query($sql2);
+            $sql = "UPDATE client SET emailValid = 1 where clientUserName='$username'";
+            $con->query($sql);
             header ('location: index/profile.php');
         }
         else{
@@ -76,7 +76,7 @@
                       </div>
                     </div>
                     <div class="form-group text-center" style="margin-top:1.8rem!important">
-                      <input type="submit" name="submit" value="Confirmer mon email" class="btn btn-primary submit-btn btn-block">
+                      <input type="submit" name="submit" value="Confirmer mon email" class="btn btn-dark-red submit-btn btn-block">
                       <button class="btn btn-primary submit-btn btn-block" type="button" style="background-color:#0083ff!important">Pas maintenant</button>
                     </div>
                     <div class="form-group">

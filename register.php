@@ -221,7 +221,7 @@
                   </div>
                   <div class="bottom-container col-xs-12 text-center" style="display:inline-block;width:100%!important">
                       <div class="form-group">
-                        <input type="submit" name="submit" value="Registrer" class="btn btn-primary submit-btn btn-block" style="width:30%;margin-top:2%">
+                        <input type="submit" name="submit" value="Registrer" class="btn btn-dark-red submit-btn btn-block" style="width:30%;margin-top:2%">
                       </div>
                       <div class="text-block text-center my-3">
                         <span class="text-small font-weight-semibold">

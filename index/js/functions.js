@@ -37,14 +37,14 @@ function allLetters(name) {
 }
 
 // check if all letters are string words with space
-function allLettersWithSpace(ev) {
-    var name = $(ev.target);
+function allLettersWithSpace(name) {
     var letters = /^[A-Za-z\s]+$/g;
     if (name.val().match(letters))
         return true;
     else
         return false;
 }
+
 
 // check telephone string format
 function check_numberPhone(number) {

@@ -72,7 +72,7 @@ $(function () {
 
         if (!validLength(username, 5, 20)) {
             $("#username_error").css("visibility", "visible");
-            $("#username_error").html("* Nom d'utilisateur faut �tre entre 5-20 catact�res !");
+            $("#username_error").html("* Nom d'utilisateur doit contenir entre 5-20 catact�res !");
             username_error = true;
             icon_change_color(span, icon);
         } else {
@@ -109,12 +109,12 @@ $(function () {
 
         if (!validLength(prenom, 3, 30)) {
             $("#prenom_error").css("visibility", "visible");
-            $("#prenom_error").html("* Prenom faut �tre entre 3-30 caract�res !");
+            $("#prenom_error").html("* Un prenom doit contenir entre entre 3-30 caractères !");
             prenom_error = true;
             icon_change_color(span, icon);
         } else if (!allLetters(prenom)) {
             $("#prenom_error").css("visibility", "visible");
-            $("#prenom_error").html("* Prenom faut pas contient des num�ros ou des espaces !");
+            $("#prenom_error").html("* Un nom ne contient pas des numéros ou des espaces !");
             prenom_error = true;
             icon_change_color(span, icon);
         } else {
@@ -132,12 +132,12 @@ $(function () {
 
         if (!validLength(nom, 3, 30)) {
             $("#nom_error").css("visibility", "visible");
-            $("#nom_error").html("* Nom faut �tre entre 3-30 caract�res !");
+            $("#nom_error").html("* Un nom doit contenir entre 3-30 caractères !");
             nom_error = true;
             icon_change_color(span, icon);
-        } else if (!allLetters(nom)) {
+        } else if (!allLettersWithSpace(nom)) {
             $("#nom_error").css("visibility", "visible");
-            $("#nom_error").html("* Nom faut pas contient des num�ros ou des espaces !");
+            $("#nom_error").html("* Un nom ne contient pas de chiffres !");
             nom_error = true;
             icon_change_color(span, icon);
         } else {
@@ -155,7 +155,7 @@ $(function () {
 
         if (!validLength(adresse, 3, 50)) {
             $("#adresse_error").css("visibility", "visible");
-            $("#adresse_error").html("* L'adresse faut �tre entre minimaum 3 et maximaux 50 caract�res !");
+            $("#adresse_error").html("* Une adresse doit contenir entre minimaum 3 et maximaux 50 caractères !");
             adresse_error = true;
             icon_change_color(span, icon);
         } else {
@@ -173,7 +173,7 @@ $(function () {
 
         if (!check_numberPhone(tele) || !validLength(tele, 10, 10) && !validLength(tele, 13, 13)) {
             $("#tele_error").css("visibility", "visible");
-            $("#tele_error").html("* Num�ro de telephone incorrect !");
+            $("#tele_error").html("* Numéro de telephone incorrect !");
             tele_error = true;
             icon_change_color(span, icon);
         } else {
@@ -191,12 +191,12 @@ $(function () {
 
         if (!validLength(reponse, 6, 50)) {
             $("#reponse_error").css("visibility", "visible");
-            $("#reponse_error").html("* La r�ponse faut �tre entre 6-50 caract�res");
+            $("#reponse_error").html("* Une réponse doit contenir entre entre 6-50 caractères");
             reponse_error = true;
             icon_change_color(span, icon);
         } else if (!allLetters(reponse)) {
             $("#reponse_error").css("visibility", "visible");
-            $("#reponse_error").html("* La r�ponse faut pas contient des num�ros ou des espaces !");
+            $("#reponse_error").html("* Une réponse faut pas contient des numéros ou des espaces !");
             reponse_error = true;
             icon_change_color(span, icon);
         } else {
@@ -212,7 +212,7 @@ $(function () {
         var icon = $("#postal-ic-i");
         var span = $("#postal-ic-span");
 
-        if (!validNumber(code_postal) || !validLength(code_postal, 4, 8)) {
+        if (!allNumbers(code_postal) || !validLength(code_postal, 4, 8)) {
             $("#code_postal_error").css("visibility", "visible");
             $("#code_postal_error").html("* Code postal incorrect !");
             code_postal_error = true;
@@ -236,7 +236,7 @@ $(function () {
             if (!validLength(passowrd, 8, 40)) {
                 password_error = true;
                 $("#password_error").css("visibility", "visible");
-                $("#password_error").html("* Mot de passe faut �tre 8-40 caract�res");
+                $("#password_error").html("* Un mot de passe doit contenir 8-40 caractères");
                 icon_change_color(span, icon);
             } else {
                 $("#password_error").css("visibility", "hidden");
@@ -254,7 +254,7 @@ $(function () {
                 $("#password2_error").css("visibility", "visible");
                 pass_match_error = true;
                 icon_change_color(span, icon);
-                $("#password2_error").html("* Les deux mots de passe sont pas identiques !");
+                $("#password2_error").html("* Les deux mots de passe sont pas identiques ! Réssayez");
             } else {
                 $("#password2_error").css("visibility", "hidden");
                 pass_match_error = false;

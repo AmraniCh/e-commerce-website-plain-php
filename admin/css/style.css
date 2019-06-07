@@ -8659,7 +8659,7 @@ pre {
   .form-control:focus {
     color: #495057;
     background-color: #fff;
-    border-color: #80bdff;
+    border-color: #e5e5e5;
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); }
   .form-control::placeholder {
@@ -14485,7 +14485,7 @@ pre {
   height: 200px; }
 
 .purchace-popup > div > span {
-  background: var(--second-color);
+  background: var(--blue-color);
   padding: 15px 20px;
   border-radius: 3px; }
   .purchace-popup > div > span .btn {
