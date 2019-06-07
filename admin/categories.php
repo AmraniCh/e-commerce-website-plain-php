@@ -114,7 +114,7 @@
               <div class="modal-footer">
                   <form action="" method="post">
                     <button type="button" class="btn btn-blueary" data-dismiss="modal">Non, merci</button>
-                    <button type="button" class="btn btn-primary btn-delete-cat">Oui</button>
+                    <button type="button" class="btn btn-red btn-delete-cat">Oui</button>
                   </form>
               </div>
             </div>
