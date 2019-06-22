@@ -1,7 +1,7 @@
 <?php require_once 'includes/header.php' ?>
 
  <?php
-  if(isset($_GET['admin']) || isset($_SESSION['admin'])){
+  if(isset($_GET['admin']) && isset($_SESSION['admin'])){
 		if($_GET['admin'] == $_SESSION['admin'])
 		{
   
@@ -594,4 +594,6 @@
       else
           header ('location: index.php?admin='.$_SESSION['admin']);
     }
+      else
+          header ('location: login.php');
 ?>

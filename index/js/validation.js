@@ -411,3 +411,10 @@ $(function(){
     });
     
 });
+
+
+function compteIntrouvable()
+{
+    $("#username_error").css("visibility", "visible");
+    $("#username_error").html("* Nom d'utilisateur ou le mot de passe est incorrect");
+}

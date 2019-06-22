@@ -7,14 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Star Admin Free Bootstrap Admin Dashboard Template</title>
   <!-- plugins:css -->
-  <link rel="stylesheet" href="../../vendors/iconfonts/mdi/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
-  <link rel="stylesheet" href="../../vendors/css/vendor.bundle.addons.css">
+  <link rel="stylesheet" href="../admin/vendors/iconfonts/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../admin/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="../admin/vendors/css/vendor.bundle.addons.css">
   <!-- endinject -->
   <!-- inject:css -->
-  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../admin/css/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="../../images/favicon.png" />
+  <link rel="shortcut icon" href="../admin/images/favicon.png" />
 </head>
 
 <body>
@@ -28,18 +28,18 @@
                 <h1 class="display-1 mb-0">404</h1>
               </div>
               <div class="col-lg-6 error-page-divider text-lg-left pl-lg-4">
-                <h2>SORRY!</h2>
-                <h3 class="font-weight-light">The page you’re looking for was not found.</h3>
+                <h2>Désolé    !</h2>
+                <h3 class="font-weight-light">La page que vous demandez n'a pas trouvée.</h3>
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-12 text-center mt-xl-2">
-                <a class="text-white font-weight-medium" href="../../index.html">Back to home</a>
+                <a class="text-white font-weight-medium" href="../admin/index.html">Retour à l'accueil</a>
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-12 mt-xl-2">
-                <p class="text-white font-weight-medium text-center">Copyright &copy; 2018 All rights reserved.</p>
+                <p class="text-white font-weight-medium text-center">Copyright &copy; M.G.A All rights reserved..</p>
               </div>
             </div>
           </div>
@@ -51,12 +51,12 @@
   </div>
   <!-- container-scroller -->
   <!-- plugins:js -->
-  <script src="../../vendors/js/vendor.bundle.base.js"></script>
-  <script src="../../vendors/js/vendor.bundle.addons.js"></script>
+  <script src="../admin/vendors/js/vendor.bundle.base.js"></script>
+  <script src="../admin/vendors/js/vendor.bundle.addons.js"></script>
   <!-- endinject -->
   <!-- inject:js -->
-  <script src="../../js/off-canvas.js"></script>
-  <script src="../../js/misc.js"></script>
+  <script src="../admin/js/off-canvas.js"></script>
+  <script src="../admin/js/misc.js"></script>
   <!-- endinject -->
 </body>
 

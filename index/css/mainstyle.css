@@ -7,22 +7,28 @@
 
 .btn-red{
     background-color: var(--red-color)!important; 
-    color: #fff;
+    color: #fff!important;
 }
 
 .btn-dark-red {
     background-color: var(--dark-red-color)!important;
-    color: #fff;
+    color: #fff!important;
 }
 
 .btn-blue{
     background-color: var(--blue-color)!important;
-    color: #fff;
+    color: #fff!important;
 }
 
 .btn-dark-blue {
    background-color: var(--dark-blue-color)!important; 
-    color: #fff;
+    color: #fff!important;
+}
+
+.btn
+{
+    white-space: normal!important;
+    line-height: 18px!important;
 }
 
 
@@ -34,10 +40,57 @@
     background-color: var(--second-color)!important;
 }
 
+.mini-input{
+    width: 30%!important;
+    padding: 15px!important;
+}
+
+.inline-input{
+    display: inline-block!important;
+    margin-left: 10px;
+}
+
+.form-group label, .input-group label{
+    vertical-align: baseline!important;
+}
+
 
 .mdi-view-dashboard{
   font-size: 20px!important;
 }
+
+input[type="radio"]
+{
+    width:initial!important;
+    display: inline;
+}
+
+.radio-label{
+    margin: 0 20px 0 7px;
+}
+
+.prepend-text{
+    border-left: 1px solid
+}
+
+.input-group-prepend, .input-group-append 
+{
+    height:40px!important;
+}
+
+.prepend-inline{
+    margin-left: 10px;
+}
+
+.font-large-input{
+    font-size: 20px!important;
+}
+
+.inline-select {
+    display: inline-block!important;
+    width: 40%!important;
+}
+
 /*********** START login-register pages CSS ***********/
 .left-container {
     width: 50%;
@@ -89,6 +142,10 @@
     .content-wrapper {
         padding: 5% 0;
         text-align: center;
+    }
+    
+    .flex-container{
+        display: block!important;
     }
 }
 
@@ -217,4 +274,19 @@ span[class="input-group-text"]{
 /*********** START dashboard CSS ***********/
 .modal-content{
     background-color:#fff!important;
+}
+
+.photo-produit
+{
+    display:inline;
+    height:125px;
+    background-size: cover;
+    display: inline-block;
+    max-height: 100%;
+    vertical-align:top;
+}
+
+.img-upload:hover{
+    opacity: .6;
+    box-shadow: 0 0 3px 2px #eee
 }

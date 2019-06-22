@@ -1,32 +1,25 @@
 <?php require_once 'includes/header.php' ?>
 
  <?php
-  if(isset($_GET['admin']) || isset($_SESSION['admin'])){
+  if(isset($_GET['admin']) && isset($_SESSION['admin'])){
 		if($_GET['admin'] == $_SESSION['admin'])
 		{
             
       
-            class categorie{
-                public $con;
+            final class categorie{
+                private $con;
                 
                 function __construct(){
                     global $con;
                     $this->con = $con;
                 }
                 
-                function getCategories(){
-                    
+                public function AfficherCategories(){ 
                     $result = $this->con->query("SELECT * FROM categorie ORDER BY categorieID");
                     return $result;
                 }
                 
-                function deleteCategorie($idCat){
-                    global $con;
-                    $result = $con->query("DELETE FROM categorie WHERE categorieID = $idCat");
-                    
-                }
-                
-                function echoBadge($active){
+                public function echoBadge($active){
                     if($active == 0)
                         return "<label class='badge badge-danger'>Pas Active</label>";
                     else
@@ -75,7 +68,7 @@
                                               <tbody>
                                                  <?php 
                                                     $categorie = new categorie();
-                                                    $result = $categorie->getCategories();
+                                                    $result = $categorie->AfficherCategories();
                                                     while($row = $result->fetch_row()){
                                                         $badge = $categorie->echoBadge($row[3]);
                                                         echo '<tr><td class="id" id="'.$row[0].'">'.$row[0].'</td>';
@@ -225,7 +218,7 @@
                 $.ajax({
                     url: '../public-includes/ajax_queries.php',
                     type: "POST",
-                    data: {function: "deleteCategorie", idCat: idCat},
+                    data: {function: "SupprimerCategorie", idCat: idCat},
                     success: function()
                     {
                         $(".categories-table").load(" .categories-table");
@@ -242,7 +235,7 @@
                 $.ajax({
                     url: '../public-includes/ajax_queries.php',
                     type: "POST",
-                    data: {function: "addCategorie", nomCat: nomCat, descCat: descCat, active: active},
+                    data: {function: "AjouterCategorie", nomCat: nomCat, descCat: descCat, active: active},
                     success: function()
                     {
                         $(".categories-table").load(" .categories-table");
@@ -258,7 +251,7 @@
                 $.ajax({
                     url: '../public-includes/ajax_queries.php',
                     type: "POST",
-                    data: {function: "updateCategorie", idCat: values[0], nomCat: nomCat, descCat: descCat, active: active},
+                    data: {function: "MiseCategorie", idCat: values[0], nomCat: nomCat, descCat: descCat, active: active},
                     success: function()
                     {
                         $(".categories-table").load(" .categories-table");
@@ -268,13 +261,17 @@
             });
             
             $(document).on("click",".btn-update-dialog",function(){
-                $("#nomCatUpdate").val(values[1]);
+                setDialogInputs();
+            });
+
+            function setDialogInputs(){
+              $("#nomCatUpdate").val(values[1]);
                 $("#descCatUpdate").val(values[2]);
                 if(values[3] == 0)
                     $("#activeUpdate").prop("checked", false);
                 else
                     $("#activeUpdate").prop("checked", true);
-            });
+            }
         });
                         
     </script>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 07, 2019 at 03:46 AM
+-- Generation Time: Jun 22, 2019 at 02:26 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -76,17 +76,18 @@ CREATE TABLE IF NOT EXISTS `article` (
   `articleID` int(11) NOT NULL AUTO_INCREMENT,
   `articleNom` varchar(100) NOT NULL,
   `articlePrix` decimal(15,2) NOT NULL,
+  `artcilePrixRemise` decimal(15,2) DEFAULT NULL,
   `articleDescription` text,
-  `remise` int(11) DEFAULT NULL,
+  `tauxRemise` float DEFAULT NULL,
   `remiseDisponible` bit(1) NOT NULL DEFAULT b'0',
-  `unitesEnStock` int(11) DEFAULT '1',
+  `unitesEnStock` int(11) NOT NULL DEFAULT '1',
   `unitesSurCommande` int(11) DEFAULT '0',
-  `articleDisponible` int(11) DEFAULT NULL,
+  `articleDisponible` bit(1) NOT NULL DEFAULT b'1',
   `niveau` int(11) DEFAULT '5',
   `categorieID` int(11) NOT NULL,
   PRIMARY KEY (`articleID`),
   KEY `categorieID` (`categorieID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -101,16 +102,15 @@ CREATE TABLE IF NOT EXISTS `categorie` (
   `description` text,
   `active` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`categorieID`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `categorie`
 --
 
 INSERT INTO `categorie` (`categorieID`, `categorieNom`, `description`, `active`) VALUES
-(22, 'aa', 'dd', b'0'),
-(20, 'aa', 'aa', b'1'),
-(21, 'aa', 'dd', b'1');
+(20, 'aafff', 'aa', b'0'),
+(25, 'qsdqsd', 'qs', b'1');
 
 -- --------------------------------------------------------
 
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `client` (
 --
 
 INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
-(24, 'qsdqsdqsd', 'qsdqsd', 'qsdqsdqsdqs', 'elamrani.sv.laza@gmail.com', 'qsdqsdqs', 'casa', b'0', '73680', 445585, '+212144710547', '$2y$10$6qRjiLP47Vnd8Evob.1qQOj.xwUESYyUUkOhYnl.LItr/UV3CLu.2', 'Quel était le nom de votre premier animal ?', 'ffffffff', NULL);
+(24, 'qsdqsdqsd', 'qsdqsd', 'qsdqsdqsdqs', 'elamrani.sv.laza@gmail.com', 'qsdqsdqs', 'casa', b'0', '73680', 445585, '+212144710547', 'testtest', 'Quel était le nom de votre premier animal ?', 'ffffffff', NULL);
 
 --
 -- Triggers `client`
@@ -228,11 +228,11 @@ CREATE TABLE IF NOT EXISTS `demandedetails` (
 
 DROP TABLE IF EXISTS `imagearticle`;
 CREATE TABLE IF NOT EXISTS `imagearticle` (
-  `imageArticleNom` varchar(100) NOT NULL,
-  `articleID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`imageArticleNom`),
-  KEY `FK_articleID` (`articleID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `imageArticleNom` varchar(256) NOT NULL,
+  `articleID` int(11) NOT NULL,
+  PRIMARY KEY (`imageArticleNom`,`articleID`),
+  KEY `fk_articleID_imagearticle` (`articleID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -322,6 +322,16 @@ CREATE TABLE IF NOT EXISTS `panierdetails` (
   KEY `panierID` (`panierID`),
   KEY `articleID` (`articleID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `imagearticle`
+--
+ALTER TABLE `imagearticle`
+  ADD CONSTRAINT `fk_articleID_imagearticle` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

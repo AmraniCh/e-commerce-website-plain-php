@@ -162,7 +162,7 @@
                   </div>
                 </div>
               </a>
-              <a class="dropdown-item mt-2" href="profile.php">
+              <a class="dropdown-item mt-2" href="profile.php?admin=<?php echo $_SESSION['admin'] ?>">
                 Mon Profil
               </a>
               <a class="dropdown-item">
