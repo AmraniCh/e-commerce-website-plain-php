@@ -44,7 +44,7 @@
                           <h3 class="title">Ajouter Produit</h3>             
                       </div>
                       <div class="profile-content">
-                          <form id="ajouterArtcileForm" action="" method="post">
+                          <form id="ajouterArtcileForm" onsubmit="return validation()" action="" method="post">
                             <div class="flex-container" style="display:flex">
                                 <div class="left-flex-container col-md-6">
                                     <div class="col-md-12">
@@ -214,6 +214,71 @@
         </div>
         
         <script>
+
+            let startsubmit;
+
+            function validNumber(number)
+            {
+                var numbers = /[0-9]/g;
+                if(number.val().match(numbers))
+                    return true;
+                else
+                    return false;
+            }
+
+
+            $("#nomPr").focusout(function () {
+                if ($(this).val().length<6||$(this).val()==""){
+                    $(this).css("background-color","red");
+                    startsubmit=false;
+                }
+                else {
+                    $(this).css("background-color","");
+                    startsubmit=true;
+                }
+            });
+
+
+            $("#prixPr").keypress(function (e) {
+                if (!validNumber($("#prixPr"))) {
+                    $(this).css("background-color","red");
+                    startsubmit=false;
+                }
+                else {
+                    $(this).css("background-color","");
+                    startsubmit=true;
+
+                }
+            });
+
+            $("#unitesStock").keypress(function (e) {
+                if (!validNumber($("#unitesStock"))) {
+                    $(this).css("background-color","red");
+                    startsubmit=false;
+                }
+                else {
+                    $(this).css("background-color","");
+                    startsubmit=true;
+
+                }
+            });
+
+
+            function validation(){
+                return startsubmit
+            }
+
+
+
+
+
+
+
+
+
+
+
+
             $(document).ready(function(){
                 
                 function CalculerPrix(){
@@ -299,6 +364,10 @@
                     });
                 });
             });
+
+
+
+
         </script>
                     
         
