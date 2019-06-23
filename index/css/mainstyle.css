@@ -54,6 +54,10 @@
     vertical-align: baseline!important;
 }
 
+.inline-label{
+    display:inline-block!important;
+    width: 30%;
+}
 
 .mdi-view-dashboard{
   font-size: 20px!important;
@@ -73,13 +77,8 @@ input[type="radio"]
     border-left: 1px solid
 }
 
-.input-group-prepend, .input-group-append 
-{
-    height:40px!important;
-}
-
-.prepend-inline{
-    margin-left: 10px;
+.append-text, .prepend-text{
+    height:40px;
 }
 
 .font-large-input{
@@ -89,6 +88,14 @@ input[type="radio"]
 .inline-select {
     display: inline-block!important;
     width: 40%!important;
+}
+
+.inline-input-group{
+    align-items: flex-end!important;
+}
+
+.block-input{
+    width:auto!important;
 }
 
 /*********** START login-register pages CSS ***********/
@@ -141,7 +148,7 @@ input[type="radio"]
 
     .content-wrapper {
         padding: 5% 0;
-        text-align: center;
+
     }
     
     .flex-container{
@@ -284,6 +291,7 @@ span[class="input-group-text"]{
     display: inline-block;
     max-height: 100%;
     vertical-align:top;
+    margin-bottom: 2%
 }
 
 .img-upload:hover{

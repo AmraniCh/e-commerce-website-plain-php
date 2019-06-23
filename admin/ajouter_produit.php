@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <div class="input-group" style="align-items:end">
+                                            <div class="input-group inline-input-group">
                                                 <label class="inline-label">Prix initial :</label>
                                                 <div class="input-group-prepend prepend-inline">
                                                     <span class="input-group-text prepend-text">$</span>
@@ -97,9 +97,9 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                           <div class="input-group" style="align-items:end">
+                                           <div class="input-group inline-input-group">
                                             <label class="inline-label">Unités en stock :</label>
-                                            <input type="text" name="unitesStock" id="unitesStock" class="form-control mini-input inline-input" placeholder="Ex: 100">
+                                            <input type="text" name="unitesStock" id="unitesStock" class="form-control mini-input inline-input-group" placeholder="Ex: 100">
                                             <div class="input-group-append">
                                                     <span class="input-group-text append-text">Un</span>
                                             </div>
@@ -125,9 +125,9 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                           <div class="input-group" style="align-items:end">
+                                           <div class="input-group inline-input-group">
                                                 <label class="inline-label">Taux de remise :</label>
-                                                <input type="text" name="taux" id="taux" class="form-control mini-input inline-input font-large-input" placeholder="Ex: 20%" disabled>
+                                                <input type="text" name="taux" id="taux" class="form-control mini-input inline-input-group font-large-input" placeholder="Ex: 20%" disabled>
                                                 <div class="input-group-append">
                                                         <span class="input-group-text append-text">%</span>
                                                 </div>
@@ -139,8 +139,8 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <div class="input-group" style="align-items:end">
-                                                <div class="input-group" style="align-items:end">
+                                            <div class="input-group">
+                                                <div class="input-group inline-input-group">
                                                     <label class="inline-label">Prix final :</label>
                                                     <div class="input-group-prepend prepend-inline">
                                                         <span class="input-group-text prepend-text">$</span>
@@ -155,6 +155,17 @@
                                     </div>
                                 </div>
                                 <div class="right-flex-container col-md-6">
+                                   <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <label>Les couleurs disponibles du produits :</label>
+                                                <input type="text" id="couleurPr" class="form-control block-input" placeholder="rouge, blue, blanc ...">
+                                                <div class="container" style="padding:0;text-align:left;margin:0;">
+                                                    <small class="form-text text-muted">Séparer les couleur avec des virgules (,)</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-12">
                                          <div class="photos-container" style="max-width:100%;width:100%">
                                              <label style="display:block">Ajouter des photos pour le produit ici :</label>
@@ -275,12 +286,15 @@
                     else
                         var articleDisponible = 0;
                     
+                    var couleurs = $("#couleurPr").val();
+                    
                     $.ajax({
                        url: '../public-includes/ajax_queries.php',
                         method: "POST",
-                        data: { function: "AjouterArtcile", artcileNom: nomPr, articlePrix: prixPr, articlePrixRemise: prixFinal, artcileDescription: descPr, tauxRemise: taux, remiseDisponible: remiseDisponible, unitesEnStock: unitesStock, articleDisponible: articleDisponible, categorieID: categorieID},
+                        data: { function: "AjouterArtcile", couleurs: couleurs, artcileNom: nomPr, articlePrix: prixPr, articlePrixRemise: prixFinal, artcileDescription: descPr, tauxRemise: taux, remiseDisponible: remiseDisponible, unitesEnStock: unitesStock, articleDisponible: articleDisponible, categorieID: categorieID},
                         success: function(data){
-                            $('#messageAjoute').modal('toggle');
+                            $("body").append(data);
+                            alert(data);
                         }
                     });
                 });

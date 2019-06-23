@@ -21,7 +21,7 @@
         case "uploadMutiplePhotos":
             echo $_REQUEST['function']();break;
         case "AjouterArtcile":
-            echo $_POST['function']($_POST['artcileNom'],$_POST['articlePrix'],$_POST['articlePrixRemise'], $_POST['artcileDescription'],$_POST['tauxRemise'],$_POST['remiseDisponible'],$_POST['unitesEnStock'],$_POST['articleDisponible'],$_POST['categorieID']);break;
+            echo $_POST['function']($_POST['couleurs'],$_POST['artcileNom'],$_POST['articlePrix'],$_POST['articlePrixRemise'], $_POST['artcileDescription'],$_POST['tauxRemise'],$_POST['remiseDisponible'],$_POST['unitesEnStock'],$_POST['articleDisponible'],$_POST['categorieID']);break;
     }
 
     // catégories fonctions 
@@ -42,7 +42,7 @@
     }
 
     // article fonctions
-    function AjouterArtcile($artcileNom, $articlePrix, $articlePrixRemise, $artcileDescription, $tauxRemise, $remiseDisponible, $unitesEnStock, $articleDisponible, $categorieID){
+    function AjouterArtcile($couleurs, $artcileNom, $articlePrix, $articlePrixRemise, $artcileDescription, $tauxRemise, $remiseDisponible, $unitesEnStock, $articleDisponible, $categorieID){
         global $con;
         $result = $con->query("INSERT INTO article VALUES(null,'$artcileNom',$articlePrix,$articlePrixRemise,'$artcileDescription',$tauxRemise,$remiseDisponible,$unitesEnStock,default,$articleDisponible,default,$categorieID)");
         if(!$result)
@@ -55,6 +55,7 @@
         }
         else
         {
+            // récupérer artcileID à partir articleNom
             $result = $con->query("SELECT * FROM article WHERE articleNom = '$artcileNom'");
             while($row = $result->fetch_row()){
                 $articleID = $row[0];
@@ -66,6 +67,13 @@
                 $filenameWithoutPath = explode('/',$filename)[2];
                 $con->query("INSERT INTO imagearticle VALUES('$filenameWithoutPath',$articleID)");
             }
+            // ajouter couleurs du produit
+            $array_couleurs = explode(',',$couleurs);
+            foreach($array_couleurs as $couleur)
+            {
+                $con->query("INSERT INTO couleurarticle VALUES('$couleur',$articleID)");
+            }
+            return "<script>$('#messageAjoute').modal('toggle');</script>";
         }
     }
 
