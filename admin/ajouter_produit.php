@@ -1,5 +1,7 @@
 <?php require_once 'includes/header.php' ?>
 
+
+
  <?php
   if(isset($_GET['admin']) && isset($_SESSION['admin'])){
 		if($_GET['admin'] == $_SESSION['admin'])
@@ -201,72 +203,9 @@
             </div>
           </div>
         </div>
-        
+
+            <script type="text/javascript" src="../index/js/validation.js"></script>
         <script>
-
-            let startsubmit;
-
-            function validNumber(number)
-            {
-                var numbers = /[0-9]/g;
-                if(number.val().match(numbers))
-                    return true;
-                else
-                    return false;
-            }
-
-
-            $("#nomPr").focusout(function () {
-                if ($(this).val().length<6||$(this).val()==""){
-                    $(this).css("background-color","red");
-                    startsubmit=false;
-                }
-                else {
-                    $(this).css("background-color","");
-                    startsubmit=true;
-                }
-            });
-
-
-            $("#prixPr").keypress(function (e) {
-                if (!validNumber($("#prixPr"))) {
-                    $(this).css("background-color","red");
-                    startsubmit=false;
-                }
-                else {
-                    $(this).css("background-color","");
-                    startsubmit=true;
-
-                }
-            });
-
-            $("#unitesStock").keypress(function (e) {
-                if (!validNumber($("#unitesStock"))) {
-                    $(this).css("background-color","red");
-                    startsubmit=false;
-                }
-                else {
-                    $(this).css("background-color","");
-                    startsubmit=true;
-
-                }
-            });
-
-
-            function validation(){
-                return startsubmit
-            }
-
-
-
-
-
-
-
-
-
-
-
 
             $(document).ready(function(){
                 
@@ -318,36 +257,49 @@
                 
 
                 $(document).on("submit","#ajouterArtcileForm",function(e){
-                    e.preventDefault();
-                    
-                    var nomPr = $("#nomPr").val();
-                    var descPr = $("#descPr").val();
-                    var categorieID = $("#categorie option:selected").val();
-                    var prixPr = $("#prixPr").val();
-                    var unitesStock = $("#unitesStock").val();
-                    var taux = "default";
-                    var prixFinal = "default";
-                    var remiseDisponible = 0;
-                    if($("input[name='radioRemise']:checked").attr("id") == "radioRemOui")
-                    {
-                        var remiseDisponible = 1;
-                        var taux = $("#taux").val();
-                        var prixFinal = $("#prixFinal").val();
-                    }
-                    
-                    if($("input[name='radioDis']:checked").attr("id") == "radioDisOui")
-                        var articleDisponible = 1;
-                    else
-                        var articleDisponible = 0;
-                    
-                    $.ajax({
-                       url: '../public-includes/ajax_queries.php',
-                        method: "POST",
-                        data: { function: "AjouterArtcile", artcileNom: nomPr, articlePrix: prixPr, articlePrixRemise: prixFinal, artcileDescription: descPr, tauxRemise: taux, remiseDisponible: remiseDisponible, unitesEnStock: unitesStock, articleDisponible: articleDisponible, categorieID: categorieID},
-                        success: function(data){
-                            $('#messageAjoute').modal('toggle');
+                    if (startsubmit) {
+                        e.preventDefault();
+
+                        var nomPr = $("#nomPr").val();
+                        var descPr = $("#descPr").val();
+                        var categorieID = $("#categorie option:selected").val();
+                        var prixPr = $("#prixPr").val();
+                        var unitesStock = $("#unitesStock").val();
+                        var taux = "default";
+                        var prixFinal = "default";
+                        var remiseDisponible = 0;
+                        if ($("input[name='radioRemise']:checked").attr("id") == "radioRemOui") {
+                            var remiseDisponible = 1;
+                            var taux = $("#taux").val();
+                            var prixFinal = $("#prixFinal").val();
                         }
-                    });
+
+                        if ($("input[name='radioDis']:checked").attr("id") == "radioDisOui")
+                            var articleDisponible = 1;
+                        else
+                            var articleDisponible = 0;
+
+                        $.ajax({
+                            url: '../public-includes/ajax_queries.php',
+                            method: "POST",
+                            data: {
+                                function: "AjouterArtcile",
+                                artcileNom: nomPr,
+                                articlePrix: prixPr,
+                                articlePrixRemise: prixFinal,
+                                artcileDescription: descPr,
+                                tauxRemise: taux,
+                                remiseDisponible: remiseDisponible,
+                                unitesEnStock: unitesStock,
+                                articleDisponible: articleDisponible,
+                                categorieID: categorieID
+                            },
+                            success: function (data) {
+                                $('#messageAjoute').modal('toggle');
+                            }
+                        });
+                    }
+
                 });
             });
 

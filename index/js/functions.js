@@ -67,5 +67,15 @@ function icon_change_color(span, icon, ifcorrect) {
     }
 }
 
+
+function validNumber(number)
+{
+    var numbers = /^\d+$/g;
+    if(number.val().match(numbers))
+        return true;
+    else
+        return false;
+}
+
 /****** END VALIDATION FUNCTIONS *****/
 
