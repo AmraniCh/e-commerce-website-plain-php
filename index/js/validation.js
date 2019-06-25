@@ -418,3 +418,49 @@ function compteIntrouvable()
     $("#username_error").css("visibility", "visible");
     $("#username_error").html("* Nom d'utilisateur ou le mot de passe est incorrect");
 }
+
+//validation ajouter article
+
+let startsubmit=false;
+
+$("#nomPr").focusout(function () {
+    if ($(this).val().length<6||$(this).val()==""){
+        $(this).css("background-color","red");
+        startsubmit=false;
+    }
+    else {
+        $(this).css("background-color","");
+        startsubmit=true;
+    }
+});
+
+
+$("#prixPr").focusout(function () {
+    if (!validNumber($("#prixPr"))) {
+        $(this).css("background-color","red");
+        startsubmit=false;
+    }
+    else {
+        $(this).css("background-color","");
+        startsubmit=true;
+
+    }
+});
+
+$("#unitesStock").focusout(function () {
+    if (!validNumber($("#unitesStock"))) {
+        $(this).css("background-color","red");
+        startsubmit=false;
+    }
+    else {
+        $(this).css("background-color","");
+        startsubmit=true;
+
+    }
+});
+
+
+function validation(){
+    alert(startsubmit);
+    return startsubmit;
+}

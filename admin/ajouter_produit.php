@@ -1,5 +1,7 @@
 <?php require_once 'includes/header.php' ?>
 
+
+
  <?php
   if(isset($_GET['admin']) && isset($_SESSION['admin'])){
 		if($_GET['admin'] == $_SESSION['admin'])
@@ -213,72 +215,7 @@
           </div>
         </div>
         
-        <script>
-
-            let startsubmit;
-
-            function validNumber(number)
-            {
-                var numbers = /[0-9]/g;
-                if(number.val().match(numbers))
-                    return true;
-                else
-                    return false;
-            }
-
-
-            $("#nomPr").focusout(function () {
-                if ($(this).val().length<6||$(this).val()==""){
-                    $(this).css("background-color","red");
-                    startsubmit=false;
-                }
-                else {
-                    $(this).css("background-color","");
-                    startsubmit=true;
-                }
-            });
-
-
-            $("#prixPr").focusout(function (e) {
-                if (!validNumber($("#prixPr"))) {
-                    $(this).css("background-color","red");
-                    startsubmit=false;
-                }
-                else {
-                    $(this).css("background-color","");
-                    startsubmit=true;
-
-                }
-            });
-
-            $("#unitesStock").focusout(function (e) {
-                if (!validNumber($("#unitesStock"))) {
-                    $(this).css("background-color","red");
-                    startsubmit=false;
-                }
-                else {
-                    $(this).css("background-color","");
-                    startsubmit=true;
-
-                }
-            });
-
-
-            function validation(){
-                return startsubmit
-            }
-
-
-
-
-
-
-
-
-
-
-
-
+           <script>
             $(document).ready(function(){
                 
                 function CalculerPrix(){
@@ -364,10 +301,6 @@
                     });
                 });
             });
-
-
-
-
         </script>
                     
         
