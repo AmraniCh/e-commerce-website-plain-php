@@ -239,7 +239,7 @@
             });
 
 
-            $("#prixPr").keypress(function (e) {
+            $("#prixPr").focusout(function (e) {
                 if (!validNumber($("#prixPr"))) {
                     $(this).css("background-color","red");
                     startsubmit=false;
@@ -251,7 +251,7 @@
                 }
             });
 
-            $("#unitesStock").keypress(function (e) {
+            $("#unitesStock").focusout(function (e) {
                 if (!validNumber($("#unitesStock"))) {
                     $(this).css("background-color","red");
                     startsubmit=false;
