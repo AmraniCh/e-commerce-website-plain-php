@@ -1,6 +1,7 @@
 <?php
     require_once 'public-includes/config.php';
     require_once 'public-includes/functions.php';
+    session_name('reg-sess');
     session_start();
 ?>
 <!DOCTYPE html>

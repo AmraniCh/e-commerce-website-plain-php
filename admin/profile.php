@@ -112,4 +112,6 @@
       else
           header ('location: profile.php?admin='.$_SESSION['admin']);
     }
+    else
+        header ('location: login.php');
 ?>

@@ -8472,7 +8472,9 @@ pre {
 .table-primary,
 .table-primary > th,
 .table-primary > td {
-  background-color: #c5dff6; }
+  background-color: var(--blue-color);
+  color: #fff
+    }
 
 .table-hover .table-primary:hover {
   background-color: #afd3f3; }

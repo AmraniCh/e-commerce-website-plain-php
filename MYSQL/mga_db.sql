@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 22, 2019 at 02:26 AM
+-- Generation Time: Jun 27, 2019 at 07:12 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `article` (
   `articleID` int(11) NOT NULL AUTO_INCREMENT,
   `articleNom` varchar(100) NOT NULL,
   `articlePrix` decimal(15,2) NOT NULL,
-  `artcilePrixRemise` decimal(15,2) DEFAULT NULL,
+  `articlePrixRemise` decimal(15,2) DEFAULT NULL,
   `articleDescription` text,
   `tauxRemise` float DEFAULT NULL,
   `remiseDisponible` bit(1) NOT NULL DEFAULT b'0',
@@ -87,7 +87,17 @@ CREATE TABLE IF NOT EXISTS `article` (
   `categorieID` int(11) NOT NULL,
   PRIMARY KEY (`articleID`),
   KEY `categorieID` (`categorieID`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `article`
+--
+
+INSERT INTO `article` (`articleID`, `articleNom`, `articlePrix`, `articlePrixRemise`, `articleDescription`, `tauxRemise`, `remiseDisponible`, `unitesEnStock`, `unitesSurCommande`, `articleDisponible`, `niveau`, `categorieID`) VALUES
+(1, 'DDfff', '20.00', '10.00', 'DESC11', 50, b'1', 8000, 0, b'0', 3, 28),
+(2, 'Iphone6', '2500.00', '2250.00', 'Iphone6', 10, b'1', 10, 0, b'1', 5, 29),
+(3, 'Iphone6', '2500.00', '2250.00', 'Iphone6', 10, b'1', 10, 0, b'1', 5, 28),
+(4, 'LENOVO', '4000.00', '3600.00', 'LENOVO 541', 10, b'1', 10, 0, b'1', 5, 27);
 
 -- --------------------------------------------------------
 
@@ -102,15 +112,16 @@ CREATE TABLE IF NOT EXISTS `categorie` (
   `description` text,
   `active` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`categorieID`)
-) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `categorie`
 --
 
 INSERT INTO `categorie` (`categorieID`, `categorieNom`, `description`, `active`) VALUES
-(20, 'aafff', 'aa', b'0'),
-(25, 'qsdqsd', 'qs', b'1');
+(29, 'Smartphones', 'Smartphones', b'1'),
+(28, 'Accessoires', 'Accessoires', b'1'),
+(27, 'Ordinateurs portable', 'Ordinateurs portable', b'1');
 
 -- --------------------------------------------------------
 
@@ -159,31 +170,24 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `couleur`
+-- Table structure for table `couleurarticle`
 --
 
-DROP TABLE IF EXISTS `couleur`;
-CREATE TABLE IF NOT EXISTS `couleur` (
-  `codeCouleur` varchar(100) NOT NULL,
+DROP TABLE IF EXISTS `couleurarticle`;
+CREATE TABLE IF NOT EXISTS `couleurarticle` (
   `nomCouleur` varchar(100) NOT NULL,
-  PRIMARY KEY (`codeCouleur`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `couleur_article`
---
-
-DROP TABLE IF EXISTS `couleur_article`;
-CREATE TABLE IF NOT EXISTS `couleur_article` (
-  `couleur_article` int(11) NOT NULL AUTO_INCREMENT,
   `articleID` int(11) NOT NULL,
-  `codeCouleur` varchar(100) NOT NULL,
-  PRIMARY KEY (`couleur_article`),
-  KEY `articleID` (`articleID`),
-  KEY `codeCouleur` (`codeCouleur`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`nomCouleur`,`articleID`),
+  KEY `fk_articleID_couleurarticle` (`articleID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `couleurarticle`
+--
+
+INSERT INTO `couleurarticle` (`nomCouleur`, `articleID`) VALUES
+('rouge,blue', 1),
+('noir, ', 3);
 
 -- --------------------------------------------------------
 
@@ -233,6 +237,15 @@ CREATE TABLE IF NOT EXISTS `imagearticle` (
   PRIMARY KEY (`imageArticleNom`,`articleID`),
   KEY `fk_articleID_imagearticle` (`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `imagearticle`
+--
+
+INSERT INTO `imagearticle` (`imageArticleNom`, `articleID`) VALUES
+('architecture_city_view_from_above_buildings_river_118446_1920x1080.jpg', 4),
+('big_hero_6_2014_beymaks_robot_97786_1600x1200.jpg', 4),
+('boat_sea_view_from_above_water_119937_1920x1080.jpg', 4);
 
 -- --------------------------------------------------------
 
@@ -326,6 +339,12 @@ CREATE TABLE IF NOT EXISTS `panierdetails` (
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `couleurarticle`
+--
+ALTER TABLE `couleurarticle`
+  ADD CONSTRAINT `fk_articleID_couleurarticle` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `imagearticle`

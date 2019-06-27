@@ -61,8 +61,8 @@
                                                       <th>Nom Catégorie</th>
                                                       <th>Description</th>
                                                       <th>Status</th>
-                                                      <th>Modifier</th>
-                                                      <th>Supprimer</th>
+                                                      <th class="font-awsome-large"><i class="fas fa-edit"></i></th>
+                                                      <th class="font-awsome-large"><i class="fas fa-trash"></i></th>
                                                   </tr>
                                               </thead>
                                               <tbody>
@@ -282,4 +282,6 @@
       else
           header ('location: categories.php?admin='.$_SESSION['admin']);
     }
+    else
+        header ('location: login.php');
 ?>

@@ -72,7 +72,7 @@ $(function () {
 
         if (!validLength(username, 5, 20)) {
             $("#username_error").css("visibility", "visible");
-            $("#username_error").html("* Nom d'utilisateur doit contenir entre 5-20 catact�res !");
+            $("#username_error").html("* Nom d'utilisateur doit contenir entre 5-20 catactères !");
             username_error = true;
             icon_change_color(span, icon);
         } else {
@@ -314,7 +314,7 @@ $(function(){
         var l = username.val().length;
         if (l <= 4 || l >= 20) {
             $("#username_error").css("visibility", "visible");
-            $("#username_error").html("* Nom d'utilisateur faut �tre entre 5-20 catact�res !");
+            $("#username_error").html("* Nom d'utilisateur faut être entre 5-20 catactères !");
             username_error = true;
             icon_change_color(span, icon);
         } else {
@@ -335,7 +335,7 @@ $(function(){
             if (!validLength(passowrd, 8, 40)) {
                 password_error = true;
                 $("#password_error").css("visibility", "visible");
-                $("#password_error").html("* Mot de passe faut �tre 8-40 caract�res");
+                $("#password_error").html("* Mot de passe faut être entre 8-40 caractères");
                 icon_change_color(span, icon);
             } else {
                 $("#password_error").css("visibility", "hidden");
@@ -412,55 +412,50 @@ $(function(){
     
 });
 
-
-function compteIntrouvable()
-{
-    $("#username_error").css("visibility", "visible");
-    $("#username_error").html("* Nom d'utilisateur ou le mot de passe est incorrect");
-}
-
 //validation ajouter article
+$(function(){
 
-let startsubmit=false;
+    let startsubmit=false;
 
-$("#nomPr").focusout(function () {
-    if ($(this).val().length<6||$(this).val()==""){
-        $(this).css("background-color","red");
-        startsubmit=false;
-    }
-    else {
-        $(this).css("background-color","");
-        startsubmit=true;
+    $("#nomPr").focusout(function () {
+        if ($(this).val().length<6||$(this).val()==""){
+            $(this).css("background-color","red");
+            startsubmit=false;
+        }
+        else {
+            $(this).css("background-color","");
+            startsubmit=true;
+        }
+    });
+
+
+    $("#prixPr").focusout(function () {
+        if (!validNumber($("#prixPr"))) {
+            $(this).css("background-color","red");
+            startsubmit=false;
+        }
+        else {
+            $(this).css("background-color","");
+            startsubmit=true;
+
+        }
+    });
+
+    $("#unitesStock").focusout(function () {
+        if (!validNumber($("#unitesStock"))) {
+            $(this).css("background-color","red");
+            startsubmit=false;
+        }
+        else {
+            $(this).css("background-color","");
+            startsubmit=true;
+
+        }
+    });
+
+
+    function validation(){
+        alert(startsubmit);
+        return startsubmit;
     }
 });
-
-
-$("#prixPr").focusout(function () {
-    if (!validNumber($("#prixPr"))) {
-        $(this).css("background-color","red");
-        startsubmit=false;
-    }
-    else {
-        $(this).css("background-color","");
-        startsubmit=true;
-
-    }
-});
-
-$("#unitesStock").focusout(function () {
-    if (!validNumber($("#unitesStock"))) {
-        $(this).css("background-color","red");
-        startsubmit=false;
-    }
-    else {
-        $(this).css("background-color","");
-        startsubmit=true;
-
-    }
-});
-
-
-function validation(){
-    alert(startsubmit);
-    return startsubmit;
-}
