@@ -73,7 +73,7 @@ $(function () {
 
         if (!validLength(username, 5, 20)) {
             $("#username_error").css("visibility", "visible");
-            $("#username_error").html("* Nom d'utilisateur doit contenir entre 5-20 catact�res !");
+            $("#username_error").html("* Nom d'utilisateur doit contenir entre 5-20 catactères !");
             username_error = true;
             icon_change_color(span, icon);
         } else {
@@ -315,7 +315,7 @@ $(function(){
         var l = username.val().length;
         if (l <= 4 || l >= 20) {
             $("#username_error").css("visibility", "visible");
-            $("#username_error").html("* Nom d'utilisateur faut �tre entre 5-20 catact�res !");
+            $("#username_error").html("* Nom d'utilisateur faut être entre 5-20 catactères !");
             username_error = true;
             icon_change_color(span, icon);
         } else {
@@ -336,7 +336,7 @@ $(function(){
             if (!validLength(passowrd, 8, 40)) {
                 password_error = true;
                 $("#password_error").css("visibility", "visible");
-                $("#password_error").html("* Mot de passe faut �tre 8-40 caract�res");
+                $("#password_error").html("* Mot de passe faut être entre 8-40 caractères");
                 icon_change_color(span, icon);
             } else {
                 $("#password_error").css("visibility", "hidden");
@@ -414,92 +414,3 @@ $(function(){
 });
 
 
-function compteIntrouvable()
-{
-    $("#username_error").css("visibility", "visible");
-    $("#username_error").html("* Nom d'utilisateur ou le mot de passe est incorrect");
-}
-
-//validation ajouter article
-
-
-function validenomPr(){
-    if ($("#nomPr").val().length<6||$("#nomPr").val()==""){
-        return false;
-    }
-    else {
-        return true;
-    }
-}
-
-
-
-$("#nomPr").focusout(function () {
-    if (!validenomPr()){
-        $(this).css("background-color","red");
-
-    }
-    else {
-        $(this).css("background-color","");
-    }
-});
-
-
-
-$("#prixPr").focusout(function () {
-    alert(validNumber($("#prixPr")));
-
-    if (!validNumber($("#prixPr"))) {
-        $(this).css("background-color","red");
-    }
-    else {
-        $(this).css("background-color","");
-    }
-});
-
-
-$("#unitesStock").focusout(function () {
-    if (!validNumber($("#unitesStock"))) {
-        $(this).css("background-color","red");
-
-    }
-    else {
-        $(this).css("background-color","");
-    }
-});
-
-
-
-function validation(){
-    if ($("#nomPr").val()==""){
-        $("#nomPr").css("background-color","red");
-        return false;
-    }
-
-
-    if ($("#descPr").val()==""){
-        $("#descPr").css("background-color","red");
-        return false;
-    }else {
-        $("#descPr").css("background-color","");
-    }
-
-    if ($("#prixPr").val()==""){
-        $("#prixPr").css("background-color","red");
-        return false;
-    }else {
-        $("#prixPr").css("background-color","");
-    }
-
-    if ($("#unitesStock").val()==""){
-        $("#unitesStock").css("background-color","red");
-        return false;
-    }else {
-        $("#unitesStock").css("background-color","");
-    }
-
-    if (!validenomPr()||!validNumber($("#prixPr"))||!validNumber($("#unitesStock")))
-        return false;
-
-    return true;
-}

@@ -44,10 +44,10 @@
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item">
-                  <a class="nav-link" href="ajouter_produit.php?admin=<?php echo $_SESSION['admin']?>">Ajouter Produit</a>
+                  <a class="nav-link" href="produit.php?admin=<?php echo $_SESSION['admin']?>">Ajouter Produit</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="pages/ui-features/typography.html">Afficher Les Produits</a>
+                  <a class="nav-link" href="produits.php?admin=<?php echo $_SESSION['admin'] ?>">Afficher Les Produits</a>
                 </li>
               </ul>
             </div>

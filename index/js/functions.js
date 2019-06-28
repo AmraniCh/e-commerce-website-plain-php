@@ -55,6 +55,15 @@ function check_numberPhone(number) {
         return false;
 }
 
+function validNumber(number)
+{
+    var numbers = /^\d+$/g;
+    if(number.val().match(numbers))
+        return true;
+    else
+        return false;
+}
+
 // change icon color when input is validated or is not
 function icon_change_color(span, icon, ifcorrect) {
     if (ifcorrect == "true") {
@@ -65,16 +74,12 @@ function icon_change_color(span, icon, ifcorrect) {
         span.css("background-color", "initial");
         icon.css("color", "#b6bbc2");
     }
-}
+}s
 
-
-function validNumber(number)
+function compteIntrouvable()
 {
-    var numbers = /^\d+$/g;
-    if(number.val().match(numbers))
-        return true;
-    else
-        return false;
+    $("#username_error").css("visibility", "visible");
+    $("#username_error").html("* Nom d'utilisateur ou le mot de passe est incorrect");
 }
 
 /****** END VALIDATION FUNCTIONS *****/

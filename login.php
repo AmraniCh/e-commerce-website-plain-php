@@ -1,5 +1,6 @@
 <?php
     require_once 'public-includes/config.php';
+    session_name('log-sess');
     session_start();
     session_unset(); 
 ?>
