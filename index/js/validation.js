@@ -1,3 +1,4 @@
+
 // register page validation
 $(function () {
 
@@ -421,46 +422,84 @@ function compteIntrouvable()
 
 //validation ajouter article
 
-let startsubmit=false;
+
+function validenomPr(){
+    if ($("#nomPr").val().length<6||$("#nomPr").val()==""){
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+
 
 $("#nomPr").focusout(function () {
-    if ($(this).val().length<6||$(this).val()==""){
+    if (!validenomPr()){
         $(this).css("background-color","red");
-        startsubmit=false;
+
     }
     else {
         $(this).css("background-color","");
-        startsubmit=true;
     }
 });
+
 
 
 $("#prixPr").focusout(function () {
+    alert(validNumber($("#prixPr")));
+
     if (!validNumber($("#prixPr"))) {
         $(this).css("background-color","red");
-        startsubmit=false;
     }
     else {
         $(this).css("background-color","");
-        startsubmit=true;
-
     }
 });
+
 
 $("#unitesStock").focusout(function () {
     if (!validNumber($("#unitesStock"))) {
         $(this).css("background-color","red");
-        startsubmit=false;
+
     }
     else {
         $(this).css("background-color","");
-        startsubmit=true;
-
     }
 });
 
 
+
 function validation(){
-    alert(startsubmit);
-    return startsubmit;
+    if ($("#nomPr").val()==""){
+        $("#nomPr").css("background-color","red");
+        return false;
+    }
+
+
+    if ($("#descPr").val()==""){
+        $("#descPr").css("background-color","red");
+        return false;
+    }else {
+        $("#descPr").css("background-color","");
+    }
+
+    if ($("#prixPr").val()==""){
+        $("#prixPr").css("background-color","red");
+        return false;
+    }else {
+        $("#prixPr").css("background-color","");
+    }
+
+    if ($("#unitesStock").val()==""){
+        $("#unitesStock").css("background-color","red");
+        return false;
+    }else {
+        $("#unitesStock").css("background-color","");
+    }
+
+    if (!validenomPr()||!validNumber($("#prixPr"))||!validNumber($("#unitesStock")))
+        return false;
+
+    return true;
 }

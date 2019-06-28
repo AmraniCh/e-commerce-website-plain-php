@@ -1,15 +1,19 @@
 <?php require_once 'includes/header.php' ?>
 
  <?php
+
   if(isset($_GET['admin']) && isset($_SESSION['admin'])){
 		if($_GET['admin'] == $_SESSION['admin'])
 		{
             if(isset($_POST['submit']))
             {
+                echo $_SESSION['admin'];
                 $nom = $_POST['nom'];
                 $prenom = $_POST['prenom'];
                 $motdepasse = $_POST['motdepasse'];
-                $con->query("UPDATE admin SET nom = '$nom', prenom = '$prenom', motdepasse = '$motdepasse'");
+                $adminname  = $_GET['admin'];
+
+                $con->query("UPDATE admin SET nom = '$nom', prenom = '$prenom', motdepasse = '$motdepasse' where adminName='$adminname' ");
                 
             }
             
