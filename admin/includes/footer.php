@@ -16,6 +16,9 @@
   </div>
   <!-- container-scroller -->
 
+
+  <script src="../index/js/functions.js"></script>
+  <script src="../index/js/validation.js"></script>
   <!-- plugins:js -->
   <script src="vendors/js/vendor.bundle.base.js"></script>
   <script src="vendors/js/vendor.bundle.addons.js"></script>

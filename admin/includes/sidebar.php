@@ -84,6 +84,9 @@
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
+                <li class="nav-item">
+                  <a class="nav-link" href="profile.php?admin=<?php echo $_SESSION['admin']?>">Paramètres du compte</a>
+                </li>
               </ul>
             </div>
           </li>

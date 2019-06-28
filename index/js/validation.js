@@ -415,8 +415,8 @@ $(function(){
 
 //validation ajouter article
 $(function(){
-
-    let startsubmit=false;
+alert();
+    let startsubmit = false;
 
     $("#nomPr").focusout(function () {
         if ($(this).val().length<6||$(this).val()==""){
@@ -430,26 +430,26 @@ $(function(){
     });
 
 
-function validenomPr(){
-    if ($("#nomPr").val().length<6||$("#nomPr").val()==""){
-        return false;
+    function validenomPr(){
+        if ($("#nomPr").val().length<6||$("#nomPr").val()==""){
+            return false;
+        }
+        else {
+            return true;
+        }
     }
-    else {
-        return true;
-    }
-}
 
 
 
-$("#nomPr").focusout(function () {
-    if (!validenomPr()){
-        $(this).css("background-color","red");
+    $("#nomPr").focusout(function () {
+        if (!validenomPr()){
+            $(this).css("background-color","red");
 
-    }
-    else {
-        $(this).css("background-color","");
-    }
-});
+        }
+        else {
+            $(this).css("background-color","");
+        }
+    });
 
 
     $("#prixPr").focusout(function () {
@@ -466,62 +466,62 @@ $("#nomPr").focusout(function () {
 
 
 
-$("#prixPr").focusout(function () {
-    alert(validNumber($("#prixPr")));
+    $("#prixPr").focusout(function () {
+        alert(validNumber($("#prixPr")));
 
-    if (!validNumber($("#prixPr"))) {
-        $(this).css("background-color","red");
-    }
-    else {
-        $(this).css("background-color","");
-    }
-});
-
-
-$("#unitesStock").focusout(function () {
-    if (!validNumber($("#unitesStock"))) {
-        $(this).css("background-color","red");
-
-    }
-    else {
-        $(this).css("background-color","");
-    }
-});
+        if (!validNumber($("#prixPr"))) {
+            $(this).css("background-color","red");
+        }
+        else {
+            $(this).css("background-color","");
+        }
+    });
 
 
+    $("#unitesStock").focusout(function () {
+        if (!validNumber($("#unitesStock"))) {
+            $(this).css("background-color","red");
 
-function validation(){
-    if ($("#nomPr").val()==""){
-        $("#nomPr").css("background-color","red");
-        return false;
-    }
+        }
+        else {
+            $(this).css("background-color","");
+        }
+    });
 
 
-    if ($("#descPr").val()==""){
-        $("#descPr").css("background-color","red");
-        return false;
-    }else {
-        $("#descPr").css("background-color","");
-    }
 
-    if ($("#prixPr").val()==""){
-        $("#prixPr").css("background-color","red");
-        return false;
-    }else {
-        $("#prixPr").css("background-color","");
-    }
+    function validation(){
+        if ($("#nomPr").val()==""){
+            $("#nomPr").css("background-color","red");
+            return false;
+        }
 
-    if ($("#unitesStock").val()==""){
-        $("#unitesStock").css("background-color","red");
-        return false;
-    }else {
-        $("#unitesStock").css("background-color","");
-    }
 
-    if (!validenomPr()||!validNumber($("#prixPr"))||!validNumber($("#unitesStock")))
-        return false;
+        if ($("#descPr").val()==""){
+            $("#descPr").css("background-color","red");
+            return false;
+        }else {
+            $("#descPr").css("background-color","");
+        }
 
-    return true;
+        if ($("#prixPr").val()==""){
+            $("#prixPr").css("background-color","red");
+            return false;
+        }else {
+            $("#prixPr").css("background-color","");
+        }
+
+        if ($("#unitesStock").val()==""){
+            $("#unitesStock").css("background-color","red");
+            return false;
+        }else {
+            $("#unitesStock").css("background-color","");
+        }
+
+        if (!validenomPr()||!validNumber($("#prixPr"))||!validNumber($("#unitesStock")))
+            return false;
+
+        return true;
 }
 
     $("#unitesStock").focusout(function () {

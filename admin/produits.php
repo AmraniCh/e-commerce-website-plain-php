@@ -77,8 +77,8 @@
                                         echo '<td>'.$row['articlePrix'].' DHS</td>';
                                         echo '<td>'.$remiseDisponible.'</td>';
                                         if($remiseDisponible == "non"){
-                                            echo '<td class="mask">N/A</td>';
-                                            echo '<td class="mask">N/A</td>';
+                                            echo '<td class="mask-column">N/A</td>';
+                                            echo '<td class="mask-column">N/A</td>';
                                         }
                                         else{
                                             echo '<td>'.$row['articlePrixRemise'].' DHS</td>';

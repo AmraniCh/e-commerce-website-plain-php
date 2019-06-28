@@ -211,15 +211,16 @@
                                    <div class="col-md-12">
                                         <div class="form-group"> 
                                             <label>Les couleurs disponibles :</label>
-                                            <input type="text" id="couleurPr" class="form-control" placeholder="rouge, blue, blanc ..." value="<?php if(isset($_GET['edit'])){
-                                                    if($couleurs[0] != null){
-                                                        foreach($couleurs as $couleur){
-                                                            echo $couleur.', ';
+                                            <input type="text" id="couleurPr" class="form-control" placeholder="rouge, blue, blanc ..." value="<?php 
+                                                    if(isset($_GET['edit'])){
+                                                        if($couleurs[0] != null){
+                                                            foreach($couleurs as $couleur){
+                                                                echo $couleur.', ';
+                                                            }
                                                         }
+                                                        else 
+                                                            echo 'N/A';
                                                     }
-                                                    else 
-                                                        echo 'N/A';
-                                                }
                                                 ?>">
                                             <div class="container" style="padding:0;text-align:left;margin:0;">
                                                 <small class="form-text text-muted">Séparer les couleur avec des virgules (,)</small>

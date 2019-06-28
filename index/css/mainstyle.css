@@ -102,9 +102,10 @@ td, th{
     text-align: center!important;
 }
 
-.mask{
+.mask-column{
     background-color: #f5f5f5;
 }
+
 .fa-star{
     color: #e4e920!important;
 }

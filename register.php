@@ -28,7 +28,7 @@
       
       if(isset($_POST['submit']))
       {
-        $username = $_POST['username'];
+        $username = $con->escape_string($_POST['username']);
         $prenom = $_POST['prenom'];
         $nom = $_POST['nom'];
         $email = $_POST['email'];

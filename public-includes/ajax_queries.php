@@ -80,8 +80,18 @@
     function ModifierArticle($couleurs, $articleID, $articleNom, $articlePrix, $articlePrixRemise, $artcileDescription, $tauxRemise, $remiseDisponible, $unitesEnStock, $articleDisponible, $categorieID){
         global $con;
         $result = $con->query("UPDATE article SET articleNom = '$articleNom', articlePrix = $articlePrix, articlePrixRemise = $articlePrixRemise, articleDescription = '$artcileDescription', tauxRemise = $tauxRemise, remiseDisponible = $remiseDisponible, unitesEnStock = $unitesEnStock, articleDisponible = $articleDisponible, categorieID = $categorieID WHERE articleID = $articleID");
-        // modifier couleurs
-        $result2 = $con->query("UPDATE couleurarticle SET nomCouleur = '$couleurs' WHERE articleID = $articleID");
+        // modifier ou inserer couleurs
+        if($couleurs != "N/A"){
+            $result2 = $con->query("UPDATE couleurarticle SET nomCouleur = '$couleurs' WHERE articleID = $articleID");
+            if(!$con->affected_rows)
+                $con->query("INSERT INTO couleurarticle VALUES('$couleurs',$articleID)");
+        }
+        // supprimer couleurs
+        if($couleurs == "")
+        {
+            $con->query("DELETE FROM couleurarticle WHERE articleID = $articleID");
+        }
+            
         
         foreach(glob("../temp/*.*") as $filename)
         {

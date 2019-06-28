@@ -21,8 +21,8 @@
       // login
       if(isset($_POST['submit']))
       {
-          $username = $_POST['username-lg'];
-          $pass = $_POST['password-lg'];
+          $username = $con->escape_string($_POST['username-lg']);
+          $pass = $con->escape_string($_POST['password-lg']);
 
           $res = mysqli_query($con,"SELECT * FROM client WHERE clientUserName = '$username' AND motdepasse = '$pass'");    
           if(mysqli_num_rows($res)>0){

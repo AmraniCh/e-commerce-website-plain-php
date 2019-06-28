@@ -27,16 +27,16 @@
       // login
       if(isset($_POST['submit']))
       {
-          $adminame = $_POST['username-lg'];
-          $pass = $_POST['password-lg'];
+            $adminame = $con->escape_string($_POST['username-lg']);
+            $pass = $con->escape_string($_POST['password-lg']);
 
-          $res = mysqli_query($con,"SELECT * FROM admin WHERE adminName = '$adminame' AND motdepasse = '$pass'");    
-          if(mysqli_num_rows($res)>0){
-              $_SESSION['admin'] = $adminame;
-              header ('location: index.php?admin='.$adminame);
-          }
-          else
-            echo '<script>$(document).ready(function(){ compteIntrouvable() });</script>';
+            $res = mysqli_query($con,"SELECT * FROM admin WHERE adminName = '$adminame' AND motdepasse = '$pass'");    
+            if(mysqli_num_rows($res)>0){
+                $_SESSION['admin'] = $adminame;
+                header ('location: index.php?admin='.$adminame);
+            }
+            else
+              echo '<script>$(document).ready(function(){ compteIntrouvable() });</script>';
       }
     ?>
 <div class="container-scroller">
