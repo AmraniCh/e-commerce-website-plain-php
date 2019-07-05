@@ -109,8 +109,11 @@ td, th{
 .fa-star{
     color: #e4e920!important;
 }
+.fa-star:before{
+    margin-left: -3px;
+}
 
-#produitsTable td, #produitsTable th{
+.small-col td, .small-col th{
     padding: 12px 12px!important;
 }
 
@@ -118,11 +121,31 @@ td, th{
     padding: 10px!important;
 }
 
-.icon-colonne::before{
+.icon-col::before{
     margin-left: 7px !important;
+    font-size: 120%
 }
 
-
+#overlay{
+    position:fixed;
+    z-index:99999;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    background:rgba(0, 0, 0, 1);
+    transition: 1s 0.4s;
+}
+#progstat {
+    font-size: 0.7em;
+    letter-spacing: 3px;
+    position: absolute;
+    top: 50%;
+    margin-top: -40px;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+}
 /*********** START login-register pages CSS ***********/
 .left-container {
     width: 50%;
@@ -324,3 +347,5 @@ span[class="input-group-text"]{
     opacity: .6;
     box-shadow: 0 0 3px 2px #eee
 }
+
+

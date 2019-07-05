@@ -65,7 +65,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/forms/basic_elements.html">
+            <a class="nav-link" href="clients.php?admin=<?php echo $_SESSION['admin'] ?>">
               <i class="menu-icon fas fa-users"></i>
               <span class="menu-title">Clients</span>
             </a>

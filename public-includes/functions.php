@@ -9,8 +9,7 @@
 /**************************************************************
     Send Email FUNCTION
 **************************************************************/
-function sendEmail($RecipientEmail,$Nom)
-{
+function sendEmail($RecipientEmail,$Nom){
     global $con;
     $code = null;
 
@@ -67,8 +66,7 @@ function sendEmail($RecipientEmail,$Nom)
     END Send Email FUNCTION
 ***********************************/
 
-function CategorieNomParID($categorieID)
-{
+function CategorieNomParID($categorieID){
     global $con;
     $result = $con->query("SELECT categorieNom FROM categorie WHERE categorieID = $categorieID");
     while($row = $result->fetch_row())
@@ -78,15 +76,13 @@ function CategorieNomParID($categorieID)
     return $categorieNom;
 }
 
-function ArticleParID($articleID)
-{
+function ArticleParID($articleID){
     global $con;
     $result = $con->query("SELECT * FROM article WHERE articleID = '$articleID'");
     return $result;
 }
 
-function CouleursArticle($articleID)
-{
+function CouleursArticle($articleID){
     global $con;
     $result = $con->query("SELECT nomCouleur FROM couleurarticle WHERE articleID = $articleID");
     $rows = $result->fetch_row();
@@ -106,14 +102,51 @@ function ImagesArticle($articleID){
     return $result;
 }
 
-function upload_article_images($articleID)
-{
+function RandomCategoriesNav(){
     global $con;
-    foreach(glob("../temp/*.*") as $filename)
-    {
-        $filenameWithoutPath = explode('/',$filename)[2];
-        $con->query("INSERT INTO imagearticle VALUES('$filenameWithoutPath',$articleID)");
-        // transférer les au uploaded dossier
-        rename($filename, '../uploaded/articles-images/'.$filenameWithoutPath);
+    $result = $con->query("SELECT categorieNom FROM categorie ORDER BY RAND() LIMIT 4");
+    return $result;
+}
+
+function RandomCategoriesWidget(){
+    global $con;
+    $result = $con->query("SELECT categorieNom FROM categorie ORDER BY RAND() LIMIT 1");
+    $row = $result->fetch_row();		
+    return $row[0];
+}
+
+function returnTabWidget($categorie){
+    $article = new Article();
+    $res_query1 = $article->ProduitsWidget($categorie);
+    $return = "<div>";
+    while($row = $res_query1->fetch_assoc()){
+        $imageArticle = $article->ImageArticle($row['articleID']);
+        $categorieNom = CategorieNomParID($row['categorieID']);
+        if ($row['remiseDisponible'] == true) {
+        $return.="<div class='product-widget'>
+            <div class='product-img'>
+                <img src=".$imageArticle." alt=".$imageArticle.">
+            </div>
+            <div class='product-body'>
+                <p class='product-category'><img src='img/new.png'></p>
+                <h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
+                <h4 class='product-price'>".$row['articlePrix']."<del class='product-old-price'>".$row['articlePrixRemise']."</del></h4>
+            </div>
+        </div>";
+        }
+        else{
+        $return.= "<div class='product-widget'>
+            <div class='product-img'>
+                <img src=".$imageArticle." alt=".$imageArticle.">
+            </div>
+            <div class='product-body'>
+                <p class='product-category'><img src='img/new.png'></p>
+                <h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
+                <h4 class='product-price'>".$row['articlePrix']."</h4>
+            </div>
+        </div>";
+        }
     }
+    $return.= "</div>";
+    return $return;
 }

@@ -74,7 +74,7 @@ function icon_change_color(span, icon, ifcorrect) {
         span.css("background-color", "initial");
         icon.css("color", "#b6bbc2");
     }
-}s
+}
 
 function compteIntrouvable()
 {
@@ -83,4 +83,150 @@ function compteIntrouvable()
 }
 
 /****** END VALIDATION FUNCTIONS *****/
+
+
+function reload_js(src) {
+    $('script[src="' + src + '"]').remove();
+    $('<script>').attr('src', src).appendTo('.scripts');
+}
+
+
+function SlickNav1() {
+
+    var eles = $(".tab1");
+    $(eles).each(function () {
+        if ($(this).hasClass("active"))
+            categorie = $(this).attr("id");
+    });
+      
+    var ele = $("div[data-nav='#slick-nav-1']");
+    $.ajax({
+        url: "../public-includes/ajax_queries.php",
+        method: "POST",
+        data: {
+            function: "RechargerTab",
+            categorie: categorie
+        },
+        success: function (data) {
+            ele.slick('slickRemove', null, null, true); // remove slide data
+            ele.html(data);
+            // refersh scripts
+            setTimeout(function () {
+                ele.slick('unslick');
+                $('<script>').attr('src', "js/refersh-slick.js").appendTo('.scripts');
+            }, 10);
+        }
+    });      
+}
+
+function SlickNav2() {
+    var eles = $(".tab2");
+    $(eles).each(function () {
+        if ($(this).hasClass("active"))
+            categorie = $(this).attr("id");
+    });
+      
+    var ele = $("div[data-nav='#slick-nav-2']");
+    $.ajax({
+        url: "../public-includes/ajax_queries.php",
+        method: "POST",
+        data: {
+            function: "RechargerTab",
+            categorie: categorie
+        },
+        success: function (data) {
+            ele.slick('slickRemove', null, null, true); // remove slide data
+            ele.html(data);
+            // refersh scripts
+            setTimeout(function () {
+                ele.slick('unslick');
+                $('<script>').attr('src', "js/refersh-slick.js").appendTo('.scripts');
+            }, 10);
+        }
+    });    
+}
+
+function SlickWidget1(){
+    var categorie = $(".categorie-widget1").attr("id");
+    var ele = $("div[data-nav='#slick-nav-3']");
+    $.ajax({
+        url: "../public-includes/ajax_queries.php",
+        method: "POST",
+        data: {
+            function: "RechargerTabWidget",
+            categorie: categorie
+        },
+        dataType: "JSON",
+        success: function (data) {
+            // remove slide data
+            ele.slick('slickRemove', null, null, true);
+            ele.append(data['tab1']);
+            ele.append(data['tab2']);
+            // refersh scripts
+            setTimeout(function () {
+                $("div[data-nav='#slick-nav-1']").slick('unslick');
+                $("div[data-nav='#slick-nav-2']").slick('unslick');
+                $("div[data-nav='#slick-nav-3']").slick('unslick');
+                $('<script>').attr('src', "js/refersh-slick.js").appendTo('.scripts');
+            }, 10);
+        }
+    });     
+}
+
+function SlickWidget2(){
+    var categorie = $(".categorie-widget2").attr("id");
+    var ele = $("div[data-nav='#slick-nav-4']");
+    $.ajax({
+        url: "../public-includes/ajax_queries.php",
+        method: "POST",
+        data: {
+            function: "RechargerTabWidget",
+            categorie: categorie
+        },
+        dataType: "JSON",
+        success: function (data) {
+            // remove slide data
+            ele.slick('slickRemove', null, null, true);
+            ele.append(data['tab1']);
+            ele.append(data['tab2']);
+            // refersh scripts
+            setTimeout(function () {
+                $("div[data-nav='#slick-nav-1']").slick('unslick');
+                $("div[data-nav='#slick-nav-2']").slick('unslick');
+                $("div[data-nav='#slick-nav-3']").slick('unslick');
+                $("div[data-nav='#slick-nav-4']").slick('unslick');
+                $('<script>').attr('src', "js/refersh-slick.js").appendTo('.scripts');
+            }, 10);
+        }
+    });     
+}
+
+function SlickWidget3(){
+    var categorie = $(".categorie-widget3").attr("id");
+    var ele = $("div[data-nav='#slick-nav-5']");
+    $.ajax({
+        url: "../public-includes/ajax_queries.php",
+        method: "POST",
+        data: {
+            function: "RechargerTabWidget",
+            categorie: categorie
+        },
+        dataType: "JSON",
+        success: function (data) {
+            // remove slide data
+            ele.slick('slickRemove', null, null, true);
+            ele.append(data['tab1']);
+            ele.append(data['tab2']);
+            // refersh scripts
+            setTimeout(function () {
+                $("div[data-nav='#slick-nav-1']").slick('unslick');
+                $("div[data-nav='#slick-nav-2']").slick('unslick');
+                $("div[data-nav='#slick-nav-3']").slick('unslick');
+                $("div[data-nav='#slick-nav-4']").slick('unslick');
+                $("div[data-nav='#slick-nav-5']").slick('unslick');
+                $('<script>').attr('src', "js/refersh-slick.js").appendTo('.scripts');
+            }, 10);
+        }
+    });     
+}
 

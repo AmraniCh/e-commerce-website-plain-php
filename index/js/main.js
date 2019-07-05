@@ -1,4 +1,6 @@
 (function($) {
+	
+	
 	"use strict"
 
 	// Mobile Nav toggle
@@ -14,37 +16,45 @@
 
 	/////////////////////////////////////////
 
+
 	// Products Slick
 	$('.products-slick').each(function() {
+		
+	
 		var $this = $(this),
 				$nav = $this.attr('data-nav');
+		window.setTimeout(function(){
+		
+			$this.slick({
+				slidesToShow: 4,
+				slidesToScroll: 1,
+				autoplay: true,
+				infinite: true,
+				speed: 300,
+				dots: false,
+				arrows: true,
+				appendArrows: $nav ? $nav : false,
+				responsive: [{
+				breakpoint: 991,
+				settings: {
+				  slidesToShow: 2,
+				  slidesToScroll: 1,
+				}
+			  },
+			  {
+				breakpoint: 480,
+				settings: {
+				  slidesToShow: 1,
+				  slidesToScroll: 1,
+				}
+			  },
+			]
+			});
+			$(".pro-tab1").css("visibility","visible");
+		},150, $(".pro-tab1").css("visibility","hidden"));
 
-		$this.slick({
-			slidesToShow: 4,
-			slidesToScroll: 1,
-			autoplay: true,
-			infinite: true,
-			speed: 300,
-			dots: false,
-			arrows: true,
-			appendArrows: $nav ? $nav : false,
-			responsive: [{
-	        breakpoint: 991,
-	        settings: {
-	          slidesToShow: 2,
-	          slidesToScroll: 1,
-	        }
-	      },
-	      {
-	        breakpoint: 480,
-	        settings: {
-	          slidesToShow: 1,
-	          slidesToScroll: 1,
-	        }
-	      },
-	    ]
-		});
 	});
+	
 
 	// Products Widget Slick
 	$('.products-widget-slick').each(function() {
@@ -71,6 +81,7 @@
     arrows: true,
     fade: true,
     asNavFor: '#product-imgs',
+
   });
 
 	// Product imgs Slick
@@ -128,14 +139,17 @@
 	var priceInputMax = document.getElementById('price-max'),
 			priceInputMin = document.getElementById('price-min');
 
+	if(priceInputMax){
 	priceInputMax.addEventListener('change', function(){
 		updatePriceSlider($(this).parent() , this.value)
 	});
+	}
 
+	if(priceInputMin){
 	priceInputMin.addEventListener('change', function(){
 		updatePriceSlider($(this).parent() , this.value)
 	});
-
+	}
 	function updatePriceSlider(elem , value) {
 		if ( elem.hasClass('price-min') ) {
 			console.log('min')

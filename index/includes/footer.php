@@ -48,7 +48,7 @@
 
 						<div class="col-md-3 col-xs-6">
 							<div class="footer">
-								<h3 class="footer-title">Service</h3>
+								<h3 class="footer-title">Services</h3>
 								<ul class="footer-links">
 									<li><a href="#">Mon compte</a></li>
 									<li><a href="#">Voir le panier</a></li>
@@ -93,14 +93,19 @@
 			<!-- /bottom footer -->
 		</footer>
 		<!-- /FOOTER -->
-
+	
 		<!-- jQuery Plugins -->
-		<script src="js/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
-		<script src="js/slick.min.js"></script>
+		
 		<script src="js/nouislider.min.js"></script>
 		<script src="js/jquery.zoom.min.js"></script>
-		<script src="js/main.js"></script>
-
+		
+		<div class="scripts">
+			<script src="js/slick.min.js"></script>
+			<script src="js/main.js"></script>
+		</div>
+					
+			
+			
 	</body>
 </html>

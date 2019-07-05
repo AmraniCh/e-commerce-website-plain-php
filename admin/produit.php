@@ -241,7 +241,7 @@
                                              <?php 
                                                 if(isset($_GET['edit'])){
                                                     while($rows = $images->fetch_row()){
-                                                        echo '<div class="photo-produit col-xs-6 col-sm-6 col-md-4 col-lg-6" style="background-image: url(../uploaded/articles-images/'.$rows[0].');"></div>';
+                                                        echo '<div class="photo-produit col-xs-6 col-sm-6 col-md-4 col-lg-6" style="background-image: url(../uploaded/articles-images/'.$rows[0].');background-size: contain;background-repeat: no-repeat;background-position:center"></div>';
                                                     }
                                                 }
                                              ?>
@@ -309,8 +309,9 @@
         
            <script>
             $(document).ready(function(){
+                CalculerPrixFinal();
                 
-                function CalculerPrix(){
+                function CalculerPrixInitial(){
                     var prixIn = $("#prixPr").val();
                     var taux = $("#taux").val();
                     if(taux != null && taux != ""){
@@ -321,20 +322,21 @@
                     return null;
                 }
                 
-                $("#prixPr, #taux, input[name='radioRemise']").on("input",function(){
-                    
+                function CalculerPrixFinal()
+                {
                     if($("input[name='radioRemise']:checked").attr("id") == "radioRemOui"){
                         $("#taux").prop("disabled",false); 
-                        $("#prixFinal").val(CalculerPrix());
+                        $("#prixFinal").val(CalculerPrixInitial());
                     }
                     else{
-        
                         $("#taux").prop("disabled",true);
                         var prixIn = $("#prixPr").val();
                         $("#prixFinal").val(prixIn);
                     }
-                    
+                }
                 
+                $("#prixPr, #taux, input[name='radioRemise']").on("input",function(){      
+                    CalculerPrixFinal();
                 });
                 
                $(document).on("change","#photoPr",function(){

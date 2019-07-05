@@ -415,7 +415,6 @@ $(function(){
 
 //validation ajouter article
 $(function(){
-alert();
     let startsubmit = false;
 
     $("#nomPr").focusout(function () {
@@ -522,7 +521,7 @@ alert();
             return false;
 
         return true;
-}
+    }
 
     $("#unitesStock").focusout(function () {
         if (!validNumber($("#unitesStock"))) {
@@ -535,7 +534,6 @@ alert();
 
         }
     });
-
 
     function validation(){
         alert(startsubmit);

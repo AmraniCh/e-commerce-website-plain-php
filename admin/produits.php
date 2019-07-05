@@ -35,7 +35,7 @@
               <div class="col-12">
                   <div class="card">
                      <div class="table-responsive">
-                        <table id="produitsTable" class="table table-hover table-bordered">
+                        <table id="produitsTable" class="table table-hover table-bordered small-col">
                             <thead>
                                 <tr class="table-primary">
                                     <th>ID</th>
@@ -94,8 +94,8 @@
                                         }
                                         echo '</td>';
                                         echo '<td>'.$categorieNom.'</td>';
-                                        echo '<td><button type="button" id="btnModifier" class="btn btn-blue btn-column-icon"><i class="fas fa-edit icon-colonne"></i></button></td>';
-                                        echo '<td><button id="btnSupprimer" type="button" class="btn btn-red btn-column-icon" data-toggle="modal" data-target="#messageSuppresion"><i class="fas fa-trash icon-colonne"></i></button></td>';
+                                        echo '<td><button type="button" id="btnModifier" class="btn btn-blue btn-column-icon"><i class="fas fa-edit icon-col"></i></button></td>';
+                                        echo '<td><button id="btnSupprimer" type="button" class="btn btn-red btn-column-icon" data-toggle="modal" data-target="#messageSuppresion"><i class="fas fa-trash icon-col"></i></button></td>';
                                         echo '</tr>';
                                     }
                                   ?>

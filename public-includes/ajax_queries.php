@@ -1,6 +1,7 @@
 <?php 
     require_once 'config.php';
     require_once 'functions.php';
+    require_once 'classes.php';
     session_name('ad-sess');
     session_start();
 
@@ -25,6 +26,12 @@
             echo $_POST['function']($_POST['articleID']);break;
         case "ModifierArticle":
             echo $_POST['function']($_POST['couleurs'],$_POST['articleID'],$_POST['articleNom'],$_POST['articlePrix'],$_POST['articlePrixRemise'], $_POST['artcileDescription'],$_POST['tauxRemise'],$_POST['remiseDisponible'],$_POST['unitesEnStock'],$_POST['articleDisponible'],$_POST['categorieID']);break;
+        case "SupprimerClient":
+            echo $_POST['function']($_POST['clientID']);break;
+        case "RechargerTab":
+            echo $_POST['function']($_POST['categorie']);break;
+        case "RechargerTabWidget":
+            echo $_POST['function']($_POST['categorie']);break;
     }
 
     // catégories fonctions 
@@ -46,7 +53,7 @@
     // article fonctions
     function AjouterArtcile($couleurs, $artcileNom, $articlePrix, $articlePrixRemise, $artcileDescription, $tauxRemise, $remiseDisponible, $unitesEnStock, $articleDisponible, $categorieID){
         global $con;
-        $result = $con->query("INSERT INTO article VALUES(null,'$artcileNom',$articlePrix,$articlePrixRemise,'$artcileDescription',$tauxRemise,$remiseDisponible,$unitesEnStock,default,$articleDisponible,default,$categorieID)");
+        $result = $con->query("INSERT INTO article VALUES(null,'$artcileNom',$articlePrix,$articlePrixRemise,'$artcileDescription',$tauxRemise,$remiseDisponible,$unitesEnStock,default,$articleDisponible,default,default,$categorieID)");
         // récupérer artcileID à partir articleNom
         $result = $con->query("SELECT * FROM article WHERE articleNom = '$artcileNom'");
         while($row = $result->fetch_row()){
@@ -109,13 +116,71 @@
             foreach($_FILES['files']['name'] as $filename => $value)
             {  
                 move_uploaded_file($_FILES['files']['tmp_name'][$filename], '../temp/'.$_FILES['files']['name'][$filename]);
-                echo '<div class="photo-produit col-12 col-xs-6 col-sm-6 col-md-4 col-lg-6" style="background-image: url(../temp/'.$_FILES['files']['name'][$filename].');"></div>';
+                echo '<div class="photo-produit col-12 col-xs-6 col-sm-6 col-md-4 col-lg-6" style="background-image: url(../temp/'.$_FILES['files']['name'][$filename].');background-size:contain;background-repeat:no-repeat;background-position:center"></div>';
             }
         }
     }
 
-
-            
+    // clients fonctions
+    function SupprimerClient($clientID)
+    {
+        global $con;
+        $result = $con->query("DELETE FROM client WHERE clientID = $clientID");
+        if($con->affected_rows)
+            return true;
+        return false;
+    }
                 
+    // index fonctions
+    function RechargerTab($categorie){
+        $article = new Article();
+        if($categorie != 'aleatoire')
+            $res_query1 = $article->ProduitsParCategorie($categorie);
+        else
+            $res_query1 = $article->NouveauxProduitsAleatoire();
+    
+        while($row = $res_query1->fetch_assoc()){
+            $imageArticle = $article->ImageArticle($row['articleID']);
+            $niveau = $article->echoNiveau($row['articleID']);
+            $categorieNom = CategorieNomParID($row['categorieID']);
+            
+            if ($row['remiseDisponible'] == true) {
+                echo "<div class='product pro-tab1' style='visibility:hidden'>
+                    <div class='product-img'><img src=".$imageArticle." alt=".$imageArticle.">
+                        <div class='product-label'><span class='sale'>".$row['tauxRemise']."%</span><span class='new'>Nouveau</span></div>
+                    </div>
+                    <div class='product-body'>
+                        <p class='product-category'>".$categorieNom."</p>
+                        <h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
+                        <h4 class='product-price'>".$row['articlePrixRemise']." DHS<del class='product-old-price'>". $row['articlePrix']."</del></h4>
+                        <div class='product-rating'>".$niveau."</div>
+                        <div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div>
+                    </div>
+                    <div class='add-to-cart'><button class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> add to cart</button></div>
+                </div>";
+            }
+            else
+                echo "<div class='product pro-tab1' style='visibility:hidden'>
+                <div class='product-img'><img src=".$imageArticle." alt=".$imageArticle.">
+                    <div class='product-label'><span class='new'>Nouveau</span></div>
+                </div>
+                <div class='product-body'>
+                    <p class='product-category'>".$categorieNom."</p>
+                    <h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
+                    <h4 class='product-price'>".$row['articlePrix']." DHS</h4>
+                    <div class='product-rating'>".$niveau."</div>
+                    <div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div>
+                </div>
+                <div class='add-to-cart'><button class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> add to cart</button></div>
+                </div>";
+        }
+    }
+
+    function RechargerTabWidget($categorie){
+        $array = array('tab1' => returnTabWidget($categorie), 'tab2' => returnTabWidget($categorie));
+        return json_encode($array);
+    }
+
+    
 
 ?>
