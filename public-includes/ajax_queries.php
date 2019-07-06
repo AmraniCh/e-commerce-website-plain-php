@@ -181,6 +181,3 @@
         return json_encode($array);
     }
 
-    
-
-?>

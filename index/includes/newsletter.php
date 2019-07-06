@@ -33,3 +33,5 @@
 			<!-- /container -->
 		</div>
 		<!-- /NEWSLETTER -->
+	</div>
+	<!-- /full container -->

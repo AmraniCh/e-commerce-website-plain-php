@@ -63,7 +63,9 @@
 					$result = $this->con->query("SELECT * FROM article inner join categorie
 					on article.categorieID = categorie.categorieID
 					where categorie.categorieID = '$categorieID' AND article.articleNom like '%$mot%' ORDER BY dateAjoute");
-				return $result;
+				if($result->num_rows > 0)
+					return $result;
+				return null;
 			}
 			return null;
 		}

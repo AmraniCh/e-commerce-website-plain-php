@@ -90,11 +90,19 @@ ob_start();
 											$result = $con->query("SELECT * FROM categorie ORDER BY categorieNom");
 											while($row = $result->fetch_assoc())
 											{
-												echo '<option value='.$row['categorieID'].'>'.$row['categorieNom'].'</option>';
+												if(isset($_GET['rechercher']) && isset($_GET['categorie'])){
+													$categorie = $_GET['categorie'];
+													if($row['categorieID'] == $categorie)
+														echo '<option value='.$row['categorieID'].' selected>'.$row['categorieNom'].'</option>';
+													else
+														echo '<option value='.$row['categorieID'].'>'.$row['categorieNom'].'</option>';
+												}
+												else
+													echo '<option class=""  value='.$row['categorieID'].'>'.$row['categorieNom'].'</option>';
 											}
 										?>
 									</select>
-									<input class="input mini-input" name="search" placeholder="Chercher ici" style="width:36%">
+									<input class="input mini-input" name="search" placeholder="Chercher ici" value="<?php if(isset($_GET['rechercher']) && isset($_GET['categorie'])) echo $_GET['rechercher'] ?>" style="width:36%">
 									<input type="submit" name="submit" class="search-btn" value="Rechercher"/>
 								</form>
 							</div>
