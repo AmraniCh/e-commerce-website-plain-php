@@ -463,6 +463,7 @@ textarea.input {
 
 .header-search {
   padding: 15px 0px;
+	text-align: center;
 }
 
 .header-search form {
@@ -494,7 +495,7 @@ textarea.input {
 \*----------------------------*/
 
 .header-ctn {
-  float: right;
+  text-align: center;
   padding: 15px 0px;
 }
 

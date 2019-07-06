@@ -3,10 +3,18 @@
 	include_once "../public-includes/functions.php";
 	include_once "../public-includes/classes.php";
 	session_name("cli-sess");
+ob_start();
 	session_start();
+ 	
+
+
+	if(isset($_POST['submit']))
+	{
+		$search = $_POST['search'];
+		$categorie = $_POST['categorie'];
+		header('location: rechercher.php?categorie='.$categorie.'&rechercher='.$search);
+	}
 ?>
-
-
 <!DOCTYPE html>
 <html lang="fr">
 	<head>
@@ -27,6 +35,7 @@
 		<link rel="stylesheet" href="css/font-awesome.min.css">
 		<!-- Custom stlylesheet -->
 		<link type="text/css" rel="stylesheet" href="css/style.css"/>
+		<link type="text/css" rel="stylesheet" href="css/mainstyle.css"/>
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
@@ -74,14 +83,19 @@
 						<!-- SEARCH BAR -->
 						<div class="col-md-6">
 							<div class="header-search">
-								<form>
-									<select class="input-select">
-										<option value="0">Tout</option>
-										<option value="1">Catégorie 01</option>
-										<option value="1">Catégorie 02</option>
+								<form action="" method="post">
+									<select name="categorie" class="input-select" style="width:23%">
+										<option value="tout">Tout</option>
+										<?php
+											$result = $con->query("SELECT * FROM categorie ORDER BY categorieNom");
+											while($row = $result->fetch_assoc())
+											{
+												echo '<option value='.$row['categorieID'].'>'.$row['categorieNom'].'</option>';
+											}
+										?>
 									</select>
-									<input class="input" placeholder="Cherche ici">
-									<button class="search-btn">Rechercher</button>
+									<input class="input mini-input" name="search" placeholder="Chercher ici" style="width:36%">
+									<input type="submit" name="submit" class="search-btn" value="Rechercher"/>
 								</form>
 							</div>
 						</div>

@@ -84,7 +84,6 @@ function compteIntrouvable()
 
 /****** END VALIDATION FUNCTIONS *****/
 
-
 function reload_js(src) {
     $('script[src="' + src + '"]').remove();
     $('<script>').attr('src', src).appendTo('.scripts');

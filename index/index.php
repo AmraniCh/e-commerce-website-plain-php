@@ -1,7 +1,7 @@
 <?php include_once "includes/header.php" ?>
 
 		<?php include_once "includes/navigation.php" ?>
-		
+
 		<!-- SECTION -->
 		<div class="section">
 			<!-- container -->
@@ -256,32 +256,6 @@
 		<!-- /SECTION -->
 		<?php include_once "includes/newsletter.php" ?>
 		
-		<div id="overlay">
-			<div id="progstat"><img src="img/Ellipsis-1s-200px.svg"></div>
-			<style>
-				#overlay{
-					position:fixed;
-					z-index:99999;
-					top:0;
-					left:0;
-					bottom:0;
-					right:0;
-					background:rgba(0, 0, 0, 1);
-					transition: 1s 0.4s;
-				}
-				#progstat {
-					font-size: 0.7em;
-					letter-spacing: 3px;
-					position: absolute;
-					top: 50%;
-					margin-top: -40px;
-					width: 100%;
-					text-align: center;
-					color: #fff;
-				}
-			</style>
-		</div>
-		
 		<script>
 			$(document).ready(function() {
 
@@ -301,10 +275,10 @@
         		}, 120);
 
 			});
-			$(window).load(function(){
-			   $('#overlay').fadeOut();
-			});
+			
 		</script>
+		
+		<?php include_once "includes/loading.html" ?>
 		
 		<?php include_once "includes/footer.php" ?>
 		
