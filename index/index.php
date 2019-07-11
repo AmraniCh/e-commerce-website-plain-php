@@ -258,7 +258,7 @@
 		
 		<script>
 			$(document).ready(function() {
-
+				
 				$(document).on("click", "li[class='tab1']", function(e) {		
 					SlickNav1();
 				});

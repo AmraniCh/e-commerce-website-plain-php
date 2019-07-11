@@ -27,16 +27,17 @@
 				<div class="container">
 					<?php 
 						if(isset($_GET['categorie']) && isset($_GET['rechercher'])){
+							$article = new article();
+							$categorie = new categorie();
 							$categorieID = $con->escape_string($_GET['categorie']);
 							$mot = $con->escape_string($_GET['rechercher']);
-							$article = new article();
 							$res_query = $article->RechercherArticle($categorieID,$mot);
 							if($res_query){
 								while($row = $res_query->fetch_array())
 								{
 									$imageArticle = $article->ImageArticle($row['articleID']);
 									$niveau = $article->echoNiveau($row['articleID']);
-									$categorieNom = CategorieNomParID($row['categorieID']);
+									$categorieNom = $categorie->CategorieNomParID($row['categorieID']);
 									if ($row['remiseDisponible'] == true) {
 										echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'><div class='product pro-tab1'>
 												<div class='product-img no-slick-product' style='background-image:url($imageArticle)'>
@@ -49,7 +50,7 @@
 													<div class='product-rating'>".$niveau."</div>
 													<div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div>
 												</div>
-												<div class='add-to-cart'><button class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> add to cart</button></div>
+												<div class='add-to-cart'><button id=".$row['articleID']." class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div>
 												</div>
 											</div>";
 										}
@@ -66,7 +67,7 @@
 														<div class='product-rating'>".$niveau."</div>
 														<div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div>
 													</div>
-													<div class='add-to-cart'><button class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> add to cart</button></div>
+													<div class='add-to-cart'><button id=".$row['articleID']." class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div>
 												</div>
 											</div>";
 								}

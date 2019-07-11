@@ -3,14 +3,6 @@
 	
 	"use strict"
 
-	// Fix cart dropdown from closing
-	$('.cart-dropdown').on('click', function (e) {
-		e.stopPropagation();
-	});
-
-	/////////////////////////////////////////
-
-
 	// Products Slick
 	$('.products-slick').each(function() {
 		
@@ -158,12 +150,12 @@
 	var priceSlider = document.getElementById('price-slider');
 	if (priceSlider) {
 		noUiSlider.create(priceSlider, {
-			start: [1, 999],
+			start: [1, 999999],
 			connect: true,
 			step: 1,
 			range: {
 				'min': 1,
-				'max': 999
+				'max': 10000
 			}
 		});
 

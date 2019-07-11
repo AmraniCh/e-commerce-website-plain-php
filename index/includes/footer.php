@@ -93,10 +93,13 @@
 			<!-- /bottom footer -->
 		</footer>
 		<!-- /FOOTER -->
+		
+		<audio id="audio" style="display:none;">
+			<source src="img/Ambient_Game_Bubble_UI_1.mp3">
+		</audio>
 	
 		<!-- jQuery Plugins -->
 		<script src="js/bootstrap.min.js"></script>
-		
 		<script src="js/nouislider.min.js"></script>
 		<script src="js/jquery.zoom.min.js"></script>
 		
@@ -104,8 +107,6 @@
 			<script src="js/slick.min.js"></script>
 			<script src="js/main.js"></script>
 		</div>
-					
-			
 			
 	</body>
 </html>

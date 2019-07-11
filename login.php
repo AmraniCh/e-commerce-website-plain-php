@@ -1,6 +1,5 @@
 <?php
     require_once 'public-includes/config.php';
-    session_name('log-sess');
     session_start();
     session_unset(); 
 ?>
@@ -14,24 +13,25 @@
         <link href="index/css/main.css" rel="stylesheet" />		
         <link href="index/css/mainstyle.css" rel="stylesheet" />		
         <link href="index/css/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
-   	    <script src="index/js/jquery-3.3.1.min.js"></script>
+   	    <script src="index/js/jquery.min.js"></script>
     </head>
   <body>
   <?php
       // login
       if(isset($_POST['submit']))
       {
-          $username = $con->escape_string($_POST['username-lg']);
-          $pass = $con->escape_string($_POST['password-lg']);
+          $clientUserName = $con->escape_string($_POST['username-lg']);
+          $motdepass = $con->escape_string($_POST['password-lg']);
 
-          $res = mysqli_query($con,"SELECT * FROM client WHERE clientUserName = '$username' AND motdepasse = '$pass'");    
-          if(mysqli_num_rows($res)>0){
-              echo 'works';
-              /*header ('location: index.php?user='.$username);
-              $_SESSION['user'] = $username;*/
+          $res = $con->query("SELECT * FROM client WHERE clientUserName = '$clientUserName' AND motdepasse = '$motdepass'");
+          if($res->num_rows >0){
+              $row = $res->fetch_assoc();
+              $_SESSION['clientUserName'] = $clientUserName;
+              $_SESSION['clientID'] = $row['clientID'];
+              header ('location: index/index.php?client='.$clientUserName);
           }
           else
-            echo '<script>$(document).ready(function(){ compteIntrouvable() });</script>';
+              echo '<script>$(document).ready(function(){ compteIntrouvable() });</script>';
       }
     ?>
 <div class="container-scroller">

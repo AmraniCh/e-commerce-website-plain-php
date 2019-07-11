@@ -3,31 +3,7 @@
  <?php
   if(isset($_GET['admin']) && isset($_SESSION['admin'])){
 		if($_GET['admin'] == $_SESSION['admin'])
-		{
-            
-      
-            final class categorie{
-                private $con;
-                
-                function __construct(){
-                    global $con;
-                    $this->con = $con;
-                }
-                
-                public function AfficherCategories(){ 
-                    $result = $this->con->query("SELECT * FROM categorie ORDER BY categorieID");
-                    return $result;
-                }
-                
-                public function echoBadge($active){
-                    if($active == 0)
-                        return "<label class='badge badge-danger'>Pas Active</label>";
-                    else
-                        return "<label class='badge badge-success'>Active</label>";
-                    return null;
-                }
-            }
-    
+		{    
 
   ?>
   <div class="container-scroller">
@@ -67,7 +43,7 @@
                                               </thead>
                                               <tbody>
                                                  <?php 
-                                                    $categorie = new categorie();
+                                                    $categorie = new Categorie();
                                                     $result = $categorie->AfficherCategories();
                                                     while($row = $result->fetch_row()){
                                                         $badge = $categorie->echoBadge($row[3]);

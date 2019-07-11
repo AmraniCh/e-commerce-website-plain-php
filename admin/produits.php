@@ -4,19 +4,6 @@
   if(isset($_GET['admin']) && isset($_SESSION['admin'])){
 		if($_GET['admin'] == $_SESSION['admin'])
 		{   
-            final class article{
-                private $con;
-                
-                function __construct(){
-                    global $con;
-                    $this->con = $con;
-                }
-                
-                public function AfficherArtciles(){
-                    $result = $this->con->query("SELECT * FROM article");
-                    return $result;
-                }                
-            }
 
   ?>
   <div class="container-scroller">
@@ -41,6 +28,7 @@
                                     <th>ID</th>
                                     <th>Nom Produit</th>
                                     <th>Description</th>
+                                    <th>Marque</th>
                                     <th>Couleurs</th>
                                     <th>Prix Initial</th>
                                     <th>Remise Disponible</th>
@@ -58,15 +46,20 @@
                             <tbody>
                                 <?php 
                                     $article = new article();
-                                    $query_res1 = $article->AfficherArtciles();
+                                    $categorie = new Categorie();
+                                    $query_res1 = $article->AfficherArticles();
                                     while($row = $query_res1->fetch_assoc()){
-                                        $categorieNom = CategorieNomParID($row['categorieID']);
+                                        $categorieNom = $categorie->CategorieNomParID($row['categorieID']);
                                         $couleurs = CouleursArticle($row['articleID']);
                                         ($row['articleDisponible'] == true) ? $articleDisponibe = "oui" : $articleDisponibe = "non";
                                         ($row['remiseDisponible'] == true) ? $remiseDisponible = "oui" : $remiseDisponible = "non";
                                         echo '<tr><td id="articleID">'.$row['articleID'].'</td>';
                                         echo '<td>'.$row['articleNom'].'</td>';
                                         echo '<td>'.$row['articleDescription'].'</td>';
+                                        if($row['articleMarque'] != '')
+                                            echo '<td>'.$row['articleMarque'].'</td>';
+                                        else
+                                            echo '<td>N/A</td>';
                                         echo '<td>';
                                         if($couleurs != null){
                                             foreach($couleurs as $couleur){ echo $couleur.', '; };

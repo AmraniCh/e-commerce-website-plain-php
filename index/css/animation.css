@@ -1,0 +1,39 @@
+@keyframes add-to-cart-icon-anim
+{
+  0% {transform: scale(1);}
+  50% {transform: scale(2);}
+  100% {transform: scale(3);}
+}
+
+@-webkit-keyframes add-to-cart-icon-anim
+{
+  0% {transform: scale(1);}
+  50% {transform: scale(2);}
+  100% {transform: scale(3);}
+}
+
+@keyframes add-to-cart-anim
+{
+  0% {transform: rotateY(0);}
+  25% {transform: rotateY(-10deg);}
+  50% {transform: rotate(10deg);}
+  75% {transform: rotate(-10deg);}
+  100% {transform: rotate(0);}
+}
+
+@-webkit-keyframes add-to-cart-anim
+{
+  0% {transform: rotateY(0);}
+  25% {transform: rotateY(-10deg);}
+  50% {transform: rotate(10deg);}
+  75% {transform: rotate(-10deg);}
+  100% {transform: rotate(0);}
+}
+
+.produit-panier-icon{
+  animation: add-to-cart-icon-anim 0.4s linear reverse;
+}
+
+.produit-panier{
+  animation: add-to-cart-anim 0.5s linear;
+}

@@ -1,7 +1,7 @@
 <?php
     require_once '../public-includes/config.php';
     require_once '../public-includes/functions.php';
-    session_name('ad-sess');
+    require_once '../public-includes/classes.php';
     session_start();
 
 ?>

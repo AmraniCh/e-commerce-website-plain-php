@@ -1,6 +1,5 @@
 <?php
     require_once '../public-includes/config.php';
-    session_name('ad-sess');
     session_start();
 ?>
 <!DOCTYPE html>
@@ -13,7 +12,7 @@
         <link href="../index/css/main.css" rel="stylesheet" />		
         <link href="../index/css/mainstyle.css" rel="stylesheet" />		
         <link href="../index/css/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
-   	    <script src="../index/js/jquery-3.3.1.min.js"></script>
+   	    <script src="../index/js/jquery.min.js"></script>
     </head>
   <body>
   <?php  

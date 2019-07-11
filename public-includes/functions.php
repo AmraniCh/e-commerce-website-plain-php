@@ -6,9 +6,8 @@
     require '../PHPMailer/src/PHPMailer.php';
     require '../PHPMailer/src/SMTP.php';
 
-/**************************************************************
-    Send Email FUNCTION
-**************************************************************/
+/************************
+      PHPMailer ********/
 function sendEmail($RecipientEmail,$Nom){
     global $con;
     $code = null;
@@ -62,19 +61,9 @@ function sendEmail($RecipientEmail,$Nom){
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 }
-/***********************************
-    END Send Email FUNCTION
-***********************************/
+/************************
+      PHPMailer ********/
 
-function CategorieNomParID($categorieID){
-    global $con;
-    $result = $con->query("SELECT categorieNom FROM categorie WHERE categorieID = $categorieID");
-    while($row = $result->fetch_row())
-    {
-        $categorieNom = $row[0];
-    }
-    return $categorieNom;
-}
 
 function ArticleParID($articleID){
     global $con;
@@ -115,13 +104,14 @@ function RandomCategoriesWidget(){
     return $row[0];
 }
 
-function returnTabWidget($categorie){
+function returnTabWidget($categorieNom){
     $article = new Article();
-    $res_query1 = $article->ProduitsWidget($categorie);
+    $categorie = new Categorie();
+    $query = $article->ProduitsWidget($categorieNom);
     $return = "<div>";
-    while($row = $res_query1->fetch_assoc()){
+    while($row = $query->fetch_assoc()){
         $imageArticle = $article->ImageArticle($row['articleID']);
-        $categorieNom = CategorieNomParID($row['categorieID']);
+        $categorieNom = $categorie->CategorieNomParID($row['categorieID']);
         if ($row['remiseDisponible'] == true) {
         $return.="<div class='product-widget'>
             <div class='product-img'>

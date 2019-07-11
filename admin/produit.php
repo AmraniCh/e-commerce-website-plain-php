@@ -9,22 +9,10 @@
                 unlink('../temp/'.$filename);
             }
             
-            final class article{
-                private $con;
-                
-                function __construct(){
-                    global $con;
-                    $this->con = $con;
-                }
-                
-                public function afficherCategories(){
-                    $result = $this->con->query("SELECT * FROM categorie");
-                    return $result;
-                }         
-            }
                         
             if(isset($_GET['edit']))
             {
+                $categorie = new Categorie();
                 $articleID = $_GET['edit'];
                 $couleurs = CouleursArticle($articleID);
                 $result = ArticleParID($articleID);
@@ -32,7 +20,8 @@
                 {
                     $articleNom = $row['articleNom'];
                     $articleDescription = $row['articleDescription'];
-                    $categorieNom = CategorieNomParID($row['categorieID']);
+                    $articleMarque = $row['articleMarque'];
+                    $categorieNom = $categorie->CategorieNomParID($row['categorieID']);
                     $categorieID = $row['categorieID'];
                     $articlePrix = $row['articlePrix'];
                     $unitesEnStock = $row['unitesEnStock'];
@@ -65,7 +54,7 @@
                           <h3 class="title">Ajouter Produit</h3>             
                       </div>
                       <div class="profile-content">
-                          <form onsubmit="return validation()" action="" method="post">
+                          <form action="" method="post">
                             <div class="flex-container" style="display:flex">
                                 <div class="left-flex-container col-md-6">
                                     <div class="col-md-12">
@@ -77,7 +66,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Description :</label>
@@ -89,11 +77,20 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
+                                            <label>Marque :</label>
+                                            <input id="marque" name="marque" type="text" class="form-control" placeholder="Entrez la marque de produit si possible ! Ex: 'Sony'" value="<?php if(isset($_GET['edit'])) echo $articleMarque ?>">
+                                            <div class="container" style="padding:0;text-align:left;margin:0;">
+                                                <small id="marquePr_error_msg" class="form-text text-muted"></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
                                             <label class="inline-label">Categorie :</label>
                                             <select name="categorie" id="categorie" class="form-control inline-select">
                                                 <?php 
-                                                    $article = new article();
-                                                    $resultat = $article->afficherCategories();
+                                                    $categorie = new Categorie();
+                                                    $resultat = $categorie->AfficherCategories();
                                                     while($row = $resultat->fetch_assoc())
                                                     {
                                                         if(isset($_GET['edit'])){
@@ -364,6 +361,7 @@
                     e.preventDefault();
                     var nomPr = $("#nomPr").val();
                     var descPr = $("#descPr").val();
+                    var marquePr = $("#marque").val();
                     var categorieID = $("#categorie option:selected").val();
                     var prixPr = $("#prixPr").val();
                     var unitesStock = $("#unitesStock").val();
@@ -389,7 +387,7 @@
                         $.ajax({
                            url: '../public-includes/ajax_queries.php',
                             method: "POST",
-                            data: { function: "AjouterArtcile", couleurs: couleurs, articleNom: nomPr, articlePrix: prixPr, articlePrixRemise: prixFinal, artcileDescription: descPr, tauxRemise: taux, remiseDisponible: remiseDisponible, unitesEnStock: unitesStock, articleDisponible: articleDisponible, categorieID: categorieID},
+                            data: { function: "AjouterArtcile", couleurs: couleurs, articleNom: nomPr, articlePrix: prixPr, articlePrixRemise: prixFinal, artcileDescription: descPr, articleMarque: marquePr, tauxRemise: taux, remiseDisponible: remiseDisponible, unitesEnStock: unitesStock, articleDisponible: articleDisponible, categorieID: categorieID},
                             success: function(data){
                                 (data == true) ? $('#messageAjoute').modal('toggle') : null;
                             }
@@ -402,7 +400,7 @@
                         $.ajax({
                            url: '../public-includes/ajax_queries.php',
                             method: "POST",
-                            data: { function: "ModifierArticle", couleurs: couleurs, articleID: articleID, articleNom: nomPr, articlePrix: prixPr, articlePrixRemise: prixFinal, artcileDescription: descPr, tauxRemise: taux, remiseDisponible: remiseDisponible, unitesEnStock: unitesStock, articleDisponible: articleDisponible, categorieID: categorieID},
+                            data: { function: "ModifierArticle", couleurs: couleurs, articleID: articleID, articleNom: nomPr, articlePrix: prixPr, articlePrixRemise: prixFinal, artcileDescription: descPr, articleMarque: marquePr, tauxRemise: taux, remiseDisponible: remiseDisponible, unitesEnStock: unitesStock, articleDisponible: articleDisponible, categorieID: categorieID},
                             success: function(data){
                                 alert(data);
                                 (data == true) ? $('#messageModification').modal('toggle') : null;
