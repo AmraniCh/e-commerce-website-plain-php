@@ -1,7 +1,43 @@
 <?php include_once "includes/header.php" ?>
 
 		<?php include_once "includes/navigation.php" ?>
-		
+
+
+<?php
+$result = mysqli_query($con,"SELECT * FROM client WHERE clientID = '".$_SESSION['clientID']."'");
+if(mysqli_num_rows($result)>0) {
+    $row = mysqli_fetch_assoc($result);
+    $clientUserName = $row['clientUserName'];
+    $prenom = $row['prenom'];
+    $nom = $row['nom'];
+    $adresse = $row['adresse'];
+    $ville = $row['ville'];
+    $codePostal = $row['codePostal'];
+    $telephone = $row['telephone'];
+
+    $questionSecurite = $row['questionSecurite'];
+    if ($questionSecurite=='Quel était le nom de votre premier animal ?'){
+        $question1 = 'selected="selected"';
+    }
+    if ($questionSecurite=='Qui était votre héros d\'enfance ?'){
+        $question2 = 'selected="selected"';
+    }
+    if ($questionSecurite=='Quelle était le nom de votre école primaire ?'){
+        $question3 = 'selected="selected"';
+    }
+    if ($questionSecurite=='Quelle est votre équipe sportive favorite ?'){
+        $question4 = 'selected="selected"';
+    }
+    if ($questionSecurite=='Quelle est votre couleur préférée ?'){
+        $question5 = 'selected="selected"';
+    }
+
+    $reponseQuestion = $row['reponseQuestion'];
+}
+    ?>
+
+
+
 			<!-- BREADCRUMB -->
 			<div id="breadcrumb" class="section">
 				<!-- container -->
@@ -31,35 +67,38 @@
 								<h3 class="title">Profile</h3>
 							</div>
 							<div class="form-group">
-								<input class="form-control" id="username" type="text" name="username" placeholder="Pseudo" disabled>
+								<input class="form-control" id="username" type="text" name="username" placeholder="Pseudo" disabled value="<?php echo $clientUserName?>">
 							</div>
 							<div class="form-group">
-								<input class="form-control" id="prenom" type="text" name="prenom" placeholder="Prenom">
+								<input class="form-control" id="prenom" type="text" name="prenom" placeholder="Prenom" value="<?php echo $prenom?>">
 							</div>
 							<div class="form-group">
-								<input class="form-control" id="email" type="email" name="email" placeholder="Nom">
+								<input class="form-control" id="email" type="email" name="email" placeholder="Nom" value="<?php echo $nom?>">
 							</div>
 							<div class="form-group">
-								<input class="form-control" id="adresse" type="text" name="addresse" placeholder="Address">
+								<input class="form-control" id="adresse" type="text" name="addresse" placeholder="Address" value="<?php echo $adresse?>">
 							</div>
 							<div class="form-group">
-								<input class="form-control" id="ville" type="text" name="city" placeholder="Ville">
+								<input class="form-control" id="ville" type="text" name="city" placeholder="Ville" value="<?php echo $ville?>">
 							</div>
 							<div class="form-group">
-								<input class="form-control" id="codePostal" type="text" name="codePostal" placeholder="Code Postal">
+								<input class="form-control" id="codePostal" type="text" name="codePostal" placeholder="Code Postal" value="<?php echo $codePostal?>">
 							</div>
 							<div class="form-group">
-								<input class="form-control" id="tele" type="tel" name="tel" placeholder="Telephone">
+								<input class="form-control" id="tele" type="tel" name="tel" placeholder="Telephone" value="<?php echo $telephone?>">
 							</div>
 							<div class="form-group">
 								<lablel for="question" class="inline-label">Question sécurité :</lablel>
 								<select name="question" id="question" class="form-control">
-									
-									
+                                    <option value="Quel était le nom de votre premier animal ?" <?php echo $question1?>>Quel était le nom de votre premier animal ?</option>
+                                    <option value="Qui était votre héros d'enfance ?" <?php echo $question2?>>Qui était votre héros d'enfance ?</option>
+                                    <option value="Quelle était le nom de votre école primaire ?" <?php echo $question3?>>Quelle était le nom de votre école primaire ?</option>
+                                    <option value="Quelle est votre équipe sportive favorite ?" <?php echo $question4?>>Quelle est votre équipe sportive favorite ?</option>
+                                    <option value="Quelle est votre couleur préférée ?" <?php echo $question5?>>Quelle est votre couleur préférée ?</option>
 								</select>
 							</div>
 							<div class="form-group">
-								<input class="form-control" id="reponse" tele type="tel" name="reponse" placeholder="Réponse">
+								<input class="form-control" id="reponse" tele type="tel" name="reponse" placeholder="Réponse" value="<?php echo $reponseQuestion?>">
 							</div>
 						</div>
 
