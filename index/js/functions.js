@@ -1,14 +1,14 @@
 $(document).ready(function(){
     
-    RemplirPanierAJAX();
-    AfficherProduitsFilter();
+    RemplirPanier();
+    StorePagination();
     AfficherMarques();
-
+    
     $('.cart-summary, .cart-btns').on('click', function (e) {
 		e.stopPropagation();
 	});
     
-     $(document).on("click",".add-to-cart-btn", function(e){
+    $(document).on("click",".add-to-cart-btn", function(e){
         $(this).children(".fa-shopping-cart").toggleClass("produit-panier-icon");
         $(this).toggleClass("produit-panier");  
 
@@ -24,7 +24,7 @@ $(document).ready(function(){
             success: function(data){
                 if(data != false){      
                     $("#audio")[0].play();
-                    RemplirPanierAJAX();
+                    RemplirPanier();
                 }
                 else
                     $(location).attr('href', '../login.php');
@@ -48,12 +48,15 @@ $(document).ready(function(){
             success: function (data) {
                 if (data != false){
                     $("div#" + articleID + ".product-widget").remove();
-                    RemplirPanierAJAX();
+                    RemplirPanier();
                 }
             }
         });
     });
+    
+    
 });
+
 
 function AfficherMarques() {
     var categoriesIDs = [];
@@ -94,6 +97,9 @@ function AfficherProduitsFilter() {
 
     var minPrix = $("#price-min").val();
     var maxPrix = $("#price-max").val();
+    var filtrerpar = $("#filtrerPar option:selected").val();
+    var afficherNbr = $("#afficherNbr option:selected").val();
+    var page_nbr = $(".store-pagination li[class*='active']").attr("id");
 
     if (categoriesIDs[0] != null && minPrix != '' && maxPrix != '') {
         $.ajax({
@@ -105,11 +111,15 @@ function AfficherProduitsFilter() {
                 marques: JSON.stringify(marques),
                 minPrix: minPrix,
                 maxPrix: maxPrix,
+                filtrerPar: filtrerpar,
+                afficherNbr: afficherNbr,
+                page_nbr: page_nbr
             },
             beforeSend: function(){
                 Lodding($(".produits-filter"));
             },
             success: function (data) {
+
                 if(data != '')
                     $(".produits-filter").html(data);
                 else
@@ -119,6 +129,57 @@ function AfficherProduitsFilter() {
     } 
     else
         $(".produits-filter").empty();
+    
+}
+
+function StorePagination(){
+    var afficherNbr = $("#afficherNbr option:selected").val();
+    
+    var categoriesIDs = [];
+    $(".cat-check").each(function () {
+        if ($(this).prop("checked")) {
+            categoriesIDs.push($(this).attr("id"));
+        }
+    });
+    
+    var marques = [];
+    $(".marque-check").each(function () {
+        if ($(this).prop("checked")) {
+            marques.push($(this).attr("id"));
+        }
+    });
+
+    var minPrix = $("#price-min").val();
+    var maxPrix = $("#price-max").val();
+    var filtrerpar = $("#filtrerPar option:selected").val();
+    var afficherNbr = $("#afficherNbr option:selected").val();
+    
+    $.ajax({
+        url: "../public-includes/ajax_queries",
+        method: "POST",
+        data: {
+            function: "StorePagination",
+            categoriesIDs: JSON.stringify(categoriesIDs),
+            marques: JSON.stringify(marques),
+            minPrix: minPrix,
+            maxPrix: maxPrix,
+            filtrerPar: filtrerpar,
+            afficherNbr: afficherNbr,
+        },
+        dataType: "JSON",
+        success: function(data){
+
+                $(".store-pagination").empty();
+                for(var i=1; i<=data[0].nbr_pages; i++){
+                    if(data[0].page_nbr == i)
+                        $(".store-pagination").append("<li id='"+i+"' class='active pagination'>"+i+"</li>");
+                    else
+                        $(".store-pagination").append("<li id='"+i+"' class='pagination'><a>"+i+"</a></li>");
+                }
+        
+                AfficherProduitsFilter();
+        }
+    });
 }
 
 function reload_js(src) {
@@ -273,7 +334,7 @@ function SlickWidget3(){
     });     
 }
 
-function RemplirPanierAJAX(){
+function RemplirPanier(){
 	$.ajax({
 	    url: '../public-includes/ajax_queries',
 	    method: 'POST',

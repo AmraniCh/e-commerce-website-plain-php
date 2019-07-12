@@ -2212,3 +2212,7 @@ textarea.input {
     margin-top: 10px;
   }
 }
+
+.store-pagination li {
+  cursor: pointer;
+}

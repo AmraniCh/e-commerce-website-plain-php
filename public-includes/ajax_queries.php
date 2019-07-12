@@ -4,6 +4,9 @@
     require_once 'classes.php';
     session_start();
 
+    static $static_page_nbr = 1;
+    static $limitRange = 0;
+        
     if(isset($_POST['function']))
         $called_function = $_POST['function'];
     else
@@ -40,7 +43,9 @@
         case "AfficherMarquesFilter":
             echo $_POST['function']($_POST['categoriesIDs']);break;
         case "AfficherProduitsFilter":
-            echo $_POST['function']($_POST['categoriesIDs'], $_POST['marques'], $_POST['minPrix'], $_POST['maxPrix']);break;
+            echo $_POST['function']($_POST['categoriesIDs'], $_POST['marques'], $_POST['minPrix'], $_POST['maxPrix'],$_POST['filtrerPar'],$_POST['afficherNbr'],$_POST['page_nbr']);break;
+        case "StorePagination":
+            echo $_POST['function']($_POST['categoriesIDs'],$_POST['marques'],$_POST['minPrix'],$_POST['maxPrix'],$_POST['filtrerPar'],$_POST['afficherNbr']);break;
     }
 
     // catégories fonctions 
@@ -194,7 +199,6 @@
         return json_encode($array);
     }
 
-    
     // fonction générales
     function RemplirPanier(){
         $json = array();
@@ -290,21 +294,37 @@
        
     }
 
-    function AfficherProduitsFilter($categoriesIDs, $marques, $minPrix, $maxPrix){
-        global $con;
+    function AfficherProduitsFilter($categoriesIDs, $marques, $minPrix, $maxPrix, $filrerPar, $afficherNbr, $page_nbr)
+    {
+        global $con,$limitRange,$static_page_nbr;
+        $static_page_nbr = $page_nbr;
+        
         $article = new Article();
         $categorie = new Categorie();
-        $marques_implode = implode(',', json_decode($marques));
+        $marques_substr = substr($marques, 1, -1);
         $categoriesIDs_implode = implode(',', json_decode($categoriesIDs));
         $categoriesIDs_array = explode(',',$categoriesIDs_implode);
-        $query_string = "SELECT * FROM article WHERE (articlePrix BETWEEN $minPrix AND $maxPrix OR articlePrixRemise BETWEEN $minPrix AND $maxPrix)";
+        $query_string = "SELECT * FROM article WHERE articleDisponible = true AND (articlePrix BETWEEN $minPrix AND $maxPrix OR articlePrixRemise BETWEEN $minPrix AND $maxPrix)";
         
-        if(!in_array('-1',$categoriesIDs_array)) // pas tous
-            $query_string.= "AND categorieID IN($categoriesIDs_implode)";
-        if($marques_implode != '')
-            $query_string.= "AND articleMarque IN('$marques_implode')";
+        if(!in_array('-1',$categoriesIDs_array)) // filter categorie
+            $query_string.= " AND categorieID IN($categoriesIDs_implode)";
+        if($marques_substr != '') // filter marques
+            $query_string.= " AND articleMarque IN($marques_substr)";
         
-            $query = $con->query($query_string);
+        // fitrerPar
+        switch($filrerPar){
+            case "Nouveau":
+                $query_string.= " ORDER BY dateAjoute Desc ";
+        }
+        
+        if($page_nbr == 1)
+            $limitRange = 0;
+        else
+            $limitRange+=$afficherNbr; // page 2 : limitRange = 2
+        
+        $query_string.= "LIMIT $limitRange,$afficherNbr";
+        
+        $query = $con->query($query_string);
         if($query->num_rows > 0){
             while($row = $query->fetch_array())
             {
@@ -348,5 +368,31 @@
         }
         else 
             return '';
+    }
+
+    function StorePagination($categoriesIDs, $marques, $minPrix, $maxPrix, $filrerPar, $afficherNbr){
+        global $con,$static_page_nbr;
+        $categoriesIDs_implode = implode(',', json_decode($categoriesIDs));
+        $categoriesIDs_array = explode(',',$categoriesIDs_implode);
+        $marques_substr = substr($marques, 1, -1);
+        
+        $query_string = "SELECT COUNT(*) FROM article WHERE articleDisponible = true AND (articlePrix BETWEEN $minPrix AND $maxPrix OR articlePrixRemise BETWEEN $minPrix AND $maxPrix) ";
+        
+        if(!in_array('-1',$categoriesIDs_array))
+            $query_string.= "AND categorieID IN($categoriesIDs_implode) ";    
+        if($marques_substr != '') // filter marques
+            $query_string.= "AND articleMarque IN($marques_substr) ";
+        
+        switch($filrerPar){
+            case "Nouveau":
+                $query_string.= "ORDER BY dateAjoute Desc";
+        }
+        
+        $query = $con->query($query_string);
+        $row = $query->fetch_row();
+        $nbr_articles = $row[0];
+        $nbr_pages = ceil($nbr_articles / $afficherNbr);
+        $data[] = array('page_nbr' => $static_page_nbr, 'nbr_pages' => $nbr_pages);
+        return json_encode($data);
     }
 

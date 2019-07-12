@@ -163,18 +163,19 @@
 						<div class="store-filter clearfix">
 							<div class="store-sort">
 								<label>
-									Sort By:
-									<select class="input-select">
-										<option value="0">Popular</option>
-										<option value="1">Position</option>
+									Sort By : 
+									<select id="filtrerPar" class="input-select">
+										<option value="Nouveau">Nouveau</option>
+										<option value="Recommonde">Recommonde</option>
 									</select>
 								</label>
 
 								<label>
-									Show:
-									<select class="input-select">
-										<option value="0">20</option>
-										<option value="1">50</option>
+									Afficher : 
+									<select id="afficherNbr" class="input-select">
+										<option value="2">2</option>
+										<option value="4">4</option>
+										<option value="8">8</option>
 									</select>
 								</label>
 							</div>
@@ -196,12 +197,13 @@
 						<!-- store bottom filter -->
 						<div class="store-filter clearfix">
 							<span class="store-qty">Showing 20-100 products</span>
+							<?php
+								
+							?>
 							<ul class="store-pagination">
-								<li class="active">1</li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#">4</a></li>
-								<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+
+								<!--
+								<li><a href="#"><i class="fa fa-angle-right"></i></a></li>-->
 							</ul>
 						</div>
 						<!-- /store bottom filter -->
@@ -222,15 +224,31 @@
 		$(document).ready(function(){
 			
 	
-			$(document).on("input", ".cat-check, #price-max, #price-min, .marque-check", function(){
+			$(document).on("input", ".cat-check, #price-max, #price-min, .marque-check, #afficherNbr", function(){
 				
 				AfficherProduitsFilter();
+				StorePagination();
 			});
 			
 			$(".cat-check").on("click",function(){
-
 				AfficherMarques();
+				StorePagination();
+			});
+			
+			$(document).on("click",".pagination",function(e){
 				
+				$(".pagination").each(function(){
+					if($(this).hasClass("active")){
+						$(this).removeClass("active");
+						$(this).children("a").css("color","#333");
+					}
+				});
+				
+				$(this).toggleClass("active");
+				$(this).children("a").css("color","#fff");
+			
+			
+				AfficherProduitsFilter();
 			});
 		});
 		</script>
