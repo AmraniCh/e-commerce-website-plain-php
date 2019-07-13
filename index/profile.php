@@ -4,7 +4,7 @@
 
 
 <?php
-$result = mysqli_query($con,"SELECT * FROM client WHERE clientID = '".$_SESSION['clientID']."'");
+$result =  mysqli_query($con,"SELECT * FROM client WHERE clientID = '".$_SESSION['clientID']."'");
 if(mysqli_num_rows($result)>0) {
     $row = mysqli_fetch_assoc($result);
     $clientUserName = $row['clientUserName'];
@@ -14,6 +14,12 @@ if(mysqli_num_rows($result)>0) {
     $ville = $row['ville'];
     $codePostal = $row['codePostal'];
     $telephone = $row['telephone'];
+
+    $question1='';
+    $question2='';
+    $question3='';
+    $question4='';
+    $question5='';
 
     $questionSecurite = $row['questionSecurite'];
     if ($questionSecurite=='Quel était le nom de votre premier animal ?'){

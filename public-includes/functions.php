@@ -119,7 +119,7 @@ function returnTabWidget($categorieNom){
             </div>
             <div class='product-body'>
                 <p class='product-category'><img src='img/new.png'></p>
-                <h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
+                <h3 class='product-name'><a href='product.php?id=" . $row['articleID']. "'>".$row['articleNom']."</a></h3>
                 <h4 class='product-price'>".$row['articlePrix']."<del class='product-old-price'>".$row['articlePrixRemise']."</del></h4>
             </div>
         </div>";
@@ -131,7 +131,7 @@ function returnTabWidget($categorieNom){
             </div>
             <div class='product-body'>
                 <p class='product-category'><img src='img/new.png'></p>
-                <h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
+                <h3 class='product-name'><a href='product.php?id=" . $row['articleID']. "'>".$row['articleNom']."</a></h3>
                 <h4 class='product-price'>".$row['articlePrix']."</h4>
             </div>
         </div>";
@@ -139,4 +139,33 @@ function returnTabWidget($categorieNom){
     }
     $return.= "</div>";
     return $return;
+}
+
+
+ function echoImages($articleID){
+    $result = ImagesArticle($articleID);
+    $images = '';
+
+     while( $row = mysqli_fetch_array($result)){
+         $images = $images.' <div class="product-preview">
+								<img src=img/'.$row['imageArticleNom'].'  alt="">
+							</div> ';
+     }
+
+        return $images;
+
+}
+
+function echocolors($idarticle){
+
+    global $con;
+    $result = $con->query("SELECT nomCouleur FROM couleurarticle WHERE articleID = $idarticle");
+
+    $Couleurs = '';
+
+    while ($rows = mysqli_fetch_array($result)){
+        $Couleurs = $Couleurs . '<option value="'.$rows['nomCouleur'].'">'.$rows['nomCouleur'].'</option>';
+
+    }
+    return $Couleurs;
 }
