@@ -551,8 +551,7 @@ textarea.input {
   padding: 15px;
   z-index: 9999;
   right: 0;
-  opacity: 0;
-  visibility: hidden;
+  display: none;
 }
 
 .dropdown.open>.cart-dropdown {
@@ -857,9 +856,7 @@ textarea.input {
 .product {
   position: relative;
   margin: 15px 0px;
-  -webkit-box-shadow: 0px 0px 0px 0px #E4E7ED, 0px 0px 0px 1px #E4E7ED;
-  box-shadow: 0px 0px 0px 0px #E4E7ED, 0px 0px 0px 1px #E4E7ED;
-  -webkit-transition: 0.2s all;
+  outline: 1px solid #eee;
   transition: 0.2s all;
 }
 
@@ -1371,7 +1368,7 @@ textarea.input {
   border-color: #D10024;
   color: #FFF;
   font-weight: 500;
-  cursor: default;
+  cursor: pointer;
 }
 
 .store-pagination li a {

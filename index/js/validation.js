@@ -190,9 +190,9 @@ $(function () {
         var icon = $("#reponse-ic-i");
         var span = $("#reponse-ic-span");
 
-        if (!validLength(reponse, 6, 50)) {
+        if (!validLength(reponse, 3, 50)) {
             $("#reponse_error").css("visibility", "visible");
-            $("#reponse_error").html("* Une réponse doit contenir entre entre 6-50 caractères");
+            $("#reponse_error").html("* Une réponse doit contenir entre entre 3-50 caractères");
             reponse_error = true;
             icon_change_color(span, icon);
         } else if (!allLetters(reponse)) {
@@ -379,8 +379,8 @@ $(function(){
         var icon = $("#codemail-ic-i");
         var span = $("#codemail-ic-span");
 
-        var l = codemail.val().length;
-        if (l != 6) {
+        if (codemail.length > 5) {
+            alert();
             $("#codemail_error").css("visibility", "visible");
             $("#codemail_error").html("* Le code ne doit contenir que 6 chiffres !");
             codemail_error = true;

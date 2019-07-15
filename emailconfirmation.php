@@ -1,6 +1,6 @@
 <?php
     require_once 'public-includes/config.php';
-    require_once 'public-includes/functions.php';
+    require_once 'public-includes/PHPMAILER.php';
     session_start();
 ?>
 <!DOCTYPE html>
@@ -21,35 +21,50 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
+        <script src="index/js/jquery.min.js"></script>
+        <script src="index/js/functions.js"></script>
     </head>
   <body>
     <?php
     
       // email confirmation code here
 
-    $username = $_SESSION['user'];
-
-    if(isset($_POST['submit'])){
-
-        $sql = "select codeEmail from client where clientUserName='$username'";
+    if(isset($_SESSION['clientUserName'])){
+      
+        $username = $_SESSION['clientUserName'];
+        
+        $sql = "select * from client where clientUserName='$username'";
         $result = $con->query($sql);
-
+      
         if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-                $code = $row["codeEmail"];
+          // output data of each row
+          while($row = $result->fetch_assoc()) {
+            $code = $row["codeEmail"];
+            $clientID = $row["clientID"];
+            $clientUserName = $row["clientUserName"];
+          }
+        }
+      
+        if(isset($_POST['submitCfr'])){
+            if ($con->escape_string($_POST['codemail']) == $code){
+                $sql = "UPDATE client SET emailValid = 1 where clientUserName = '$username'";
+                $con->query($sql);
+                $_SESSION['clientID'] = $clientID;
+                $_SESSION['clientUserName'] = $clientUserName;
+                header ('location: index/profile.php');
             }
+            else
+                echo "<script>$(document).ready(function(){ emailCodeIncorrect() })</script>";
         }
-
-        if ($_POST['codemail']==$code){
-            $sql = "UPDATE client SET emailValid = 1 where clientUserName='$username'";
-            $con->query($sql);
-            header ('location: index/profile.php');
+      
+        if(isset($_POST['submitPsm'])){
+          
+          $_SESSION['clientID'] = $clientID;
+          $_SESSION['clientUserName'] = $clientUserName;
+          header ('Location: index/profile.php');
+          
         }
-        else{
-            echo "your code is wrong";
-        }
-    }
+  
     ?>
     <div class="container-scroller">
         <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">
@@ -76,8 +91,8 @@
                       </div>
                     </div>
                     <div class="form-group text-center" style="margin-top:1.8rem!important">
-                      <input type="submit" name="submit" value="Confirmer mon email" class="btn btn-dark-red submit-btn btn-block">
-                      <button class="btn btn-primary submit-btn btn-block" type="button" style="background-color:#0083ff!important">Pas maintenant</button>
+                      <input type="submit" name="submitCfr" value="Confirmer mon email" class="btn btn-dark-red submit-btn btn-block">
+                      <button class="btn btn-primary submit-btn btn-block" type="submit" name="submitPsm" style="background-color:#0083ff!important">Pas maintenant</button>
                     </div>
                     <div class="form-group">
                       <button class="btn btn-block g-login" type="button">
@@ -93,8 +108,10 @@
         </div>
         <!-- page-body-wrapper ends -->
       </div>
-        <script src="index/js/jquery-3.3.1.min.js"></script>
-        <script src="index/js/functions.js"></script>
-        <script src="index/js/validation.js"></script>
+      <script src="index/js/validation.js"></script>
   </body>
 </html>
+
+<?php
+    }
+?>

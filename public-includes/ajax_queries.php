@@ -5,7 +5,6 @@
     session_start();
 
     static $static_page_nbr = 1;
-    static $limitRange = 0;
         
     if(isset($_POST['function']))
         $called_function = $_POST['function'];
@@ -46,9 +45,81 @@
             echo $_POST['function']($_POST['categoriesIDs'], $_POST['marques'], $_POST['minPrix'], $_POST['maxPrix'],$_POST['filtrerPar'],$_POST['afficherNbr'],$_POST['page_nbr']);break;
         case "StorePagination":
             echo $_POST['function']($_POST['categoriesIDs'],$_POST['marques'],$_POST['minPrix'],$_POST['maxPrix'],$_POST['filtrerPar'],$_POST['afficherNbr']);break;
+        case "returnTabWidget":
+            $_POST['function']($_POST['categorie']);break;
     }
 
-    // catégories fonctions 
+    // global functions
+    function RemplirPanier(){
+        if(isset($_SESSION['clientID'])){
+            $article = new Article();
+            $panier = new Panier();
+            $query = $panier->AfficherPanierProduits($_SESSION['clientID']);
+            if($query != null)
+            {
+                $json = array();
+                $prix_total = 0;
+                $html = '';
+                while($row = $query->fetch_assoc()){
+                    $imageArticle = $article->ImageArticle($row['articleID']);
+
+                    if($row['remiseDisponible']){
+                        $prix_total += $row['articlePrixRemise'] * $row['NbrArticlesPanier'];
+                        $prix = $row['articlePrixRemise'];
+                    }
+                    else{
+                        $prix_total += $row['articlePrix'] * $row['NbrArticlesPanier'];
+                        $prix = $row['articlePrix'];
+                    }
+                    $html.= '<div id="'.$row['articleID'].'" class="product-widget">
+                        <div class="product-img">
+                            <img src="'.$imageArticle.'" alt="">
+                        </div>
+                        <div class="product-body" style="text-align:left">
+                            <h3 class="product-name"><a href="#">'.$row['articleNom'].'</a></h3>
+                            <h4 class="product-price"><span class="qty">'.$row['NbrArticlesPanier'].'x</span>'.$prix.'</h4>
+                        </div>
+                        <button id="'.$row['articleID'].'" class="delete supp-panier"><i class="fa fa-close"></i></button>
+                    </div>';
+                }
+                $client = new client();
+                $clientID = $_SESSION['clientID'];
+                $json['prixTotal'] = $prix_total;
+                $json['data'] = $html;
+                $json['qty-panier'] = $client->NbrArticlesPanier($clientID);
+                return json_encode($json);
+            }
+            else
+                return json_encode(array('prixTotal' => 0, 'data' => "Votre panier est vide. Aller faire les courses!", 'qty-panier' => 0));
+        }
+        else
+                return json_encode(array('prixTotal' => 0, 'data' => "Votre panier est vide. Aller faire les courses!", 'qty-panier' => 0));
+    }
+
+    function AjouterAuPanier($articleID){
+        if(!isset($_SESSION['clientID']))
+            return json_encode(false);
+        global $con;
+        $clientID = $_SESSION['clientID'];
+        $articleID = $con->escape_string($articleID);
+        $query = $con->query("INSERT INTO panierDetails VALUES(null,$clientID,$articleID)");
+        if($con->affected_rows){
+            $client = new client();
+            return json_encode($client->NbrArticlesPanier($clientID));
+        }
+    }
+
+    function SupprimerAuPanier($articleID){
+        global $con;
+        $clientID = $_SESSION['clientID'];
+        $query = $con->query("DELETE FROM panierDetails WHERE articleID = $articleID AND clientID = $clientID");
+        if($con->affected_rows)
+            return json_encode(true);
+        else
+            return json_encode(false);
+    }
+
+    // categories.php functions 
     function SupprimerCategorie($idCat){
         global $con;
         $con->query("DELETE FROM categorie WHERE categorieID = $idCat");
@@ -64,7 +135,7 @@
         $con->query("UPDATE categorie SET categorieNom = '$nomCat', description = '$descCat', active = $active WHERE categorieID = $idCat");
     }
 
-    // article fonctions
+    // produit.php functions
     function AjouterArtcile($couleurs, $artcileNom, $articlePrix, $articlePrixRemise, $artcileDescription, $articleMarque, $tauxRemise, $remiseDisponible, $unitesEnStock, $articleDisponible, $categorieID){
         global $con;
         $result = $con->query("INSERT INTO article VALUES(null,'$artcileNom',$articlePrix,$articlePrixRemise,'$artcileDescription','$articleMarque',$tauxRemise,$remiseDisponible,$unitesEnStock,default,$articleDisponible,default,default,$categorieID)");
@@ -135,9 +206,8 @@
         }
     }
 
-    // clients fonctions
-    function SupprimerClient($clientID)
-    {
+    // clients.php functions
+    function SupprimerClient($clientID){
         global $con;
         $result = $con->query("DELETE FROM client WHERE clientID = $clientID");
         if($con->affected_rows)
@@ -145,7 +215,7 @@
         return false;
     }
                 
-    // index fonctions
+    // index functions
     function RechargerTab($categorieNom){
         $article = new Article();
         $categorie = new Categorie();
@@ -155,147 +225,52 @@
             $query = $article->NouveauxProduitsAleatoire();
     
         if($query != null){
+            $data = array();
             while($row = $query->fetch_assoc()){
                 $imageArticle = $article->ImageArticle($row['articleID']);
                 $niveau = $article->echoNiveau($row['articleID']);
                 $categorieNom = $categorie->CategorieNomParID($row['categorieID']);
-
-                if ($row['remiseDisponible'] == true) {
-                    echo "<div class='product pro-tab1' style='visibility:hidden'>
-                        <div class='product-img'><img src=".$imageArticle." alt=".$imageArticle.">
-                            <div class='product-label'><span class='sale'>".$row['tauxRemise']."%</span><span class='new'>Nouveau</span></div>
-                        </div>
-                        <div class='product-body'>
-                            <p class='product-category'>".$categorieNom."</p>
-                            <h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
-                            <h4 class='product-price'>".$row['articlePrixRemise']." DHS<del class='product-old-price'>". $row['articlePrix']."</del></h4>
-                            <div class='product-rating'>".$niveau."</div>
-                            <div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div>
-                        </div>
-                        <div class='add-to-cart'><button id=".$row['articleID']." class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div>
-                    </div>";
-                }
-                else
-                    echo "<div class='product pro-tab1' style='visibility:hidden'>
-                    <div class='product-img'><img src=".$imageArticle." alt=".$imageArticle.">
-                        <div class='product-label'><span class='new'>Nouveau</span></div>
-                    </div>
-                    <div class='product-body'>
-                        <p class='product-category'>".$categorieNom."</p>
-                        <h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
-                        <h4 class='product-price'>".$row['articlePrix']." DHS</h4>
-                        <div class='product-rating'>".$niveau."</div>
-                        <div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div>
-                    </div>
-                    <div class='add-to-cart'><button id=".$row['articleID']." class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div>
-                    </div>";
-            }
+                
+                $data[] = ['imageArticle' => $imageArticle, 'niveau' => $niveau, 'categorieNom' => $categorieNom, 'remiseDisponible' => $row['remiseDisponible'], 'tauxRemise' => $row['tauxRemise'], 'articleNom' => $row['articleNom'], 'articlePrixRemise' => $row['articlePrixRemise'], 'articlePrix' => $row['articlePrixRemise'], 'articleID' => $row['articleID']];
+            } 
+            return json_encode($data);
         }
+        else
+            return json_encode(null);
     }
 
     function RechargerTabWidget($categorie){
         global $con;
-        $array = array('tab1' => returnTabWidget($con->escape_string($categorie)), 'tab2' => returnTabWidget($con->escape_string($categorie)));
-        return json_encode($array);
-    }
-
-    // fonction générales
-    function RemplirPanier(){
-        $json = array();
-        if(isset($_SESSION['clientID'])){
-            $article = new Article();
-            $panier = new Panier();
-            $query = $panier->AfficherPanierProduits($_SESSION['clientID']);
-            $prix_total = 0;
-            $html = '';
-            while($row = $query->fetch_assoc()){
-                $imageArticle = $article->ImageArticle($row['articleID']);
-                
-                if($row['remiseDisponible']){
-                    $prix_total += $row['articlePrixRemise'] * $row['NbrArticlesPanier'];
-                    $prix = $row['articlePrixRemise'];
-                }
-                else{
-                    $prix_total += $row['articlePrix'] * $row['NbrArticlesPanier'];
-                    $prix = $row['articlePrix'];
-                }
-                $html.= '<div id="'.$row['articleID'].'" class="product-widget">
-                    <div class="product-img">
-                        <img src="'.$imageArticle.'" alt="">
-                    </div>
-                    <div class="product-body" style="text-align:left">
-                        <h3 class="product-name"><a href="#">'.$row['articleNom'].'</a></h3>
-                        <h4 class="product-price"><span class="qty">'.$row['NbrArticlesPanier'].'x</span>'.$prix.'</h4>
-                    </div>
-                    <button id="'.$row['articleID'].'" class="delete supp-panier"><i class="fa fa-close"></i></button>
-                </div>';
-            }
-            $client = new client();
-            $clientID = $_SESSION['clientID'];
-            $json['prixTotal'] = $prix_total;
-            $json['data'] = $html;
-            $json['qty-panier'] = $client->NbrArticlesPanier($clientID);
-            return json_encode($json);
+        $tab1 = returnTabWidget($categorie);
+        $tab2 = returnTabWidget($categorie);
+        if($tab1 != null && $tab2 != null){
+            $array = array('tab1' => $tab1, 'tab2' => $tab2);
+            return json_encode($array);
         }
-        else{
-            $json['prixTotal'] = 0;
-            $json['data'] = 'Votre panier est vide. Aller faire les courses!';
-            $json['qty-panier'] = 0;
-            return json_encode($json);
-        }
+        return null;
     }
 
-    function AjouterAuPanier($articleID)
-    {
-        if(!isset($_SESSION['clientID']))
-            return json_encode(false);
-        global $con;
-        $clientID = $_SESSION['clientID'];
-        $articleID = $con->escape_string($articleID);
-        $query = $con->query("INSERT INTO panierDetails VALUES(null,$clientID,$articleID)");
-        if($con->affected_rows){
-            $client = new client();
-            return json_encode($client->NbrArticlesPanier($clientID));
-        }
-    }
-
-    function SupprimerAuPanier($articleID){
-        global $con;
-        $clientID = $_SESSION['clientID'];
-        $query = $con->query("DELETE FROM panierDetails WHERE articleID = $articleID AND clientID = $clientID");
-        if($con->affected_rows)
-            return json_encode(true);
-        else
-            return json_encode(false);
-    }
-
-    // store functions
+    // store.php functions
     function AfficherMarquesFilter($categoriesIDs){
         global $con;
         $article = new Article();
         $ids = implode(',',json_decode($categoriesIDs));
         if($ids != '')
         {
+            $data = array();
             $query = $con->query("SELECT DISTINCT articleMarque FROM article WHERE categorieID IN($ids)");
             while($row = $query->fetch_row()){
                 $nbr_produits = $article->NbrProduitsParMarque($row[0]);
-                if($row[0] != ''){
-                    echo '<div class="input-checkbox">
-                            <input class="marque-check" type="checkbox" id="'.$row[0].'">
-                            <label for="'.$row[0].'">
-                                <span></span>
-                                '.$row[0].'
-                                <small>'.$nbr_produits.'</small>
-                            </label>
-                        </div>';
-                }
+                $data[] = ['articleMarque' => $row[0], 'nbr_produits' => $nbr_produits];
             }
+            return json_encode($data);
         }
+        else
+            return json_encode(null);
        
     }
 
-    function AfficherProduitsFilter($categoriesIDs, $marques, $minPrix, $maxPrix, $filrerPar, $afficherNbr, $page_nbr)
-    {
+    function AfficherProduitsFilter($categoriesIDs, $marques, $minPrix, $maxPrix, $filrerPar, $afficherNbr, $page_nbr){
         global $con,$limitRange,$static_page_nbr;
         $static_page_nbr = $page_nbr;
         
@@ -320,54 +295,28 @@
         if($page_nbr == 1)
             $limitRange = 0;
         else
-            $limitRange+=$afficherNbr; // page 2 : limitRange = 2
-        
+            $limitRange= ($page_nbr -1) * $afficherNbr;
+      
         $query_string.= "LIMIT $limitRange,$afficherNbr";
-        
         $query = $con->query($query_string);
+        $data = array();
         if($query->num_rows > 0){
             while($row = $query->fetch_array())
             {
                 $imageArticle = $article->ImageArticle($row['articleID']);
                 $niveau = $article->echoNiveau($row['articleID']);
                 $categorieNom = $categorie->CategorieNomParID($row['categorieID']);
-                if ($row['remiseDisponible'] == true) {
-                    echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'>
-                        <div class='product pro-tab1'>
-                            <div class='product-img no-slick-product' style='background-image:url($imageArticle)'>
-                                <div class='product-label'><span class='sale'>".$row['tauxRemise']."%</span><span class='new'>Nouveau</span></div>
-                            </div>
-                            <div class='product-body'>
-                                <p class='product-category'>".$categorieNom."</p>
-                                <h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
-                                <h4 class='product-price'>".$row['articlePrixRemise']." DHS<del class='product-old-price'>". $row['articlePrix']."</del></h4>
-                                <div class='product-rating'>".$niveau."</div>
-                                <div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div>
-                            </div>
-                            <div class='add-to-cart'><button id=".$row['articleID']." class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div>
-                        </div>
-                    </div>";
-                }
-                else
-                    echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'>
-                        <div class='product pro-tab1'>
-                            <div class='product-img no-slick-product' style='background-image:url($imageArticle)'>
-                                <div class='product-label'><span class='new'>Nouveau</span></div>
-                            </div>
-                            <div class='product-body'>
-                                <p class='product-category'>".$categorieNom."</p>
-                                <h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
-                                <h4 class='product-price'>".$row['articlePrix']." DHS</h4>
-                                <div class='product-rating'>".$niveau."</div>
-                                <div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div>
-                            </div>
-                            <div class='add-to-cart'><button id=".$row['articleID']." class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div>
-                        </div>
-                    </div>";
+                
+                $data[] = ['imageArticle' => $imageArticle, 'niveau' => $niveau, 'categorieNom' => $categorieNom, 'remiseDisponible' => $row['remiseDisponible'], 'articleNom' => $row['articleNom'], 'articleID' => $row['articleID'], 'articlePrix' => $row['articlePrix'], 'articlePrixRemise' => $row['articlePrixRemise'], 'tauxRemise' => $row['tauxRemise']];
             }
+            $query_string2 = explode('LIMIT', $query_string)[0];
+            $query_total_artilces = $con->query($query_string2);
+            $row2 = $query_total_artilces->fetch_row();
+            array_push($data, $query_total_artilces->num_rows, $query->num_rows);
+            return json_encode($data);
         }
         else 
-            return '';
+            return json_encode(null);
     }
 
     function StorePagination($categoriesIDs, $marques, $minPrix, $maxPrix, $filrerPar, $afficherNbr){
@@ -393,6 +342,28 @@
         $nbr_articles = $row[0];
         $nbr_pages = ceil($nbr_articles / $afficherNbr);
         $data[] = array('page_nbr' => $static_page_nbr, 'nbr_pages' => $nbr_pages);
-        return json_encode($data);
+        if($query->num_rows != 0)
+            return json_encode($data);
+        else
+            return json_encode(null);
+        return json_encode(null);
+    }
+
+    // functions
+    function returnTabWidget($categorieNom){
+        $article = new Article();
+        $categorie = new Categorie();
+        $query = $article->ProduitsWidget($categorieNom);
+        if($query != null){
+            $data = array();
+            while($row = $query->fetch_assoc()){
+                $imageArticle = $article->ImageArticle($row['articleID']);
+                $categorieNom = $categorie->CategorieNomParID($row['categorieID']);
+
+                $data[] = ['imageArticle' => $imageArticle, 'categorieNom' => $categorieNom, 'remiseDisponible' => $row['remiseDisponible'], 'articleNom' => $row['articleNom'], 'articlePrix' => $row['articleNom'], 'articlePrixRemise' => $row['articlePrixRemise']];
+            }
+            return json_encode($data);
+        }
+        return null;
     }
 

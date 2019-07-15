@@ -19,9 +19,7 @@
       
       //redirect
       if(isset($_SESSION["admin"]))
-      {
-          header ('location: index.php?admin='.$adminame);
-      }
+          header ('Location: index.php?admin='.$adminame);
       
       // login
       if(isset($_POST['submit']))
@@ -29,10 +27,10 @@
             $adminame = $con->escape_string($_POST['username-lg']);
             $pass = $con->escape_string($_POST['password-lg']);
 
-            $res = mysqli_query($con,"SELECT * FROM admin WHERE adminName = '$adminame' AND motdepasse = '$pass'");    
-            if(mysqli_num_rows($res)>0){
+            $query = mysqli_query($con,"SELECT * FROM admin WHERE adminName = '$adminame' AND motdepasse = '$pass'");    
+            if($query->num_rows > 0){
                 $_SESSION['admin'] = $adminame;
-                header ('location: index.php?admin='.$adminame);
+                header ('Location: index.php?admin='.$adminame);
             }
             else
               echo '<script>$(document).ready(function(){ compteIntrouvable() });</script>';

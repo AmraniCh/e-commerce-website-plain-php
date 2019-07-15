@@ -1,8 +1,9 @@
 <?php 
+	ob_start();
+	session_start();
 	require_once "../public-includes/config.php";
 	include_once "../public-includes/functions.php";
 	include_once "../public-includes/classes.php";
-	session_start();
 
 	if(isset($_POST['submit']))
 	{
@@ -60,7 +61,7 @@
 							if(isset($_SESSION['clientID']))
 								echo '<li><a href="profile.php?client='.$_SESSION['clientUserName'].'"><i class="fa fa-user-o"></i> Mon compte</a></li>';
 							else
-								echo '<li><a href="../login.php"><i class="fa fa-sign-in"></i>Se déconnecter</a></li>';
+								echo '<li><a href="../login.php"><i class="fa fa-sign-in"></i>Se connecter</a></li>';
 						?>
 					</ul>
 				</div>
@@ -89,18 +90,20 @@
 									<select name="categorie" class="input-select" style="width:23%">
 										<option value="tout">Tout</option>
 										<?php
-											$result = $con->query("SELECT * FROM categorie ORDER BY categorieNom");
-											while($row = $result->fetch_assoc())
-											{
-												if(isset($_GET['rechercher']) && isset($_GET['categorie'])){
-													$categorie = $_GET['categorie'];
-													if($row['categorieID'] == $categorie)
-														echo '<option value='.$row['categorieID'].' selected>'.$row['categorieNom'].'</option>';
+											$query = $con->query("SELECT * FROM categorie ORDER BY categorieNom");
+											if($query->num_rows > 0){
+												while($row = $query->fetch_assoc())
+												{
+													if(isset($_GET['rechercher']) && isset($_GET['categorie'])){
+														$categorie = $_GET['categorie'];
+														if($row['categorieID'] == $categorie)
+															echo '<option value='.$row['categorieID'].' selected>'.$row['categorieNom'].'</option>';
+														else
+															echo '<option value='.$row['categorieID'].'>'.$row['categorieNom'].'</option>';
+													}
 													else
-														echo '<option value='.$row['categorieID'].'>'.$row['categorieNom'].'</option>';
+														echo '<option class=""  value='.$row['categorieID'].'>'.$row['categorieNom'].'</option>';
 												}
-												else
-													echo '<option class=""  value='.$row['categorieID'].'>'.$row['categorieNom'].'</option>';
 											}
 										?>
 									</select>
@@ -124,8 +127,8 @@
 								</div>
 								<!-- /Wishlist -->
 								<!-- Cart -->
-								<div class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+								<div class="dropdown" style="cursor:pointer">
+									<a class="dropdown-toggle">
 										<i class="fa fa-shopping-cart"></i>
 										<span>Panier</span>
 										<div class="qty qty-panier"></div>

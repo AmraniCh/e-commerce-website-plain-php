@@ -1,6 +1,16 @@
 <?php include_once "includes/header.php" ?>
 
 		<?php include_once "includes/navigation.php" ?>
+		
+		<?php
+			
+			if(!isset($_GET['categorie']) && empty($_GET['categorie']) || !is_numeric($_GET['categorie'])):
+				header('Location: ../errors/400.php');
+				exit();
+			else:
+				$categorieID = filter_var($_GET['categorie'], FILTER_SANITIZE_NUMBER_INT);
+			
+		?>
 
 		<!-- BREADCRUMB -->
 		<div id="breadcrumb" class="section">
@@ -15,7 +25,6 @@
 							<?php
 								$categorie = new Categorie();
 								$article = new Article();
-								$categorieID = $con->escape_string($_GET['categorie']);
 								echo $categorie->categorieNomParID($categorieID).' ('.$article->NbrProduitsParCategorie($categorieID).')';
 							?>
 							</a></li>
@@ -57,11 +66,10 @@
 								<?php 
 									$categorie = new Categorie();
 									$article = new Article();
-									$query = $categorie->AfficherCategories();
-									$id = $con->escape_string($_GET['categorie']);						
+									$query = $categorie->AfficherCategories();					
 									while($row = $query->fetch_assoc()){
 										$nbr_produits = $article->NbrProduitsParCategorie($row['categorieID']);
-										if($id == $row['categorieID'])
+										if($categorieID == $row['categorieID'])
 										{
 											echo '<div class="input-checkbox">
 												<input class="cat-check" type="checkbox" id="'.$row['categorieID'].'" checked>
@@ -94,13 +102,13 @@
 							<div class="price-filter">
 								<div id="price-slider"></div>
 								<div class="input-number price-min">
-									<input id="price-min" type="number">
+									<input id="price-min" type="number" min="0" max="9999">
 									<span class="qty-up">+</span>
 									<span class="qty-down">-</span>
 								</div>
 								<span>-</span>
 								<div class="input-number price-max">
-									<input id="price-max" type="number">
+									<input id="price-max" type="number" min="0" max="9999">
 									<span class="qty-up">+</span>
 									<span class="qty-down">-</span>
 								</div>
@@ -119,38 +127,9 @@
 
 						<!-- aside Widget -->
 						<div class="aside">
-							<h3 class="aside-title">Top selling</h3>
-							<div class="product-widget">
-								<div class="product-img">
-									<img src="./img/product01.png" alt="">
-								</div>
-								<div class="product-body">
-									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								</div>
-							</div>
+							<h4 id="<?php $randomCat = RandomCategoriesWidget(); echo $randomCat ?>" class="title categorie-aside"><?php echo $randomCat ?></h4>
+							<div class="section-nav">
 
-							<div class="product-widget">
-								<div class="product-img">
-									<img src="./img/product02.png" alt="">
-								</div>
-								<div class="product-body">
-									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								</div>
-							</div>
-
-							<div class="product-widget">
-								<div class="product-img">
-									<img src="./img/product03.png" alt="">
-								</div>
-								<div class="product-body">
-									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								</div>
 							</div>
 						</div>
 						<!-- /aside Widget -->
@@ -196,10 +175,8 @@
 
 						<!-- store bottom filter -->
 						<div class="store-filter clearfix">
-							<span class="store-qty">Showing 20-100 products</span>
-							<?php
-								
-							?>
+							<span class="store-qty"></span>
+
 							<ul class="store-pagination">
 
 								<!--
@@ -223,16 +200,18 @@
 		<script>
 		$(document).ready(function(){
 			
-	
-			$(document).on("input", ".cat-check, #price-max, #price-min, .marque-check, #afficherNbr", function(){
-				
-				AfficherProduitsFilter();
+			$(".noUi-handle").on("click", function(){
 				StorePagination();
+                AfficherProduitsFilter();
+			});
+				
+			$(document).on("input", ".cat-check, #price-max, #price-min, .marque-check, #afficherNbr", function(){
+                StorePagination();
+                AfficherProduitsFilter();
 			});
 			
 			$(".cat-check").on("click",function(){
 				AfficherMarques();
-				StorePagination();
 			});
 			
 			$(document).on("click",".pagination",function(e){
@@ -250,7 +229,30 @@
 			
 				AfficherProduitsFilter();
 			});
+			
+			(function AsideData(){
+				var categorie = $(".categorie-aside").attr("id");
+				var ele = $(".section-nav");
+				$.ajax({	
+					url: "../public-includes/ajax_queries",
+					method: "POST",
+					dataType: "JSON",
+					data: {
+						function: "RechargerTabWidget",
+						categorie: categorie
+					},
+					success: function(data){
+						LoadAsideData(data['tab1'], ele);
+					}
+				});
+			}());
 		});
+			
 		</script>
-		
+			
+
+			
+		<?php 
+			endif;
+		?>
 		<?php include_once "includes/footer.php" ?>

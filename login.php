@@ -22,16 +22,18 @@
       {
           $clientUserName = $con->escape_string($_POST['username-lg']);
           $motdepass = $con->escape_string($_POST['password-lg']);
-
-          $res = $con->query("SELECT * FROM client WHERE clientUserName = '$clientUserName' AND motdepasse = '$motdepass'");
-          if($res->num_rows >0){
-              $row = $res->fetch_assoc();
-              $_SESSION['clientUserName'] = $clientUserName;
-              $_SESSION['clientID'] = $row['clientID'];
-              header ('location: index/index.php?client='.$clientUserName);
-          }
-          else
-              echo '<script>$(document).ready(function(){ compteIntrouvable() });</script>';
+          
+          $query = $con->query("SELECT * FROM client WHERE clientUserName = '$clientUserName'");
+          if($query->num_rows >0):
+              $row = $query->fetch_assoc();
+              if(password_verify($motdepass, $row['motdepasse'])):
+                $_SESSION['clientUserName'] = $row['clientUserName'];
+                $_SESSION['clientID'] = $row['clientID'];
+                header ('location: index/index.php');
+              else:
+                echo '<script>$(document).ready(function(){ compteIntrouvable() });</script>';
+              endif;
+          endif;
       }
     ?>
 <div class="container-scroller">

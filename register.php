@@ -1,6 +1,6 @@
 <?php
     require_once 'public-includes/config.php';
-    require_once 'public-includes/functions.php';
+    require_once 'public-includes/PHPMAILER.php';
     session_start();
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Se connecter</title>
     <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="index/bootstrap/css/bootstrap.min.css">
     <link href="index/css/main.css" rel="stylesheet" />
     <link href="index/css/mainstyle.css" rel="stylesheet" />
     <link href="index/css/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
@@ -28,25 +28,22 @@
       if(isset($_POST['submit']))
       {
         $username = $con->escape_string($_POST['username']);
-        $prenom = $_POST['prenom'];
-        $nom = $_POST['nom'];
-        $email = $_POST['email'];
-        $adresse = $_POST['adresse'];
-        $ville = $_POST['ville'];
-        $tele = $_POST['tele'];
-        $codepostal = $_POST['code_postal'];
-        $question = $_POST['question'];
-        $reponse = $_POST['reponse'];
-        $password = password_hash($_POST['password2'], PASSWORD_BCRYPT, array('cost' => 10)); // Crypt the password
+        $prenom = $con->escape_string($_POST['prenom']);
+        $nom = $con->escape_string($_POST['nom']);
+        $email = $con->escape_string($_POST['email']);
+        $adresse = $con->escape_string($_POST['adresse']);
+        $ville = $con->escape_string($_POST['ville']);
+        $tele = $con->escape_string($_POST['tele']);
+        $codepostal = $con->escape_string($_POST['code_postal']);
+        $question = $con->escape_string($_POST['question']);
+        $reponse = $con->escape_string($_POST['reponse']);
+        $password = password_hash($_POST['password2'], PASSWORD_DEFAULT, array('cost' => 10));
         
-        $result = mysqli_query($con,"INSERT INTO client VALUES(NULL,'$username','$prenom','$nom','$email','$adresse','$ville',default,NULL,$codepostal,'$tele','$password','$question','$reponse',NULL)");   
-        if($result){
-          $_SESSION['user'] = $username;
+        $query = $con->query("INSERT INTO client VALUES(NULL,'$username','$prenom','$nom','$email','$adresse','$ville',default,NULL,$codepostal,'$tele','$password','$question','$reponse',NULL)");   
+        if($con->affected_rows){
+          $_SESSION['clientUserName'] = $username;
           header ('location: emailconfirmation.php');
         }
-        else
-          echo 'Error : '.mysqli_error($con);
-
 
         sendEmail($email,$nom);
       }
@@ -238,7 +235,7 @@
         </div>
       </div>
     </div>
-    <script src="index/js/jquery-3.3.1.min.js"></script>
+    <script src="index/js/jquery.min.js"></script>
     <script src="index/js/functions.js"></script>
     <script src="index/js/validation.js"></script>
   </body>

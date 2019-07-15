@@ -1,1 +1,8 @@
+# Set Directory Index
 directoryindex index
+# Prevent Directory Listing
+Options -Indexes
+
+
+
+# Redirect Error Pages

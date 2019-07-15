@@ -99,8 +99,12 @@
 		
 		public function NbrProduitsParCategorie($categorieID){
 			$query = $this->con->query("SELECT COUNT(*) FROM article WHERE categorieID = $categorieID");
-			$row = $query->fetch_row();
-			return $row[0];
+			if($query->num_rows > 0)
+			{
+				$row = $query->fetch_row();
+				return $row[0];
+			}
+			return null;
 		}
 		
 		public function NbrProduitsParMarque($marque){
@@ -133,8 +137,11 @@
 		
 		public function CategorieNomParID($categorieID){
 			$query = $this->con->query("SELECT categorieNom FROM categorie WHERE categorieID = $categorieID");
-			$row = $query->fetch_row();
-			return $row[0];
+			if($query->num_rows > 0):
+				$row = $query->fetch_row();
+				return $row[0];
+			endif;
+			return null;
 		}
 	}
 		
@@ -148,6 +155,8 @@
 
 		function AfficherPanierProduits($clientID){
 			$query = $this->con->query("SELECT DISTINCT article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, COUNT(panierdetails.articleID) as 'NbrArticlesPanier' FROM article inner join panierDetails on article.articleID = panierDetails.articleID WHERE panierDetails.clientID = $clientID GROUP BY article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible");
-			return $query;
+			if($query->num_rows > 0)
+				return $query;
+			return null;
 		}
 	}
