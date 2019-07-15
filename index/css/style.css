@@ -867,6 +867,7 @@ textarea.input {
 
 .product .product-img {
   position: relative;
+  cursor: pointer;
 }
 
 .product .product-img>img {

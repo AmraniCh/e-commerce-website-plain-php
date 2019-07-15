@@ -40,47 +40,7 @@ function RandomCategoriesWidget(){
     return $row[0];
 }
 
-<<<<<<< HEAD
-=======
-function returnTabWidget($categorieNom){
-    $article = new Article();
-    $categorie = new Categorie();
-    $query = $article->ProduitsWidget($categorieNom);
-    $return = "<div>";
-    while($row = $query->fetch_assoc()){
-        $imageArticle = $article->ImageArticle($row['articleID']);
-        $categorieNom = $categorie->CategorieNomParID($row['categorieID']);
-        if ($row['remiseDisponible'] == true) {
-        $return.="<div class='product-widget'>
-            <div class='product-img'>
-                <img src=".$imageArticle." alt=".$imageArticle.">
-            </div>
-            <div class='product-body'>
-                <p class='product-category'><img src='img/new.png'></p>
-                <h3 class='product-name'><a href='product.php?id=" . $row['articleID']. "'>".$row['articleNom']."</a></h3>
-                <h4 class='product-price'>".$row['articlePrix']."<del class='product-old-price'>".$row['articlePrixRemise']."</del></h4>
-            </div>
-        </div>";
-        }
-        else{
-        $return.= "<div class='product-widget'>
-            <div class='product-img'>
-                <img src=".$imageArticle." alt=".$imageArticle.">
-            </div>
-            <div class='product-body'>
-                <p class='product-category'><img src='img/new.png'></p>
-                <h3 class='product-name'><a href='product.php?id=" . $row['articleID']. "'>".$row['articleNom']."</a></h3>
-                <h4 class='product-price'>".$row['articlePrix']."</h4>
-            </div>
-        </div>";
-        }
-    }
-    $return.= "</div>";
-    return $return;
-}
-
-
- function echoImages($articleID){
+function echoImages($articleID){
     $result = ImagesArticle($articleID);
     $images = '';
 
@@ -107,4 +67,3 @@ function echocolors($idarticle){
     }
     return $Couleurs;
 }
->>>>>>> ccfdf0b6f2eeacd45e8cbb4ae464cd935c73c43b

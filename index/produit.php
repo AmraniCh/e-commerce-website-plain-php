@@ -3,43 +3,37 @@
 <?php include_once "includes/navigation.php" ?>
 
 <?php
-$result = ArticleParID($_GET['id']);
-if(mysqli_num_rows($result)>0) {
+	$result = ArticleParID($_GET['id']);
+	if(mysqli_num_rows($result)>0) {
 
-    $article = new Article();
+		$article = new Article();
 
-    $row = mysqli_fetch_assoc($result);
-    $articleNom = $row['articleNom'];
-    $articlePrix = $row['articlePrix'];
-    $articlePrixRemise = $row['articlePrixRemise'];
-    $articleDescription = $row['articleDescription'];
-    $articleMarque = $row['articleMarque'];
+		$row = mysqli_fetch_assoc($result);
+		$articleNom = $row['articleNom'];
+		$articlePrix = $row['articlePrix'];
+		$articlePrixRemise = $row['articlePrixRemise'];
+		$articleDescription = $row['articleDescription'];
+		$articleMarque = $row['articleMarque'];
 
-    $tauxRemise = $row['tauxRemise'];
+		$tauxRemise = $row['tauxRemise'];
 
-    $remiseDisponible = $row['remiseDisponible'];
-    $unitesEnStock = $row['unitesEnStock'];
-    $articleDisponible = $row['articleDisponible'];
-    $niveau = $article->echoNiveau($_GET['id']);
-    $categorieID = $row['categorieID'];
+		$remiseDisponible = $row['remiseDisponible'];
+		$unitesEnStock = $row['unitesEnStock'];
+		$articleDisponible = $row['articleDisponible'];
+		$niveau = $article->echoNiveau($_GET['id']);
+		$categorieID = $row['categorieID'];
 
-    $colors =  echocolors($_GET['id']);
+		$colors =  echocolors($_GET['id']);
 
-    $images = echoImages($_GET['id']);
+		$images = echoImages($_GET['id']);
 
-    global $con;
-    $result = $con->query("SELECT categorieNom from categorie WHERE categorieID = $categorieID");
-    $row2 = mysqli_fetch_assoc($result);
-    $categoryName = $row2['categorieNom'];
+		global $con;
+		$result = $con->query("SELECT categorieNom from categorie WHERE categorieID = $categorieID");
+		$row2 = mysqli_fetch_assoc($result);
+		$categoryName = $row2['categorieNom'];
 
-
-
-
-
-}
+	}
 ?>
-
-
 		<!-- BREADCRUMB -->
 		<div id="breadcrumb" class="section">
 			<!-- container -->
@@ -47,12 +41,15 @@ if(mysqli_num_rows($result)>0) {
 				<!-- row -->
 				<div class="row">
 					<div class="col-md-12">
+						<h3 class="breadcrumb-header">Accueil</h3>
 						<ul class="breadcrumb-tree">
-							<li><a href="#">Home</a></li>
-							<li><a href="#">All Categories</a></li>
-							<li><a href="#">Accessories</a></li>
-							<li><a href="#">Headphones</a></li>
-							<li class="active">Product name goes here</li>
+							<li class="active"><a> 
+							<?php
+								$categorie = new Categorie();
+								$categorieNom = $categorie->CategorieNomParID($categorieID);
+								echo '/ '.$categorieNom.' / '.$articleNom;
+							?>
+							</a></li>
 						</ul>
 					</div>
 				</div>

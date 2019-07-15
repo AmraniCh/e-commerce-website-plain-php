@@ -202,12 +202,12 @@
 			
 			$(".noUi-handle").on("click", function(){
 				StorePagination();
-                AfficherProduitsFilter();
+                AfficherProduitsFiltrer();
 			});
 				
 			$(document).on("input", ".cat-check, #price-max, #price-min, .marque-check, #afficherNbr", function(){
                 StorePagination();
-                AfficherProduitsFilter();
+                AfficherProduitsFiltrer();
 			});
 			
 			$(".cat-check").on("click",function(){
@@ -227,7 +227,7 @@
 				$(this).children("a").css("color","#fff");
 			
 			
-				AfficherProduitsFilter();
+				AfficherProduitsFiltrer();
 			});
 			
 			(function AsideData(){

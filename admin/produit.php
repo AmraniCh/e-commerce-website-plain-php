@@ -359,6 +359,7 @@
 
                 $(document).on("click","#btnAjouter, #btnModifier",function(e){
                     e.preventDefault();
+                    
                     var nomPr = $("#nomPr").val();
                     var descPr = $("#descPr").val();
                     var marquePr = $("#marque").val();

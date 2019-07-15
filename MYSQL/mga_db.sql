@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  ven. 12 juil. 2019 à 11:07
+-- Généré le :  lun. 15 juil. 2019 à 23:27
 -- Version du serveur :  5.7.24
 -- Version de PHP :  7.2.14
 
@@ -89,14 +89,14 @@ CREATE TABLE IF NOT EXISTS `article` (
   `categorieID` int(11) NOT NULL,
   PRIMARY KEY (`articleID`),
   KEY `categorieID` (`categorieID`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `article`
 --
 
 INSERT INTO `article` (`articleID`, `articleNom`, `articlePrix`, `articlePrixRemise`, `articleDescription`, `articleMarque`, `tauxRemise`, `remiseDisponible`, `unitesEnStock`, `unitesSurCommande`, `articleDisponible`, `niveau`, `dateAjoute`, `categorieID`) VALUES
-(27, 'LENOVO 541', '5000.00', '4500.00', 'LENOVO 541', 'LENOVO', 10, b'1', 2, 0, b'1', 5, '2019-07-09 17:38:17', 40),
+(27, 'LENOVO 541', '5000.00', NULL, 'LENOVO 541', 'LENOVO', NULL, b'0', 2, 0, b'1', 5, '2019-07-09 17:38:17', 40),
 (28, 'LENOVO 541', '5000.00', '4500.00', 'LENOVO 541', 'LENOVO', 10, b'1', 2, 0, b'1', 5, '2019-07-09 17:38:26', 40),
 (29, 'HP 640', '5000.00', '4500.00', 'HP 640', 'HP', 10, b'1', 2, 0, b'1', 5, '2019-07-09 17:38:46', 40),
 (30, 'HP 640', '5000.00', '4500.00', 'HP 640', 'HP', 10, b'1', 2, 0, b'1', 5, '2019-07-09 17:38:56', 40),
@@ -162,17 +162,14 @@ CREATE TABLE IF NOT EXISTS `client` (
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `clientUserName` (`clientUserName`),
   KEY `panierID` (`panierID`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `client`
 --
 
 INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
-(25, 'dqsd', 'qsdqsd', 'qsdqsdqsdqs', 'elamrani.sv.laza@gmail.com', 'qsdqsdqs', 'casa', b'0', '728623', 445585, '+212144710547', 'testtest', 'Quel était le nom de votre premier animal ?', 'ffffffff', NULL),
-(26, 'dqsdfsdf', 'qsdqsd', 'qsdqsdqsdqs', 'elamrani.sv.laza@gmail.com', 'qsdqsdqs', 'casa', b'0', '335736', 445585, '+212144710547', 'testtest', 'Quel était le nom de votre premier animal ?', 'ffffffff', NULL),
-(27, 'qsdqd', 'qsdqsd', 'qsdqsdqsdqs', 'elamrani.sv.laza@gmail.com', 'qsdqsdqs', 'casa', b'0', '137165', 445585, '+212144710547', 'testtest', 'Quel était le nom de votre premier animal ?', 'ffffffff', NULL),
-(30, 'chou500', 'chakir ', 'el amrani', 'el@gmail.com', 'tanger', 'tanger', b'0', '715107', NULL, '', '0659630023', '', '', NULL);
+(40, 'chou500', 'elamrani', 'chakir', 'elamrani.sv.laza@gmail.com', 'tanger', 'tanger', b'1', '334882', 90002, '0659630023', '$2y$10$GIDeDZ8Q3cTJ68B10HkPlOVTPiiZoRt2sELWxo7zRqgDgw4Jp8gOK', 'Quel était le nom de votre premier animal ?', 'KAKAKA', NULL);
 
 --
 -- Déclencheurs `client`
@@ -182,6 +179,26 @@ DELIMITER $$
 CREATE TRIGGER `randomNumber` BEFORE INSERT ON `client` FOR EACH ROW set new.codeEmail=randomNumber()
 $$
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `commentaire`
+--
+
+DROP TABLE IF EXISTS `commentaire`;
+CREATE TABLE IF NOT EXISTS `commentaire` (
+  `commID` int(11) NOT NULL AUTO_INCREMENT,
+  `clientID` int(11) NOT NULL,
+  `articleID` int(11) NOT NULL,
+  `accepte` bit(1) NOT NULL DEFAULT b'0',
+  `niveau` int(11) NOT NULL,
+  `commentaire` text NOT NULL,
+  `dateComm` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`commID`),
+  KEY `fk_articleID_commentaire` (`articleID`),
+  KEY `fk_clientID_commentaire` (`clientID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -202,11 +219,7 @@ CREATE TABLE IF NOT EXISTS `couleurarticle` (
 --
 
 INSERT INTO `couleurarticle` (`nomCouleur`, `articleID`) VALUES
-('noir', 28),
-('noir', 29),
-('noir', 30),
-('blanc', 31),
-('blanc', 32);
+('Blue', 27);
 
 -- --------------------------------------------------------
 
@@ -262,7 +275,9 @@ CREATE TABLE IF NOT EXISTS `imagearticle` (
 --
 
 INSERT INTO `imagearticle` (`imageArticleNom`, `articleID`) VALUES
+('product01.png', 27),
 ('product06.png', 27),
+('product08.png', 27),
 ('shop02.png', 31),
 ('product07.png', 32),
 ('product04.png', 33);
@@ -314,22 +329,18 @@ CREATE TABLE IF NOT EXISTS `panierdetails` (
   PRIMARY KEY (`panierID`,`clientID`,`articleID`),
   KEY `fk_clientID_panierDetails` (`clientID`),
   KEY `fk_articleID_panierDetails` (`articleID`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
-
---
--- Déchargement des données de la table `panierdetails`
---
-
-INSERT INTO `panierdetails` (`panierID`, `clientID`, `articleID`) VALUES
-(6, 30, 29),
-(7, 30, 27),
-(8, 30, 29),
-(9, 30, 27),
-(10, 30, 28);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contraintes pour les tables déchargées
 --
+
+--
+-- Contraintes pour la table `commentaire`
+--
+ALTER TABLE `commentaire`
+  ADD CONSTRAINT `fk_articleID_commentaire` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`),
+  ADD CONSTRAINT `fk_clientID_commentaire` FOREIGN KEY (`clientID`) REFERENCES `client` (`clientID`);
 
 --
 -- Contraintes pour la table `couleurarticle`

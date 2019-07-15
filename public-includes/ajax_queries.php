@@ -39,9 +39,9 @@
             echo $_POST['function']($_POST['articleID']);break;
         case "RemplirPanier":
             echo $_POST['function']();break;
-        case "AfficherMarquesFilter":
+        case "AfficherMarquesFiltrer":
             echo $_POST['function']($_POST['categoriesIDs']);break;
-        case "AfficherProduitsFilter":
+        case "AfficherProduitsFiltrer":
             echo $_POST['function']($_POST['categoriesIDs'], $_POST['marques'], $_POST['minPrix'], $_POST['maxPrix'],$_POST['filtrerPar'],$_POST['afficherNbr'],$_POST['page_nbr']);break;
         case "StorePagination":
             echo $_POST['function']($_POST['categoriesIDs'],$_POST['marques'],$_POST['minPrix'],$_POST['maxPrix'],$_POST['filtrerPar'],$_POST['afficherNbr']);break;
@@ -157,7 +157,9 @@
         if($array_couleurs[0] != null){
             foreach($array_couleurs as $couleur)
             {
-                $con->query("INSERT INTO couleurarticle VALUES('$couleur',$articleID)");
+                $clr = ucfirst(trim($couleur));
+                if($clr != '')
+                    $con->query("INSERT INTO couleurarticle VALUES('$clr',$articleID)");
             }
         }
         return true; //ajax return data
@@ -174,17 +176,36 @@
         $result = $con->query("UPDATE article SET articleNom = '$articleNom', articlePrix = $articlePrix, articlePrixRemise = $articlePrixRemise, articleDescription = '$artcileDescription', articleMarque = '$articleMarque', tauxRemise = $tauxRemise, remiseDisponible = $remiseDisponible, unitesEnStock = $unitesEnStock, articleDisponible = $articleDisponible, categorieID = $categorieID WHERE articleID = $articleID");
         // modifier ou inserer couleurs
         if($couleurs != "N/A"){
-            $result2 = $con->query("UPDATE couleurarticle SET nomCouleur = '$couleurs' WHERE articleID = $articleID");
-            if(!$con->affected_rows)
-                $con->query("INSERT INTO couleurarticle VALUES('$couleurs',$articleID)");
+            /*$result2 = $con->query("UPDATE couleurarticle SET nomCouleur = '$couleurs' WHERE articleID = $articleID");
+            if(!$con->affected_rows){
+                $con->query("INSERT INTO couleurarticle VALUES('$couleurs',$articleID)");*/
+                $couleurs_array = explode(",",$couleurs);
+                $query = $con->query("SELECT nomCouleur FROM couleurarticle WHERE articleID = $articleID");
+                if($query->num_rows > 0):
+                    while($row = $query->fetch_row()){
+                        foreach($couleurs_array as $couleur)
+                        {
+                            if(strtolower($couleur) != strtolower($row[0])):
+                                $clr = ucfirst(trim($couleur));
+                                if($clr != '')
+                                    $con->query("INSERT INTO couleurarticle VALUES('$clr',$articleID)");
+                            endif;
+                        }
+                    }
+                else:
+                    foreach($couleurs_array as $couleur)       
+                    {    
+                        $clr = ucfirst(trim($couleur));
+                        if($clr != '')
+                            $con->query("INSERT INTO couleurarticle VALUES('$clr',$articleID)");
+                    }
+                endif;
         }
         // supprimer couleurs
         if($couleurs == "")
-        {
             $con->query("DELETE FROM couleurarticle WHERE articleID = $articleID");
-        }
+    
             
-        
         foreach(glob("../temp/*.*") as $filename)
         {
             $filenameWithoutPath = explode('/',$filename)[2];
@@ -251,7 +272,7 @@
     }
 
     // store.php functions
-    function AfficherMarquesFilter($categoriesIDs){
+    function AfficherMarquesFiltrer($categoriesIDs){
         global $con;
         $article = new Article();
         $ids = implode(',',json_decode($categoriesIDs));
@@ -270,7 +291,7 @@
        
     }
 
-    function AfficherProduitsFilter($categoriesIDs, $marques, $minPrix, $maxPrix, $filrerPar, $afficherNbr, $page_nbr){
+    function AfficherProduitsFiltrer($categoriesIDs, $marques, $minPrix, $maxPrix, $filrerPar, $afficherNbr, $page_nbr){
         global $con,$limitRange,$static_page_nbr;
         $static_page_nbr = $page_nbr;
         
@@ -360,7 +381,7 @@
                 $imageArticle = $article->ImageArticle($row['articleID']);
                 $categorieNom = $categorie->CategorieNomParID($row['categorieID']);
 
-                $data[] = ['imageArticle' => $imageArticle, 'categorieNom' => $categorieNom, 'remiseDisponible' => $row['remiseDisponible'], 'articleNom' => $row['articleNom'], 'articlePrix' => $row['articleNom'], 'articlePrixRemise' => $row['articlePrixRemise']];
+                $data[] = ['imageArticle' => $imageArticle, 'categorieNom' => $categorieNom, 'remiseDisponible' => $row['remiseDisponible'], 'articleNom' => $row['articleNom'], 'articlePrix' => $row['articleNom'], 'articlePrixRemise' => $row['articlePrixRemise'], 'articleID' => $row['articleID']];
             }
             return json_encode($data);
         }

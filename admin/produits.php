@@ -62,7 +62,9 @@
                                             echo '<td>N/A</td>';
                                         echo '<td>';
                                         if($couleurs != null){
-                                            foreach($couleurs as $couleur){ echo $couleur.', '; };
+                                            foreach($couleurs as $couleur){ 
+                                                echo $couleur.', '; 
+                                            };
                                         }
                                         else
                                             echo 'N/A';

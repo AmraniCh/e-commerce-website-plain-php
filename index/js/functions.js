@@ -2,7 +2,7 @@ $(document).ready(function(){
     
     RemplirPanier();
     StorePagination();
-    AfficherProduitsFilter();
+    AfficherProduitsFiltrer();
     AfficherMarques();  
     
     $(".dropdown").on("click", function () {
@@ -117,7 +117,7 @@ function StorePagination(){
         
 };
 
-function AfficherProduitsFilter() {
+function AfficherProduitsFiltrer() {
     
     var categoriesIDs = [];
     $(".cat-check").each(function () {
@@ -146,7 +146,7 @@ function AfficherProduitsFilter() {
             url: '../public-includes/ajax_queries',
             method: 'POST',
             data: {
-                function: "AfficherProduitsFilter",
+                function: "AfficherProduitsFiltrer",
                 categoriesIDs: JSON.stringify(categoriesIDs),
                 marques: JSON.stringify(marques),
                 minPrix: minPrix,
@@ -166,10 +166,10 @@ function AfficherProduitsFilter() {
                     for(var i=0;i<data.length - 2;i++)
                     {
                         if(data[i].remiseDisponible == true){
-                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='sale'>"+data[i].tauxRemise+"%</span><span class='new'>Nouveau</span></div></div><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='#'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrixRemise+" DHS<del class='product-old-price'>"+data[i].articlePrix+"</del></h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
+                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='sale'>"+data[i].tauxRemise+"%</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrixRemise+" DHS<del class='product-old-price'>"+data[i].articlePrix+"</del></h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
                         }
                         else
-                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='new'>Nouveau</span></div></div><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='#'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrix+" DHS</h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
+                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrix+" DHS</h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
                     }
                     $(".store-qty").html("Affichés "+data[data.length - 1] +" Sur "+data[data.length -2 ]);
                 }
@@ -199,7 +199,7 @@ function AfficherMarques() {
         url: '../public-includes/ajax_queries',
         method: 'POST',
         data: {
-            function: "AfficherMarquesFilter",
+            function: "AfficherMarquesFiltrer",
             categoriesIDs: JSON.stringify(categoriesIDs),
         },
         dataType: "JSON",
@@ -369,10 +369,10 @@ function LoadSildeData(data, ele){
         ele.empty();
         for (var i = 0; i < data.length; i++) {
             if (data[i].remiseDisponible == true) {
-                ele.append("<div class='product pro-tab1' style='visibility:hidden'> <div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='sale'>" + data[i].tauxRemise + "%</span><span class='new'>Nouveau</span></div></div><div class='product-body'><p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='#'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrixRemise + " DHS<del class='product-old-price'>" + data[i].articlePrix + "</del></h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
+                ele.append("<div class='product pro-tab1' style='visibility:hidden'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='sale'>" + data[i].tauxRemise + "%</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrixRemise + " DHS<del class='product-old-price'>" + data[i].articlePrix + "</del></h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
             }
             else
-                ele.append("<div class='product pro-tab1' style='visibility:hidden'> <div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='new'>Nouveau</span></div></div><div class='product-body'> <p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='#'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrix + " DHS</h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
+                ele.append("<div class='product pro-tab1' style='visibility:hidden'> <a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'> <p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrix + " DHS</h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
         }
         UnslickSlide(ele);
     }
@@ -388,9 +388,9 @@ function LoadSlideWidgetData(data, ele){
             if(i === 0)
                 html+= "<div>";
             if(json[i].remiseDisponible == true)
-                html+= "<div class='product-widget'> <div class='product-img'> <img src='"+json[i].imageArticle+"' alt='"+json[i].imageArticle+"'> </div><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='#'>"+json[i].articleNom+"</a></h3> <h4 class='product-price'>"+json[i].articlePrix+"<del class='product-old-price'>"+json[i].articlePrixRemise+"</del></h4> </div></div>";
+                html+= "<div class='product-widget'> <a href='produit.php?id=" + json[i].articleID + "'><div class='product-img'> <img src='"+json[i].imageArticle+"' alt='"+json[i].imageArticle+"'> </div></a><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?id=" + json[i].articleID + "'>"+json[i].articleNom+"</a></h3> <h4 class='product-price'>"+json[i].articlePrix+"<del class='product-old-price'>"+json[i].articlePrixRemise+"</del></h4> </div></div>";
             else
-                html+= "<div class='product-widget'> <div class='product-img'> <img src='"+json[i].imageArticle+"' alt='"+json[i].imageArticle+"'> </div><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='#'>"+json[i].articleNom+"</a></h3> <h4 class='product-price'>"+json[i].articlePrix+"</h4> </div></div>";
+                html+= "<div class='product-widget'> <a href='produit.php?id=" + json[i].articleID + "'><div class='product-img'> <img src='"+json[i].imageArticle+"' alt='"+json[i].imageArticle+"'> </div></a><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?id=" + json[i].articleID + "'>"+json[i].articleNom+"</a></h3> <h4 class='product-price'>"+json[i].articlePrix+"</h4> </div></div>";
             if(i=== json.length - 1)
                 html+= "</div>";
         }
@@ -404,9 +404,9 @@ function LoadAsideData(data, ele) {
         var html = "";
         for (var i = 0; i < json.length; i++) {
             if (json[i].remiseDisponible == true)
-                html += "<div class='product-widget'> <div class='product-img'> <img src='" + json[i].imageArticle + "' alt='" + json[i].imageArticle + "'> </div><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='#'>" + json[i].articleNom + "</a></h3> <h4 class='product-price'>" + json[i].articlePrix + "<del class='product-old-price'>" + json[i].articlePrixRemise + "</del></h4> </div></div>";
+                html += "<div class='product-widget'> <a href='produit.php?id=" + json[i].articleID + "'><div class='product-img'><img src='" + json[i].imageArticle + "' alt='" + json[i].imageArticle + "'> </div><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?id=" + json[i].articleID + "'>" + json[i].articleNom + "</a></h3> <h4 class='product-price'>" + json[i].articlePrix + "<del class='product-old-price'>" + json[i].articlePrixRemise + "</del></h4> </div></div>";
             else
-                html += "<div class='product-widget'> <div class='product-img'> <img src='" + json[i].imageArticle + "' alt='" + json[i].imageArticle + "'> </div><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='#'>" + json[i].articleNom + "</a></h3> <h4 class='product-price'>" + json[i].articlePrix + "</h4> </div></div>";
+                html += "<div class='product-widget'> <a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'> <img src='" + json[i].imageArticle + "' alt='" + json[i].imageArticle + "'> </div></a><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?id=" + json[i].articleID + "'>" + json[i].articleNom + "</a></h3> <h4 class='product-price'>" + json[i].articlePrix + "</h4> </div></div>";
         }
         ele.append(html);
     }
