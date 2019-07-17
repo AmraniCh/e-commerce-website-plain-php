@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  lun. 15 juil. 2019 à 23:27
+-- Généré le :  mer. 17 juil. 2019 à 17:21
 -- Version du serveur :  5.7.24
 -- Version de PHP :  7.2.14
 
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `article` (
   `categorieID` int(11) NOT NULL,
   PRIMARY KEY (`articleID`),
   KEY `categorieID` (`categorieID`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `article`
@@ -259,6 +259,28 @@ CREATE TABLE IF NOT EXISTS `demandedetails` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `favoridetails`
+--
+
+DROP TABLE IF EXISTS `favoridetails`;
+CREATE TABLE IF NOT EXISTS `favoridetails` (
+  `articleID` int(11) NOT NULL,
+  `clientID` int(11) NOT NULL,
+  `dateAjoute` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`articleID`,`clientID`),
+  KEY `fk_clientID_favoridetails` (`clientID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `favoridetails`
+--
+
+INSERT INTO `favoridetails` (`articleID`, `clientID`, `dateAjoute`) VALUES
+(32, 40, '2019-07-17 17:20:10');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `imagearticle`
 --
 
@@ -326,10 +348,18 @@ CREATE TABLE IF NOT EXISTS `panierdetails` (
   `panierID` int(11) NOT NULL AUTO_INCREMENT,
   `clientID` int(11) NOT NULL,
   `articleID` int(11) NOT NULL,
+  `dateAjoute` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`panierID`,`clientID`,`articleID`),
   KEY `fk_clientID_panierDetails` (`clientID`),
   KEY `fk_articleID_panierDetails` (`articleID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `panierdetails`
+--
+
+INSERT INTO `panierdetails` (`panierID`, `clientID`, `articleID`, `dateAjoute`) VALUES
+(18, 40, 32, '2019-07-17 17:19:21');
 
 --
 -- Contraintes pour les tables déchargées
@@ -347,6 +377,13 @@ ALTER TABLE `commentaire`
 --
 ALTER TABLE `couleurarticle`
   ADD CONSTRAINT `fk_articleID_couleurarticle` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `favoridetails`
+--
+ALTER TABLE `favoridetails`
+  ADD CONSTRAINT `fk_articleID_favoridetails` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_clientID_favoridetails` FOREIGN KEY (`clientID`) REFERENCES `client` (`clientID`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `imagearticle`
