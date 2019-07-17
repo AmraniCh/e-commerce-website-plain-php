@@ -1,12 +1,19 @@
 $(document).ready(function(){
     
     RemplirPanier();
+    RemplirFavoris();
     StorePagination();
     AfficherProduitsFiltrer();
     AfficherMarques();  
     
-    $(".dropdown").on("click", function () {
-        $(".cart-dropdown").toggle();
+    $(".pan-toggle").on("click", function () {
+        $(".fav-dropdown").css("display","none");
+        $(".pan-dropdown").toggle();
+    });
+    
+    $(".fav-toggle").click(function(){
+        $(".pan-dropdown").css("display","none");
+        $(".fav-dropdown").toggle();
     });
     
     $('.cart-summary, .cart-btns').on('click', function (e) {
@@ -34,11 +41,32 @@ $(document).ready(function(){
                 else
                     $(location).attr('href', '../login.php');
             }
-        })
+        });
         
     }); 
     
-    $(document).on("click",".delete",function(){
+    $(document).on("click",".add-to-wishlist", function(){
+        var articleID = $(this).attr("id");
+        $.ajax({
+            url: '../public-includes/ajax_queries',
+            method: 'POST',
+            data: {
+                function: 'AjouterAuxFavoris', 
+                articleID: articleID
+            },
+            dataType: 'JSON',
+            success: function(data){
+                if(data != false){      
+                    $("#audio")[0].play();
+                    RemplirFavoris();
+                }
+                else
+                    $(location).attr('href', '../login.php');
+            }
+        });    
+    });
+    
+    $(document).on("click",".supp-panier",function(){
     
         var articleID = $(this).attr("id");
         $.ajax({
@@ -51,9 +79,30 @@ $(document).ready(function(){
             dataType: 'JSON',
             success: function (data) {
                 if (data != false){
-                    $("div#" + articleID + ".product-widget").remove();
+                    $("div#" + articleID + ".pw-panier").remove();
                     RemplirPanier();
-                    $(".cart-dropdown").toggle();
+                    $(".pan-dropdown").toggle();
+                }
+            }
+        });
+    });
+    
+    $(document).on("click",".supp-favoris",function(){
+    
+        var articleID = $(this).attr("id");
+        $.ajax({
+            url: "../public-includes/ajax_queries",
+            method: "POST",
+            data: {
+                function: "SupprimerAuxFavoris",
+                articleID: articleID
+            },
+            dataType: 'JSON',
+            success: function (data) {
+                if (data != false){
+                    $("div#" + articleID + ".pw-favoris").remove();
+                    RemplirFavoris();
+                    $(".fav-dropdown").toggle();
                 }
             }
         });
@@ -140,7 +189,6 @@ function AfficherProduitsFiltrer() {
     var page_nbr = $(".store-pagination li[class*='active']").attr("id");   
     if(page_nbr === undefined) // cannot page_nbr be undefined or null
         page_nbr = 1;
-    
     if (categoriesIDs[0] != null && minPrix != '' && maxPrix != '') {
         $.ajax({
             url: '../public-includes/ajax_queries',
@@ -166,10 +214,10 @@ function AfficherProduitsFiltrer() {
                     for(var i=0;i<data.length - 2;i++)
                     {
                         if(data[i].remiseDisponible == true){
-                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='sale'>"+data[i].tauxRemise+"%</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrixRemise+" DHS<del class='product-old-price'>"+data[i].articlePrix+"</del></h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
+                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='sale'>"+data[i].tauxRemise+"%</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrixRemise+" DHS<del class='product-old-price'>"+data[i].articlePrix+"</del></h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
                         }
                         else
-                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrix+" DHS</h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
+                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrix+" DHS</h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
                     }
                     $(".store-qty").html("Affichés "+data[data.length - 1] +" Sur "+data[data.length -2 ]);
                 }
@@ -217,6 +265,30 @@ function AfficherMarques() {
     });
 }
 
+function RemplirFavoris(){
+	$.ajax({
+	    url: '../public-includes/ajax_queries',
+	    method: 'POST',
+	    data: {
+	        function: 'RemplirFavoris'
+	    },
+	    dataType: 'JSON',
+	    success: function (data) {
+            if(data != null){
+                $(".cart-list-favori").empty();
+                for(var i=0;i<data.length - 1;i++){
+                    $(".cart-list-favori").append("<div id='"+data[i].articleID+"' class='product-widget pw-favori'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body' style='text-align:left'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'></span>"+data[i].prix+"</h4></div><button id='"+data[i].articleID+"' class='delete supp-favoris'><i class='fa fa-close'></i></button></div>");
+                }
+                $(".qty-favori, #nbrArticlesFavoris").html(data[data.length - 1]);
+            }
+            else{
+                $(".cart-list-favori").html("<div class='msg-vide text-center'>Vous n'avez actuellement aucun favori.</div><div class='msg-vide text-center'>Ajoutez des produits à vos favoris en cliquant sur <span><i class='fa fa-heart-o'></i></span> la page du produit!</div>");
+                $(".qty-favori, #nbrArticlesFavoris").html("0");
+            }
+	    }
+	});
+}
+
 function RemplirPanier(){
 	$.ajax({
 	    url: '../public-includes/ajax_queries',
@@ -226,9 +298,18 @@ function RemplirPanier(){
 	    },
 	    dataType: 'JSON',
 	    success: function (data) {
-	        $(".cart-list").html(data['data']);
-	        $("#prixTotal").html(data['prixTotal']+ " DHS");
-            $(".qty-panier, #nbrArticles").html(data['qty-panier']);
+            if(data != null){
+                $(".cart-list-panier").empty();
+                for(var i=0;i<data.length - 2;i++){
+                     $(".cart-list-panier").append("<div id='"+data[i].articleID+"' class='product-widget pw-panier'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body' style='text-align:left'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'>"+data[i].quantite+"x</span>"+data[i].prix+"</h4></div><button id='"+data[i].articleID+"' class='delete supp-panier'><i class='fa fa-close'></i></button></div>");
+                }
+                $("#prixTotal").html(data[data.length - 2]+ " DHS");
+                $(".qty-panier, #nbrArticlesPanier").html(data[data.length - 1]);
+            }
+            else{
+                $(".cart-list-panier").html("Votre panier est vide. Aller faire les courses!");
+                $(".qty-panier, #nbrArticlesPanier").html("0");
+            }
 	    }
 	});
 }
@@ -369,10 +450,10 @@ function LoadSildeData(data, ele){
         ele.empty();
         for (var i = 0; i < data.length; i++) {
             if (data[i].remiseDisponible == true) {
-                ele.append("<div class='product pro-tab1' style='visibility:hidden'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='sale'>" + data[i].tauxRemise + "%</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrixRemise + " DHS<del class='product-old-price'>" + data[i].articlePrix + "</del></h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
+                ele.append("<div class='product pro-tab1' style='visibility:hidden'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='sale'>" + data[i].tauxRemise + "%</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrixRemise + " DHS<del class='product-old-price'>" + data[i].articlePrix + "</del></h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
             }
             else
-                ele.append("<div class='product pro-tab1' style='visibility:hidden'> <a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'> <p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrix + " DHS</h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>add to wishlist</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
+                ele.append("<div class='product pro-tab1' style='visibility:hidden'> <a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'> <p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrix + " DHS</h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
         }
         UnslickSlide(ele);
     }

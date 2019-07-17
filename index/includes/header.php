@@ -5,12 +5,11 @@
 	include_once "../public-includes/functions.php";
 	include_once "../public-includes/classes.php";
 
-	if(isset($_POST['submit']))
-	{
+	if(isset($_POST['submit']) && !empty($_POST['search'])):
 		$search = $_POST['search'];
 		$categorie = $_POST['categorie'];
 		header('location: rechercher.php?categorie='.$categorie.'&rechercher='.$search);
-	}
+    endif;
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -117,30 +116,46 @@
 						<!-- ACCOUNT -->
 						<div class="col-md-3 clearfix">
 							<div class="header-ctn">
-								<!-- Wishlist -->
-								<div>
-									<a href="#">
-										<i class="fa fa-heart-o"></i>
-										<span>Favori</span>
-										<div class="qty qty-favori">0</div>
-									</a>
-								</div>
-								<!-- /Wishlist -->
-								<!-- Cart -->
-								<div class="dropdown" style="cursor:pointer">
+								<!-- Favoris -->
+								<div class="dropdown fav-toggle" style="cursor:pointer">
 									<a class="dropdown-toggle">
-										<i class="fa fa-shopping-cart"></i>
-										<span>Panier</span>
-										<div class="qty qty-panier"></div>
+										<i class="fa fa-heart-o"></i>
+										<span>Mes Favoris</span>
+										<div class="qty qty-favori">0</div>
 									</a>	
-									<div class="cart-dropdown">
-										<div class="cart-list">
+									<div class="cart-dropdown fav-dropdown" style="cursor:initial">
+										<div class="cart-list cart-list-favori">
 											
 											
 										</div>
 										<div class="cart-summary">
 											<small>
-											<span id="nbrArticles"></span>
+											<span id="nbrArticlesFavoris"></span>
+											Artiles(s)
+											</small>
+										</div>
+										<div class="cart-btns">
+											<a>Voir mon Panier</a>
+											<a>Checkout <i class="fa fa-arrow-circle-right"></i></a>
+										</div>
+									</div>
+								</div>
+								<!-- /Favoris -->
+								<!-- Cart -->
+								<div class="dropdown pan-toggle" style="cursor:pointer">
+									<a class="dropdown-toggle">
+										<i class="fa fa-shopping-cart"></i>
+										<span>Panier</span>
+										<div class="qty qty-panier"></div>
+									</a>	
+									<div class="cart-dropdown pan-dropdown" style="cursor:initial">
+										<div class="cart-list cart-list-panier">
+											
+											
+										</div>
+										<div class="cart-summary">
+											<small>
+											<span id="nbrArticlesPanier"></span>
 											Artiles(s)
 											</small>
 											<h5>Total: <span id="prixTotal">0 DHS</span></h5>

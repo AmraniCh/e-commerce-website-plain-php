@@ -1,25 +1,13 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>PHP Security Course</title>
-  </head>
-  <body>
-    <?php
-	  
-	  require 'public-includes/config.php';
+<div id=''.$row['articleID'].'' class='product-widget pw-panier'>
+                        <div class='product-img'>
+                            <img src=''.$imageArticle.'' alt=''>
+                        </div>
+                        <div class='product-body' style='text-align:left'>
+                            <h3 class='product-name'><a href='#'>'.$row['articleNom'].'</a></h3>
+                            <h4 class='product-price'><span class='qty'>'.$row['NbrArticlesPanier'].'x</span>'.$prix.'</h4>
+                        </div>
+                        <button id=''.$row['articleID'].'' class='delete supp-panier'><i class='fa fa-close'></i></button>
+                    </div>
 
-      if(isset($_POST['submit'])):
-        //$user = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
-        echo '1 : '.$con->escape_string($_POST['user']);
-        $user = htmlspecialchars($_POST['user']);
-        echo '<br>'.$user;
-      endif;
 
-    ?>
-    <form action="" method="post">
-      <input type="text" name="user">
-      <input type="submit" name="submit" value="Submit">
-    </form>
-  </body>
-</html>
+return json_encode(array('prixTotal' => 0, 'data' => 'Votre panier est vide. Aller faire les courses!', 'qty-panier' => 0));

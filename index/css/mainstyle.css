@@ -337,3 +337,7 @@ span[class="input-group-text"]{
     background-position: center;
     height: 230px;
 }
+
+.msg-vide{
+    font-size: 12px;
+}

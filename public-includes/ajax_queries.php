@@ -4,105 +4,128 @@
     require_once 'classes.php';
     session_start();
 
-    static $static_page_nbr = 1;
-        
-    if(isset($_POST['function']))
-        $called_function = $_POST['function'];
-    else
-        $called_function = $_REQUEST['function'];
+    if($_SERVER['REQUEST_METHOD'] == "POST"):
+
+        static $static_page_nbr = 1;
+
+        if(isset($_POST['function']))
+            $called_function = $_POST['function'];
+        else
+            $called_function = $_REQUEST['function'];
+
+    endif;
 
     switch($called_function)
     {
         case "SupprimerCategorie":
             echo $_POST['function']($_POST['idCat']);break;
+            
         case "AjouterCategorie":
             echo $_POST['function']($_POST['nomCat'],$_POST['descCat'],$_POST['active']);break;
+            
         case "MiseCategorie":
             echo $_POST['function']($_POST['idCat'],$_POST['nomCat'],$_POST['descCat'],$_POST['active']);break;
+            
         case "uploadMutiplePhotos":
             echo $_REQUEST['function']();break;
+            
         case "AjouterArtcile":
             echo $_POST['function']($_POST['couleurs'],$_POST['articleNom'],$_POST['articlePrix'],$_POST['articlePrixRemise'], $_POST['artcileDescription'],$_POST['articleMarque'],$_POST['tauxRemise'],$_POST['remiseDisponible'],$_POST['unitesEnStock'],$_POST['articleDisponible'],$_POST['categorieID']);break;
+            
         case "SupprimerArticle":
             echo $_POST['function']($_POST['articleID']);break;
+            
         case "ModifierArticle":
             echo $_POST['function']($_POST['couleurs'],$_POST['articleID'],$_POST['articleNom'],$_POST['articlePrix'],$_POST['articlePrixRemise'], $_POST['artcileDescription'],$_POST['articleMarque'],$_POST['tauxRemise'],$_POST['remiseDisponible'],$_POST['unitesEnStock'],$_POST['articleDisponible'],$_POST['categorieID']);break;
+            
         case "SupprimerClient":
             echo $_POST['function']($_POST['clientID']);break;
+            
         case "RechargerTab":
             echo $_POST['function']($_POST['categorie']);break;
+            
         case "RechargerTabWidget":
             echo $_POST['function']($_POST['categorie']);break;
+            
         case "AjouterAuPanier":
             echo $_POST['function']($_POST['articleID']);break;
+            
         case "SupprimerAuPanier":
             echo $_POST['function']($_POST['articleID']);break;
+            
         case "RemplirPanier":
             echo $_POST['function']();break;
+            
         case "AfficherMarquesFiltrer":
             echo $_POST['function']($_POST['categoriesIDs']);break;
+            
         case "AfficherProduitsFiltrer":
             echo $_POST['function']($_POST['categoriesIDs'], $_POST['marques'], $_POST['minPrix'], $_POST['maxPrix'],$_POST['filtrerPar'],$_POST['afficherNbr'],$_POST['page_nbr']);break;
+            
         case "StorePagination":
             echo $_POST['function']($_POST['categoriesIDs'],$_POST['marques'],$_POST['minPrix'],$_POST['maxPrix'],$_POST['filtrerPar'],$_POST['afficherNbr']);break;
+            
         case "returnTabWidget":
-            $_POST['function']($_POST['categorie']);break;
+            echo $_POST['function']($_POST['categorie']);break;
+            
+        case "RemplirFavoris":
+            echo $_POST['function']();break;
+            
+        case "AjouterAuxFavoris":
+            echo $_POST['function']($_POST['articleID']);break;
+            
+        case "SupprimerAuxFavoris":
+            echo $_POST['function']($_POST['articleID']);break;
+            
     }
 
     // global functions
     function RemplirPanier(){
         if(isset($_SESSION['clientID'])){
+            
+            $clientID = $_SESSION['clientID'];
+            
+            $client = new Client();
             $article = new Article();
             $panier = new Panier();
-            $query = $panier->AfficherPanierProduits($_SESSION['clientID']);
+            
+            $query = $panier->AfficherPanierProduits();
             if($query != null)
             {
-                $json = array();
+                $data = array();
                 $prix_total = 0;
                 $html = '';
                 while($row = $query->fetch_assoc()){
                     $imageArticle = $article->ImageArticle($row['articleID']);
 
                     if($row['remiseDisponible']){
-                        $prix_total += $row['articlePrixRemise'] * $row['NbrArticlesPanier'];
+                        $prix_total += $row['articlePrixRemise'] * $row['Quantite'];
                         $prix = $row['articlePrixRemise'];
                     }
                     else{
-                        $prix_total += $row['articlePrix'] * $row['NbrArticlesPanier'];
+                        $prix_total += $row['articlePrix'] * $row['Quantite'];
                         $prix = $row['articlePrix'];
                     }
-                    $html.= '<div id="'.$row['articleID'].'" class="product-widget">
-                        <div class="product-img">
-                            <img src="'.$imageArticle.'" alt="">
-                        </div>
-                        <div class="product-body" style="text-align:left">
-                            <h3 class="product-name"><a href="#">'.$row['articleNom'].'</a></h3>
-                            <h4 class="product-price"><span class="qty">'.$row['NbrArticlesPanier'].'x</span>'.$prix.'</h4>
-                        </div>
-                        <button id="'.$row['articleID'].'" class="delete supp-panier"><i class="fa fa-close"></i></button>
-                    </div>';
+                    $data[] = ['articleID' => $row['articleID'], 'imageArticle' => $imageArticle, 'articleNom' => $row['articleNom'], 'prix' => $prix, 'quantite' => $row['Quantite']];
                 }
-                $client = new client();
-                $clientID = $_SESSION['clientID'];
-                $json['prixTotal'] = $prix_total;
-                $json['data'] = $html;
-                $json['qty-panier'] = $client->NbrArticlesPanier($clientID);
-                return json_encode($json);
+                
+                $nbr_article = $client->NbrArticlesPanier($clientID);
+                array_push($data, $prix_total, $nbr_article);
+                return json_encode($data);
             }
             else
-                return json_encode(array('prixTotal' => 0, 'data' => "Votre panier est vide. Aller faire les courses!", 'qty-panier' => 0));
+                return json_encode(null);
         }
         else
-                return json_encode(array('prixTotal' => 0, 'data' => "Votre panier est vide. Aller faire les courses!", 'qty-panier' => 0));
+            return json_encode(null);
     }
 
     function AjouterAuPanier($articleID){
+        global $con;
         if(!isset($_SESSION['clientID']))
             return json_encode(false);
-        global $con;
         $clientID = $_SESSION['clientID'];
-        $articleID = $con->escape_string($articleID);
-        $query = $con->query("INSERT INTO panierDetails VALUES(null,$clientID,$articleID)");
+        $query = $con->query("INSERT INTO panierDetails VALUES(null,$clientID,$articleID,default)");
         if($con->affected_rows){
             $client = new client();
             return json_encode($client->NbrArticlesPanier($clientID));
@@ -113,6 +136,59 @@
         global $con;
         $clientID = $_SESSION['clientID'];
         $query = $con->query("DELETE FROM panierDetails WHERE articleID = $articleID AND clientID = $clientID");
+        if($con->affected_rows)
+            return json_encode(true);
+        else
+            return json_encode(false);
+    }
+
+    function RemplirFavoris(){
+        if(isset($_SESSION['clientID'])){
+            $article = new Article();
+            $favori = new Favori();
+            $query = $favori->AfficherProduitsFavoris();
+            if($query != null)
+            {
+                $data = array();
+                while($row = $query->fetch_assoc()){
+                    $imageArticle = $article->ImageArticle($row['articleID']);
+
+                    if($row['remiseDisponible']):
+                        $prix = $row['articlePrixRemise'];
+                    else:
+                        $prix = $row['articlePrix'];
+                    endif;
+                    
+                    $data[] = ['articleID' => $row['articleID'], 'imageArticle' => $imageArticle, 'articleNom' => $row['articleNom'], 'prix' => $prix];
+                }
+                $client = new client();
+                $clientID = $_SESSION['clientID'];
+                array_push($data, $client->NbrArticlesFavoris($clientID));
+                return json_encode($data);
+            }
+            else
+                return json_encode(null);
+        }
+        else
+            return json_encode(null);
+    }
+
+    function AjouterAuxFavoris($articleID){
+        global $con;
+        if(!isset($_SESSION['clientID']))
+            return json_encode(false);
+        $clientID = $_SESSION['clientID'];
+        $query = $con->query("INSERT INTO favoridetails VALUES($articleID,$clientID,default)");
+        if($con->affected_rows){
+            $client = new client();
+            return json_encode($client->NbrArticlesFavoris($clientID));
+        }
+    }
+
+    function SupprimerAuxFavoris($articleID){
+        global $con;
+        $clientID = $_SESSION['clientID'];
+        $query = $con->query("DELETE FROM favoridetails WHERE articleID = $articleID AND clientID = $clientID");
         if($con->affected_rows)
             return json_encode(true);
         else

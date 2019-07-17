@@ -12,6 +12,11 @@
 			$query = $this->con->query("SELECT articleID,clientID FROM panierDetails WHERE clientID = $clientID GROUP BY articleID,clientID ");
             return $this->con->affected_rows;
 		}
+        
+        public function NbrArticlesFavoris($clientID){
+			$query = $this->con->query("SELECT articleID,clientID FROM favoridetails WHERE clientID = $clientID GROUP BY articleID,clientID ");
+            return $this->con->affected_rows;
+		}
 	}
 
 	final class Article{
@@ -112,6 +117,7 @@
 			$row = $query->fetch_row();
 			return $row[0];
 		}
+
 	}
 
 	final class Categorie{
@@ -153,10 +159,28 @@
 			$this->con = $con;
 		}
 
-		function AfficherPanierProduits($clientID){
-			$query = $this->con->query("SELECT DISTINCT article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, COUNT(panierdetails.articleID) as 'NbrArticlesPanier' FROM article inner join panierDetails on article.articleID = panierDetails.articleID WHERE panierDetails.clientID = $clientID GROUP BY article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible");
+		function AfficherPanierProduits(){
+			$clientID = $_SESSION['clientID'];
+			$query = $this->con->query("SELECT DISTINCT article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, COUNT(panierdetails.articleID) as 'Quantite', article.dateAjoute FROM article inner join panierDetails on article.articleID = panierDetails.articleID WHERE panierDetails.clientID = $clientID GROUP BY article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, article.dateAjoute ORDER BY dateAjoute DESC");
 			if($query->num_rows > 0)
 				return $query;
 			return null;
 		}
 	}
+
+    final class Favori{
+        private $con;
+
+		public function __construct(){
+			global $con;
+			$this->con = $con;
+		}
+        
+        public function AfficherProduitsFavoris(){
+			$clientID = $_SESSION['clientID'];
+            $query = $this->con->query("SELECT article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, favoridetails.dateAjoute FROM article inner join favoridetails ON article.articleID = favoridetails.articleID WHERE favoridetails.clientID = $clientID GROUP BY article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, favoridetails.dateAjoute ORDER BY favoridetails.dateAjoute DESC");
+            if($query->num_rows > 0)
+				return $query;
+			return null;
+        }
+    }
