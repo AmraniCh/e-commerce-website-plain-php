@@ -135,8 +135,7 @@
 											</small>
 										</div>
 										<div class="cart-btns">
-											<a>Voir mon Panier</a>
-											<a>Checkout <i class="fa fa-arrow-circle-right"></i></a>
+											<a href='favoris.php' style="width:100%">Mes Favoris</a>
 										</div>
 									</div>
 								</div>

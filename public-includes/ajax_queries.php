@@ -77,6 +77,9 @@
         case "SupprimerAuxFavoris":
             echo $_POST['function']($_POST['articleID']);break;
             
+        case "VerifierFavorisCount":
+            echo $_POST['function']();break;
+            
     }
 
     // global functions
@@ -443,6 +446,17 @@
             return json_encode($data);
         else
             return json_encode(null);
+        return json_encode(null);
+    }
+    
+    // favoris.php functions
+    function VerifierFavorisCount(){
+        global $con;
+        $clientID = $_SESSION['clientID'];
+        $query = $con->query("SELECT COUNT(*) FROM favoridetails WHERE clientID = $clientID");
+        $row = $query->fetch_row();
+        if($row[0] == 0)
+            return json_encode(true);
         return json_encode(null);
     }
 

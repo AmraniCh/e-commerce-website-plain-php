@@ -178,7 +178,7 @@
         
         public function AfficherProduitsFavoris(){
 			$clientID = $_SESSION['clientID'];
-            $query = $this->con->query("SELECT article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, favoridetails.dateAjoute FROM article inner join favoridetails ON article.articleID = favoridetails.articleID WHERE favoridetails.clientID = $clientID GROUP BY article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, favoridetails.dateAjoute ORDER BY favoridetails.dateAjoute DESC");
+            $query = $this->con->query("SELECT article.articleID, article.articleNom, article.articleDescription, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, favoridetails.dateAjoute FROM article inner join favoridetails ON article.articleID = favoridetails.articleID WHERE favoridetails.clientID = $clientID GROUP BY article.articleID, article.articleNom, article.articleDescription, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, favoridetails.dateAjoute ORDER BY favoridetails.dateAjoute DESC");
             if($query->num_rows > 0)
 				return $query;
 			return null;

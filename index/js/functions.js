@@ -307,6 +307,7 @@ function RemplirPanier(){
                 $(".qty-panier, #nbrArticlesPanier").html(data[data.length - 1]);
             }
             else{
+                $("#prixTotal").html("0 DHS");
                 $(".cart-list-panier").html("Votre panier est vide. Aller faire les courses!");
                 $(".qty-panier, #nbrArticlesPanier").html("0");
             }

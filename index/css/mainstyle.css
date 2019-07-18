@@ -1,3 +1,4 @@
+/* GLOBAL */
 :root{
     --dark-red-color: #d10024;
     --blue-color: #308ee0;
@@ -126,20 +127,6 @@ td, th{
     font-size: 120%
 }
 
-/*********** START login-register pages CSS ***********/
-.left-container {
-    width: 50%;
-    float: left;
-    padding-right: 20px;
-    border-right: 2px solid #97ccff;
-}
-
-.right-container {
-    width: 48%;
-    float: right;
-}
-
-
 /********* SRART media queries CSS ****************/
 
 @media (max-width: 768px) {
@@ -196,7 +183,34 @@ td, th{
         padding: 0;
     }
 }
+
+@media (max-width: 1200px){
+    .lft-container{
+        padding: 0!important;
+    }
+}
+
+@media (max-width: 480px){
+    .product-favori, .product-panier > .product-body > .quantite-ctn{
+        right: initial!important;
+        bottom: initial!important;
+        margin-bottom: 10px;
+    }
+}
 /********* END media queries CSS ****************/
+
+/*********** START login-register pages CSS ***********/
+.left-container {
+    width: 50%;
+    float: left;
+    padding-right: 20px;
+    border-right: 2px solid #97ccff;
+}
+
+.right-container {
+    width: 48%;
+    float: right;
+}
 
 .text-error{
     color: #e28181!important;
@@ -340,4 +354,130 @@ span[class="input-group-text"]{
 
 .msg-vide{
     font-size: 12px;
+}
+
+.btn-delete-favori{
+    padding: 0;
+    border: none;
+    background: transparent;
+background: transparent;
+}
+
+.product-favori, .product-panier{
+    box-shadow: 0 0 2px 1px #eeee;
+    padding: 15px;
+    cursor: pointer;
+}
+
+.product-favori, .product-panier > .product-body{
+    padding: 0;
+    text-align: left;
+    position: relative;
+}
+
+.product-favori, .product-panier > .product-body > .delete-favori{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.product-favori, .product-panier > .product-body > .heart-icon{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.product-favori, .product-panier > .product-body > .produit-description{
+    padding: 7px;
+    font-size: 94%;
+}
+
+.product-favori, .product-panier > .product-body > .product-header > .produit-image {
+    width: 80px;
+    position: relative;
+    height: 100px;
+    float: left;
+    margin-right: 7%;
+}
+
+.product-favori, .product-panier > .product-body > .product-header > .produit-image > img{
+    position: absolute;
+    width: 100%;
+}
+
+.product-favori, .product-panier > .product-body > .delete-favori > button .fa-times-circle{
+    font-size: 140%;
+}
+
+.product-favori, .product-panier > .product-body > .delete-favori > button .fa-times-circle:hover{
+    color: #999;
+}
+
+.product-favori, .product-panier > .product-body > .heart-icon > .fa-heart{
+    font-size: 110%;
+    color: #ff666c;
+}
+
+.lft-container{
+    padding-right: 50px;
+}
+
+.lft-container > .product-container > .product{
+    margin-bottom: 18px;
+}
+
+.rgt-container{
+    box-shadow: 0 0 1px 1px #eee;
+    padding: 20px;
+}
+.rgt-container .checkout-info{
+    text-align: center;
+    font-weight: 500;
+}
+
+.checkout-info > div:not(.checkout-cnt){
+    margin-bottom: 15px;
+}
+.checkout-info > .total-price-promotion > span, .checkout-info > .subtotal-price > span{ 
+    font-size: 110%;
+    font-weight: 900;
+    color: #3768bf;
+}
+
+.checkout-info > .total-price > span{
+    font-size: 120%;
+    color: #d2003f;
+    font-weight: 900;
+}
+
+.checkout-info .total-price, .total-price-promotion, .subtotal-price{
+    display: flex;
+    justify-content: space-around;
+}
+
+.checkout-cnt > button{
+    background-color: #ffda00;
+    padding: 10px 20px;
+    box-shadow: 0 0 0 1px #eee;
+    color: #333;
+    border: none;
+    font-weight: 900;
+}
+
+.checkout-cnt > button:hover{
+    opacity: .8;
+}
+
+.product-panier{
+    padding: 45px;
+}
+
+.product-favori, .product-panier > .product-body > .quantite-ctn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.quantite-ctn > .input-number > input{
+    width: 130px;
 }

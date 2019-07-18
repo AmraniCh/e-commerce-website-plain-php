@@ -3,36 +3,42 @@
 <?php include_once "includes/navigation.php" ?>
 
 <?php
-	$result = ArticleParID($_GET['id']);
-	if(mysqli_num_rows($result)>0) {
+	if(!isset($_GET['id']) && empty($_GET['id']) || !is_numeric($_GET['id'])):
+		header('Location: ../login.php');
+		exit();
+	else:
 
-		$article = new Article();
+		$get = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
 
-		$row = mysqli_fetch_assoc($result);
-		$articleNom = $row['articleNom'];
-		$articlePrix = $row['articlePrix'];
-		$articlePrixRemise = $row['articlePrixRemise'];
-		$articleDescription = $row['articleDescription'];
-		$articleMarque = $row['articleMarque'];
+		$result = ArticleParID($get);
+		if(mysqli_num_rows($result)>0) {
 
-		$tauxRemise = $row['tauxRemise'];
+			$article = new Article();
 
-		$remiseDisponible = $row['remiseDisponible'];
-		$unitesEnStock = $row['unitesEnStock'];
-		$articleDisponible = $row['articleDisponible'];
-		$niveau = $article->echoNiveau($_GET['id']);
-		$categorieID = $row['categorieID'];
+			$row = mysqli_fetch_assoc($result);
+			$articleID = $row['articleID'];
+			$articleNom = $row['articleNom'];
+			$articlePrix = $row['articlePrix'];
+			$articlePrixRemise = $row['articlePrixRemise'];
+			$articleDescription = $row['articleDescription'];
+			$articleMarque = $row['articleMarque'];
 
-		$colors =  echocolors($_GET['id']);
+			$tauxRemise = $row['tauxRemise'];
 
-		$images = echoImages($_GET['id']);
+			$remiseDisponible = $row['remiseDisponible'];
+			$unitesEnStock = $row['unitesEnStock'];
+			$articleDisponible = $row['articleDisponible'];
+			$niveau = $article->echoNiveau($get);
+			$categorieID = $row['categorieID'];
 
-		global $con;
-		$result = $con->query("SELECT categorieNom from categorie WHERE categorieID = $categorieID");
-		$row2 = mysqli_fetch_assoc($result);
-		$categoryName = $row2['categorieNom'];
+			$colors =  echocolors($get);
+			$images = echoImages($get);
 
-	}
+			global $con;
+			$result = $con->query("SELECT categorieNom from categorie WHERE categorieID = $categorieID");
+			$row2 = mysqli_fetch_assoc($result);
+			$categoryName = $row2['categorieNom']; 
+			
 ?>
 		<!-- BREADCRUMB -->
 		<div id="breadcrumb" class="section">
@@ -121,7 +127,7 @@
 										<span class="qty-down">-</span>
 									</div>
 								</div>
-								<button class="add-to-cart-btn" onclick="()"><i class="fa fa-shopping-cart"></i> Ajouter au panier</button>
+								<button id="<?php echo $articleID ?>" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Ajouter au panier</button>
 							</div>
 
 							<ul class="product-btns">
@@ -504,7 +510,11 @@
 			<!-- /container -->
 		</div>
 		<!-- /Section -->
-
+	<?php											}
+			else
+				echo '<script>AucunResultat($(".full-container"))</script>';
+		endif;
+	?>
 
 <?php include_once "includes/newsletter.php" ?>
 

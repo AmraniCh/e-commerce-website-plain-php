@@ -48,6 +48,7 @@
 										<div id="'.$row['articleID'].'" class="product product-favori">
 											<div class="product-body">
 												<div class="delete-favori"><button id="'.$row['articleID'].'" type="button" class="btn-delete-favori"><i class="fa fa-times-circle"></i></button></div>
+												<div class="heart-icon"><i class="fa fa-heart"></i></div>
 												<div class="product-header">
 													<div class="produit-image">
 														<img src="'.$imageArticle.'">
@@ -56,7 +57,7 @@
 														<a href="produit.php?id="'.$row['articleID'].'">'.$row['articleNom'].'</a>
 													</div>
 												</div>
-												<div class="produit-description">'.$row['articleDescription'].'</div>
+												<div class="produit-description"><span>'.$row['articleDescription'].'</span></div>
 												<div class="product-price">
 													<span>'.$row['articlePrix'].'</span>
 												</div>
@@ -68,6 +69,7 @@
 										<div id="'.$row['articleID'].'" class="product product-favori">
 											<div class="product-body">
 												<div class="delete-favori"><button id="'.$row['articleID'].'" type="button" class="btn-delete-favori"><i class="fa fa-times-circle"></i></button></div>
+												<div class="heart-icon"><i class="fa fa-heart"></i></div>
 												<div class="product-header">
 													<div class="produit-image">
 														<img src="'.$imageArticle.'">
@@ -76,7 +78,7 @@
 														<a href="produit.php?id='.$row['articleID'].'">'.$row['articleNom'].'</a>
 													</div>
 												</div>
-												<div class="produit-description">'.$row['articleDescription'].'</div>
+												<div class="produit-description"><span>'.$row['articleDescription'].'</span></div>
 												<div class="product-price">
 													<span>'.$row['articlePrix'].'</span>
 													<del class="product-old-price">'.$row['articlePrixRemise'].'</del>
@@ -99,6 +101,20 @@
 		<?php include_once "includes/loading.html" ?>
 		
 		<script>
+            
+			$(document).ready(function(){
+				VerifierFavorisCount();
+				SubstructArtilceDesc();
+			});
+			
+			function SubstructArtilceDesc(){
+				var descriptions = $(".produit-description > span");
+				descriptions.each(function(){
+					var desc = $(this).html();
+					$(this).html(desc.substr(0, 40)+" ...");
+				});
+			}
+			
 			$(document).on("click", ".product-favori", function() {
 				var articleID = $(this).attr("id");
 				$(location).attr("href", "produit.php?id="+articleID);
@@ -114,26 +130,30 @@
 						function: "SupprimerAuxFavoris",
 						articleID: articleID
 					},
+					async: false,
 					dataType: 'JSON',
 					success: function (data) {
 						if (data != false){
-							$(".product-container").load(" .product-conatiner");
+							$(".product-conatiner").load(" .product-conatiner");
 							RemplirFavoris();
 						}
 					}	
-				}).done(function(){
-					$.ajax({
-						url: "../public-includes/ajax_queries",
-						method: "POST",
-						data: { function: "VerifierFavorisCount" },
-						dataType: 'JSON',
-						success: function (data) {
-							if (data != null)
-								$(".product-container").html("<div class='msg-vide text-center'>Vous n'avez actuellement aucun favori.</div><div class='msg-vide text-center'>Ajoutez des produits à vos favoris en cliquant sur <span><i class='fa fa-heart-o'></i></span> la page du produit!</div>");	
-						}
-					});
 				});
 			});
+
+			function VerifierFavorisCount(){
+				$.ajax({
+					url: "../public-includes/ajax_queries",
+					method: "POST",
+					data: { function: "VerifierFavorisCount" },
+					dataType: 'JSON',
+					success: function (data) {
+						if (data == true)
+							$(".product-container").html("<div class='msg-vide text-center'><h4>Vous n'avez actuellement aucun favori.</h4></div><div class='msg-vide text-center'><h5>Ajoutez des produits à vos favoris en cliquant sur <span><i class='fa fa-heart-o'></i></span> la page du produit!<h5></div>");	
+					}
+				});
+			}
+            
 		</script>
 			
 
