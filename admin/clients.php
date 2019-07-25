@@ -4,29 +4,6 @@
   if(isset($_GET['admin']) && isset($_SESSION['admin'])){
 		if($_GET['admin'] == $_SESSION['admin'])
 		{
-            
-      
-            final class client{
-                private $con;
-                
-                function __construct(){
-                    global $con;
-                    $this->con = $con;
-                }
-                
-                public function AfficherClients(){ 
-                    $result = $this->con->query("SELECT * FROM client ORDER BY clientID");
-                    return $result;
-                }
-                
-                public function EmailValide($valide){
-                    if($valide == 0)
-                        return "<label class='badge badge-danger'>Pas validé</label>";
-                    else
-                        return "<label class='badge badge-success'>Validé</label>";
-                    return null;
-                }
-            }
     
 
   ?>
@@ -49,30 +26,29 @@
                           <h3 class="title">Clients</h3>        
                       </div>
                       <div class="profile-content">
-                          <form action="" id="profile" method="post">
-                              <div class="row">
-                                  <div class="col-md-12">
-                                     <div class="table-responsive">
-                                          <table id="clientsTable" class="table table-hover table-bordered small-col">
-                                              <thead>
-                                                  <tr>
-                                                      <th>ID</th>
-                                                      <th>Username</th>
-                                                      <th>Prenom</th>
-                                                      <th>Nom</th>
-                                                      <th>Email</th>
-                                                      <th>Téléphone</th>
-                                                      <th>Adresse</th>
-                                                      <th>Ville</th>
-                                                      <th>Mot de passe</th>
-                                                      <th>Email validé</th>
-                                                      <th>Code postal</th>
-                                                      <th>Envoyer Message</th>
-                                                      <th>Supprimer le compte</th>
-                                                  </tr>
-                                              </thead>
-                                              <tbody>
-                                                 <?php 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table id="clientsTable" class="table table-hover table-bordered small-col">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Username</th>
+                                                <th>Prenom</th>
+                                                <th>Nom</th>
+                                                <th>Email</th>
+                                                <th>Téléphone</th>
+                                                <th>Adresse</th>
+                                                <th>Ville</th>
+                                                <th>Mot de passe</th>
+                                                <th>Email validé</th>
+                                                <th>Code postal</th>
+                                                <th>Envoyer Message</th>
+                                                <th>Supprimer le compte</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php 
                                                     $client = new client();
                                                     $result = $client->AfficherClients();
                                                     while($row = $result->fetch_array()){
@@ -92,13 +68,12 @@
                                                         echo '<td><button id="btnSupprimer" type="button" class="btn btn-red btn-column-icon" data-toggle="modal" data-target="#suppressionClient"><i class="fas fa-trash icon-col"></i></button></td>';
                                                         echo '</tr>';
                                                     }
-                                                ?>                                  
-                                              </tbody>
-                                          </table>
-                                      </div>
-                                  </div>
-                              </div>
-                          </form>
+                                                ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                       </div>
                   </div>
               </div>

@@ -77,8 +77,14 @@
         case "SupprimerAuxFavoris":
             echo $_POST['function']($_POST['articleID']);break;
             
-        case "VerifierFavorisCount":
+        case "AucunFavoriTrouve":
             echo $_POST['function']();break;
+            
+        case "RemplirPagePanier":
+            echo $_POST['function']();break;
+            
+        case "IncrementArticleQtyPanier":
+            echo $_POST['function']($_POST['articleID'],$_POST['qty']);break;
             
     }
 
@@ -96,24 +102,28 @@
             if($query != null)
             {
                 $data = array();
-                $prix_total = 0;
-                $html = '';
+                $sub_total = 0;
+                $promotion = 0;
                 while($row = $query->fetch_assoc()){
+                    
                     $imageArticle = $article->ImageArticle($row['articleID']);
-
+                    
                     if($row['remiseDisponible']){
-                        $prix_total += $row['articlePrixRemise'] * $row['Quantite'];
-                        $prix = $row['articlePrixRemise'];
+                        $prixRemise = $row['articlePrixRemise'] * $row['quantite'];
+                        $sub_total += $row['articlePrixRemise'] * $row['quantite'];
                     }
-                    else{
-                        $prix_total += $row['articlePrix'] * $row['Quantite'];
-                        $prix = $row['articlePrix'];
-                    }
-                    $data[] = ['articleID' => $row['articleID'], 'imageArticle' => $imageArticle, 'articleNom' => $row['articleNom'], 'prix' => $prix, 'quantite' => $row['Quantite']];
+                    else
+                        $sub_total += $row['articlePrix'] * $row['quantite'];
+                        
+            
+                    $prix = $row['articlePrix'] * $row['quantite'];
+                    
+                    
+                    $data[] = ['articleID' => $row['articleID'], 'imageArticle' => $imageArticle, 'articleNom' => $row['articleNom'], 'prix' => $prix, 'remiseDisponible' => $row['remiseDisponible'], 'prixRemise' => $prixRemise, 'quantite' => $row['quantite']];
                 }
                 
                 $nbr_article = $client->NbrArticlesPanier($clientID);
-                array_push($data, $prix_total, $nbr_article);
+                array_push($data, $sub_total, $nbr_article);
                 return json_encode($data);
             }
             else
@@ -122,27 +132,38 @@
         else
             return json_encode(null);
     }
-
+    
     function AjouterAuPanier($articleID){
         global $con;
+        
         if(!isset($_SESSION['clientID']))
             return json_encode(false);
-        $clientID = $_SESSION['clientID'];
-        $query = $con->query("INSERT INTO panierDetails VALUES(null,$clientID,$articleID,default)");
-        if($con->affected_rows){
+        
+        $client = new Client();
+        $panierID = $client->PanierClient();
+        
+        // vérifier si l'article est déja existe
+        if($client->ArticlePanierExiste($articleID) == null && $panierID != null):
+        
+            $query = $con->query("INSERT INTO panierDetails VALUES($panierID,$articleID,default,default)");
+        
+        endif;
+        
+        if($con->affected_rows):
             $client = new client();
-            return json_encode($client->NbrArticlesPanier($clientID));
-        }
+            return json_encode($client->NbrArticlesPanier());
+        endif;
+                
+        return json_encode(false);
     }
 
     function SupprimerAuPanier($articleID){
         global $con;
-        $clientID = $_SESSION['clientID'];
-        $query = $con->query("DELETE FROM panierDetails WHERE articleID = $articleID AND clientID = $clientID");
+        $clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);
+        $query = $con->query("DELETE FROM panierDetails WHERE articleID = $articleID");
         if($con->affected_rows)
             return json_encode(true);
-        else
-            return json_encode(false);
+        return json_encode(false);
     }
 
     function RemplirFavoris(){
@@ -194,8 +215,7 @@
         $query = $con->query("DELETE FROM favoridetails WHERE articleID = $articleID AND clientID = $clientID");
         if($con->affected_rows)
             return json_encode(true);
-        else
-            return json_encode(false);
+        return json_encode(false);
     }
 
     // categories.php functions 
@@ -450,13 +470,74 @@
     }
     
     // favoris.php functions
-    function VerifierFavorisCount(){
+    function AucunFavoriTrouve(){
         global $con;
         $clientID = $_SESSION['clientID'];
         $query = $con->query("SELECT COUNT(*) FROM favoridetails WHERE clientID = $clientID");
         $row = $query->fetch_row();
         if($row[0] == 0)
             return json_encode(true);
+        return json_encode(null);
+    }
+
+    // panier.php function
+    function RemplirPagePanier(){
+            
+        $clientID = $_SESSION['clientID'];
+            
+        $client = new Client();
+        $article = new Article();
+        $panier = new Panier();
+            
+        $query = $panier->AfficherPanierProduits();
+        if($query != null)
+        {
+            $data = array();
+            $sub_total = 0;
+            $promotion = 0;
+            $total = 0;
+            while($row = $query->fetch_assoc()){
+                    
+                $imageArticle = $article->ImageArticle($row['articleID']);
+
+                if($row['remiseDisponible']):
+                    
+                    $total += $row['articlePrixRemise'] * $row['quantite'];
+                    $promotion += ($row['articlePrix'] - $row['articlePrixRemise']) * $row['quantite'];
+                    $articlePrixRemise = $row['articlePrixRemise'];
+    
+                else:
+                    
+                    $total += $row['articlePrix'] * $row['quantite'];
+                    $articlePrixRemise = null;
+                    
+                endif;
+
+                $sub_total += $row['articlePrix'] * $row['quantite'];
+                    
+                $data[] = ['articleID' => $row['articleID'], 'articleDescription' => $row['articleDescription'], 'imageArticle' => $imageArticle, 'articleNom' => $row['articleNom'], 'articlePrix' => $row['articlePrix'], 'articlePrixRemise' => $row['articlePrixRemise'], 'remiseDisponible' => $row['remiseDisponible'], 'quantite' => $row['quantite']];
+            }
+                    
+                $nbr_article = $client->NbrArticlesPanier($clientID);
+                array_push($data, $total, $promotion, $sub_total, $nbr_article);
+                return json_encode($data);
+        }
+        else
+            return json_encode(null);
+    }
+
+    function IncrementArticleQtyPanier($articleID, $qty){
+        global $con;  
+        $clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);    
+        
+        
+        $query = $con->query("UPDATE panierdetails SET quantite = $qty WHERE panierID IN (SELECT panierID FROM panier WHERE panierID IN (SELECT panierID FROM client WHERE clientID = $clientID)) AND articleID = $articleID");
+
+        if($con->affected_rows):
+            $client = new client();
+            return json_encode($client->NbrArticlesPanier($clientID));
+        endif;
+            
         return json_encode(null);
     }
 

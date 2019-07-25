@@ -20,7 +20,7 @@
 					<div class="col-md-12">
 						<h3 class="breadcrumb-header">Accueil</h3>
 						<ul class="breadcrumb-tree">
-							<li class="active"><a>/ store / Mes Favoris
+							<li class="active"><a> / Mes Favoris
 							</a></li>
 						</ul>
 					</div>
@@ -103,7 +103,7 @@
 		<script>
             
 			$(document).ready(function(){
-				VerifierFavorisCount();
+				AucunFavoriTrouve();
 				SubstructArtilceDesc();
 			});
 			
@@ -141,11 +141,11 @@
 				});
 			});
 
-			function VerifierFavorisCount(){
+			function AucunFavoriTrouve(){
 				$.ajax({
 					url: "../public-includes/ajax_queries",
 					method: "POST",
-					data: { function: "VerifierFavorisCount" },
+					data: { function: "AucunFavoriTrouve" },
 					dataType: 'JSON',
 					success: function (data) {
 						if (data == true)

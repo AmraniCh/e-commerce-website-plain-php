@@ -855,7 +855,8 @@ textarea.input {
 
 .product {
   position: relative;
-  outline: 1px solid #eee;
+  border: .5px solid #eee;
+  border-radius: 2px;
   transition: 0.2s all;
 }
 

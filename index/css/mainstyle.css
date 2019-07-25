@@ -32,6 +32,10 @@
     line-height: 18px!important;
 }
 
+.btn:hover{
+    opacity: .8;
+}
+
 
 .btn-block{
     width:100%!important
@@ -168,7 +172,14 @@ td, th{
     
     .flex-container{
         display: block!important;
+        text-align: center;
     }
+    
+    .flex-container > .lt-container, .rt-container{
+        width: 75%!important;
+        display: inline-block;
+        margin-bottom: 15px;
+    }    
 }
 
 @media (max-width: 992px) {
@@ -356,11 +367,11 @@ span[class="input-group-text"]{
     font-size: 12px;
 }
 
-.btn-delete-favori{
+.btn-delete-favori, .btn-delete-panier{
     padding: 0;
     border: none;
     background: transparent;
-background: transparent;
+    background: transparent;
 }
 
 .product-favori, .product-panier{
@@ -427,11 +438,12 @@ background: transparent;
 }
 
 .rgt-container{
-    box-shadow: 0 0 1px 1px #eee;
+    box-shadow: 0 0 2px 1px #eee;
     padding: 20px;
+    border-radius: 10px
 }
 .rgt-container .checkout-info{
-    text-align: center;
+    text-align: left;
     font-weight: 500;
 }
 
@@ -439,37 +451,39 @@ background: transparent;
     margin-bottom: 15px;
 }
 .checkout-info > .total-price-promotion > span, .checkout-info > .subtotal-price > span{ 
-    font-size: 110%;
-    font-weight: 900;
-    color: #3768bf;
+    font-size: 120%;
+    font-weight: 500;
+    color: #9b9797;
+    font-family: arial;
 }
 
-.checkout-info > .total-price > span{
+.checkout-info > .total-price > #totalPrix{
     font-size: 120%;
     color: #d2003f;
-    font-weight: 900;
+    font-weight: 500;
 }
 
 .checkout-info .total-price, .total-price-promotion, .subtotal-price{
-    display: flex;
-    justify-content: space-around;
+    
+}
+
+.pn-titre{
+    width: 150px;
+    display: inline-block
+}
+
+.checkout-cnt{
+    text-align: center;
 }
 
 .checkout-cnt > button{
-    background-color: #ffda00;
-    padding: 10px 20px;
-    box-shadow: 0 0 0 1px #eee;
-    color: #333;
-    border: none;
-    font-weight: 900;
-}
-
-.checkout-cnt > button:hover{
-    opacity: .8;
+    padding: 10px 15px;
+    font-weight: 500
 }
 
 .product-panier{
-    padding: 45px;
+    padding: 38px;
+    border-radius: 10px
 }
 
 .product-favori, .product-panier > .product-body > .quantite-ctn {
@@ -480,4 +494,57 @@ background: transparent;
 
 .quantite-ctn > .input-number > input{
     width: 130px;
+}
+
+.flex-container > .lt-container:hover{
+    box-shadow: 0 0 1px 1px #db2929;
+}
+
+.flex-container > .rt-container:hover{
+    box-shadow: 0 0 1px 1px #db2929;
+}
+
+.flex-container > .lt-container, .rt-container{
+    width: 40%;
+    padding: 20px;
+    box-shadow: 0 0 2px 1px #eee;
+    border-radius: 10px;
+}
+
+.mth-header{
+    text-align: center;
+    font-size: 140%;
+}
+
+.mth-image{
+    text-align: center;
+}
+
+.mth-btn{
+    margin-top: 15px;
+    text-align: center;
+}
+
+.mth-btn > button{
+    padding: 8px 20px;
+    border: none;
+    font-weight: 500;
+}
+
+.mth-image{
+    background-repeat:no-repeat;
+    background-size:contain;
+    background-position:center;
+    height: 130px;
+    margin: 20px 0;
+}
+
+.vd-action > button{
+    padding: 8px 20px;
+    border: none;
+    font-weight: 500;
+}
+
+input.qty-article[type='number']:disabled{
+    background-color: #f2f2f2;
 }

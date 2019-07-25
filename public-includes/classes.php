@@ -1,5 +1,4 @@
 <?php
-
 	final class Client{
 		private $con;
 		
@@ -8,15 +7,82 @@
 			$this->con = $con;
 		}
 		
-		public function NbrArticlesPanier($clientID){
-			$query = $this->con->query("SELECT articleID,clientID FROM panierDetails WHERE clientID = $clientID GROUP BY articleID,clientID ");
-            return $this->con->affected_rows;
+		public function PanierClient()
+		{
+			$clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);
+			
+			$query = $this->con->query("SELECT panierID from client WHERE clientID = $clientID");
+			$row = $query->fetch_row();
+			
+			if($row[0] == null):
+				// créer panier client 
+				$insert = $this->con->query("INSERT INTO panier VALUES(null, default)");
+				$select = $this->con->query("SELECT panierID FROM panier ORDER BY dateAjoute Desc");
+				$row = $select->fetch_row();
+				$update = $this->con->query("UPDATE client SET panierID = $row[0] WHERE clientID = $clientID");
+				return $row[0];
+			
+			else:
+				return $row[0];	
+			endif;
+			
+			return null;
+		}
+		
+		public function NbrArticlesPanier(){
+			$clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);
+			$query = $this->con->query("select count(*)
+						from panierdetails pd 
+						INNER join panier p
+						on pd.panierID = p.panierID 
+						inner join client c 
+						on c.panierID = p.panierID 
+						where c.clientID = $clientID");
+			$row = $query->fetch_row();
+            return $row[0];
+		}
+		
+		public function ArticlePanierExiste($articleID){
+			$clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);
+			$query = $this->con->query("select *
+						from panierdetails pd 
+						INNER join panier p
+						on pd.panierID = p.panierID 
+						inner join client c 
+						on c.panierID = p.panierID
+						where c.clientID = $clientID AND pd.articleID = $articleID");
+			
+			if($this->con->affected_rows > 0):
+			
+				$panierID = $this->PanierClient();
+				$row = $query->fetch_assoc();
+				$quantite = $row['quantite'];
+				$query = $this->con->query("UPDATE panierdetails SET quantite = quantite + 1 WHERE panierID = $panierID AND articleID = $articleID");
+			
+				return true;
+			
+			endif;
+			
+			return null;
 		}
         
         public function NbrArticlesFavoris($clientID){
-			$query = $this->con->query("SELECT articleID,clientID FROM favoridetails WHERE clientID = $clientID GROUP BY articleID,clientID ");
+			$query = $this->con->query("SELECT articleID,clientID FROM favoridetails WHERE clientID = $clientID GROUP BY articleID,clientID");
             return $this->con->affected_rows;
 		}
+		
+		public function AfficherClients(){ 
+        $result = $this->con->query("SELECT * FROM client ORDER BY clientID");
+        return $result;
+        }
+                
+        public function EmailValide($valide){
+			if($valide == 0)
+				return "<label class='badge badge-danger'>Pas validé</label>";
+			else
+				return "<label class='badge badge-success'>Validé</label>";
+			return null;
+        }
 	}
 
 	final class Article{
@@ -160,8 +226,16 @@
 		}
 
 		function AfficherPanierProduits(){
-			$clientID = $_SESSION['clientID'];
-			$query = $this->con->query("SELECT DISTINCT article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, COUNT(panierdetails.articleID) as 'Quantite', article.dateAjoute FROM article inner join panierDetails on article.articleID = panierDetails.articleID WHERE panierDetails.clientID = $clientID GROUP BY article.articleID, article.articleNom, article.articlePrix, article.articlePrixRemise, article.remiseDisponible, article.dateAjoute ORDER BY dateAjoute DESC");
+			$clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);
+			$query = $this->con->query("SELECT a.*, pd.*
+						FROM panierdetails pd 
+						INNER JOIN panier p 
+						ON pd.panierID = p.panierID 
+						INNER JOIN client c 
+						ON c.panierID = p.panierID 
+						INNER JOIN article a 
+						ON a.articleID = pd.articleID
+						WHERE clientID = $clientID");
 			if($query->num_rows > 0)
 				return $query;
 			return null;

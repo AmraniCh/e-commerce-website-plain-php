@@ -59,9 +59,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/charts/chartjs.html">
+            <a class="nav-link" href="commandes.php?admin=<?php echo $_SESSION['admin'] ?>">
               <i class="menu-icon fas fa-truck"></i>
-              <span class="menu-title">Les Ordres</span>
+              <span class="menu-title">Commandes</span>
             </a>
           </li>
           <li class="nav-item">

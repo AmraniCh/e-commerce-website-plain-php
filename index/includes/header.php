@@ -160,7 +160,7 @@
 											<h5>Total: <span id="prixTotal">0 DHS</span></h5>
 										</div>
 										<div class="cart-btns">
-											<a>Voir mon Panier</a>
+											<a href="panier.php">Voir mon Panier</a>
 											<a>Checkout <i class="fa fa-arrow-circle-right"></i></a>
 										</div>
 									</div>

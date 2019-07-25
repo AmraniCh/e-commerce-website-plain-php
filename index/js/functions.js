@@ -15,99 +15,104 @@ $(document).ready(function(){
         $(".pan-dropdown").css("display","none");
         $(".fav-dropdown").toggle();
     });
-    
-    $('.cart-summary, .cart-btns').on('click', function (e) {
-		e.stopPropagation();
-	});
-    
-    $(document).on("click",".add-to-cart-btn", function(e){
-        $(this).children(".fa-shopping-cart").toggleClass("produit-panier-icon");
-        $(this).toggleClass("produit-panier");  
 
-        var articleID = $(this).attr("id");
-        $.ajax({
-            url: '../public-includes/ajax_queries',
-            method: 'POST',
-            data: {
-                function: 'AjouterAuPanier', 
-                articleID: articleID
-            },
-            dataType: 'JSON',
-            success: function(data){
-                if(data != false){      
-                    $("#audio")[0].play();
-                    RemplirPanier();
-                }
-                else
-                    $(location).attr('href', '../login.php');
+});
+
+    
+$('.cart-summary, .cart-btns').on('click', function (e) {
+	e.stopPropagation();
+});
+    
+$(document).on("click",".add-to-cart-btn", function(e){
+    $(this).children(".fa-shopping-cart").toggleClass("produit-panier-icon");
+    $(this).toggleClass("produit-panier");  
+    
+    var articleID = $(this).attr("id");
+    $.ajax({
+        url: '../public-includes/ajax_queries',
+        method: 'POST',
+        data: {
+            function: 'AjouterAuPanier', 
+            articleID: articleID
+        },
+        dataType: 'JSON',
+        success: function(data){
+            if(data != false){      
+                  $("#audio")[0].play();
+                RemplirPanier();
             }
-        });
+            else
+                 $(location).attr('href', '../login.php');
+        }
+    });
         
-    }); 
+}); 
     
-    $(document).on("click",".add-to-wishlist", function(){
-        var articleID = $(this).attr("id");
-        $.ajax({
-            url: '../public-includes/ajax_queries',
-            method: 'POST',
-            data: {
-                function: 'AjouterAuxFavoris', 
-                articleID: articleID
-            },
-            dataType: 'JSON',
-            success: function(data){
-                if(data != false){      
-                    $("#audio")[0].play();
-                    RemplirFavoris();
-                }
-                else
-                    $(location).attr('href', '../login.php');
+$(document).on("click",".add-to-wishlist", function(){
+    var articleID = $(this).attr("id");
+    
+    $.ajax({
+        url: '../public-includes/ajax_queries',
+        method: 'POST',
+        data: {
+            function: 'AjouterAuxFavoris',
+            articleID: articleID
+        },
+        dataType: 'JSON',
+        success: function (data) {
+            if (data != false) {
+                $("#audio")[0].play();
+                RemplirFavoris();
+            } else
+                $(location).attr('href', '../login.php');
+        }
+    });   
+});
+    
+$(document).on("click",".supp-panier",function(){
+    var articleID = $(this).attr("id");
+    
+    $.ajax({
+        url: "../public-includes/ajax_queries",
+        method: "POST",
+        data: {
+            function: "SupprimerAuPanier",
+            articleID: articleID
+        },
+        dataType: 'JSON',
+        success: function (data) {
+            if (data != false) {
+                $("div#" + articleID + ".pw-panier").remove();
+                RemplirPanier();
+                $(".pan-dropdown").toggle();
+
+                var url = location.pathname.split('/').slice(-1)[0];
+                if (url == 'panier.php')
+                    RemplirPagePanier();
             }
-        });    
+        }
     });
+});
     
-    $(document).on("click",".supp-panier",function(){
+$(document).on("click",".supp-favoris",function(){
+    var articleID = $(this).attr("id");
     
-        var articleID = $(this).attr("id");
-        $.ajax({
-            url: "../public-includes/ajax_queries",
-            method: "POST",
-            data: {
-                function: "SupprimerAuPanier",
-                articleID: articleID
-            },
-            dataType: 'JSON',
-            success: function (data) {
-                if (data != false){
-                    $("div#" + articleID + ".pw-panier").remove();
-                    RemplirPanier();
-                    $(".pan-dropdown").toggle();
-                }
+    $.ajax({
+        url: "../public-includes/ajax_queries",
+        method: "POST",
+        data: {
+            function: "SupprimerAuxFavoris",
+            articleID: articleID
+        },
+        dataType: 'JSON',
+        success: function (data) {
+            if (data != false) {
+                $("div#" + articleID + ".pw-favoris").remove();
+                RemplirFavoris();
+                $(".fav-dropdown").toggle();
             }
-        });
+        }
     });
-    
-    $(document).on("click",".supp-favoris",function(){
-    
-        var articleID = $(this).attr("id");
-        $.ajax({
-            url: "../public-includes/ajax_queries",
-            method: "POST",
-            data: {
-                function: "SupprimerAuxFavoris",
-                articleID: articleID
-            },
-            dataType: 'JSON',
-            success: function (data) {
-                if (data != false){
-                    $("div#" + articleID + ".pw-favoris").remove();
-                    RemplirFavoris();
-                    $(".fav-dropdown").toggle();
-                }
-            }
-        });
-    });
-    
 });
 
 function StorePagination(){
@@ -277,7 +282,7 @@ function RemplirFavoris(){
             if(data != null){
                 $(".cart-list-favori").empty();
                 for(var i=0;i<data.length - 1;i++){
-                    $(".cart-list-favori").append("<div id='"+data[i].articleID+"' class='product-widget pw-favori'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body' style='text-align:left'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'></span>"+data[i].prix+"</h4></div><button id='"+data[i].articleID+"' class='delete supp-favoris'><i class='fa fa-close'></i></button></div>");
+                    $(".cart-list-favori").append("<div id='"+data[i].articleID+"' class='product-widget pw-favori'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body' style='text-align:left'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'></span>"+data[i].prix+" DHS</h4></div><button id='"+data[i].articleID+"' class='delete supp-favoris'><i class='fa fa-close'></i></button></div>");
                 }
                 $(".qty-favori, #nbrArticlesFavoris").html(data[data.length - 1]);
             }
@@ -301,7 +306,10 @@ function RemplirPanier(){
             if(data != null){
                 $(".cart-list-panier").empty();
                 for(var i=0;i<data.length - 2;i++){
-                     $(".cart-list-panier").append("<div id='"+data[i].articleID+"' class='product-widget pw-panier'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body' style='text-align:left'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'>"+data[i].quantite+"x</span>"+data[i].prix+"</h4></div><button id='"+data[i].articleID+"' class='delete supp-panier'><i class='fa fa-close'></i></button></div>");
+                    if(data[i].remiseDisponible == 1)
+                        $(".cart-list-panier").append("<div id='"+data[i].articleID+"' class='product-widget pw-panier'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body' style='text-align:left'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'>"+data[i].quantite+"x</span>" + data[i].prixRemise + "<del class='product-old-price'> " + data[i].prix + " DHS</del></h4></div><button id='"+data[i].articleID+"' class='delete supp-panier'><i class='fa fa-close'></i></button></div>");
+                    else
+                        $(".cart-list-panier").append("<div id='"+data[i].articleID+"' class='product-widget pw-panier'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body' style='text-align:left'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'>"+data[i].quantite+"x</span>"+data[i].articlePrix+"</h4></div><button id='"+data[i].articleID+"' class='delete supp-panier'><i class='fa fa-close'></i></button></div>");
                 }
                 $("#prixTotal").html(data[data.length - 2]+ " DHS");
                 $(".qty-panier, #nbrArticlesPanier").html(data[data.length - 1]);
