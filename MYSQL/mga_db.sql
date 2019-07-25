@@ -2,10 +2,10 @@
 -- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1:3306
--- Généré le :  mer. 17 juil. 2019 à 17:21
--- Version du serveur :  5.7.24
--- Version de PHP :  7.2.14
+-- Host: 127.0.0.1:3306
+-- Generation Time: Jul 25, 2019 at 06:40 PM
+-- Server version: 5.7.24
+-- PHP Version: 7.2.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,12 +19,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  `mga.db`
+-- Database: `mga.db`
 --
 
 DELIMITER $$
 --
--- Procédures
+-- Procedures
 --
 DROP PROCEDURE IF EXISTS `getrandom`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getrandom` (OUT `randomNumber` INT)  BEGIN
@@ -32,7 +32,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getrandom` (OUT `randomNumber` INT)
 end$$
 
 --
--- Fonctions
+-- Functions
 --
 DROP FUNCTION IF EXISTS `randomNumber`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `randomNumber` () RETURNS INT(50) RETURN floor(rand()*1000000)$$
@@ -42,7 +42,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Structure de la table `admin`
+-- Table structure for table `admin`
 --
 
 DROP TABLE IF EXISTS `admin`;
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `admin`
+-- Dumping data for table `admin`
 --
 
 INSERT INTO `admin` (`adminID`, `adminName`, `email`, `nom`, `prenom`, `motdepasse`, `role`) VALUES
@@ -68,7 +68,7 @@ INSERT INTO `admin` (`adminID`, `adminName`, `email`, `nom`, `prenom`, `motdepas
 -- --------------------------------------------------------
 
 --
--- Structure de la table `article`
+-- Table structure for table `article`
 --
 
 DROP TABLE IF EXISTS `article`;
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `article` (
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `article`
+-- Dumping data for table `article`
 --
 
 INSERT INTO `article` (`articleID`, `articleNom`, `articlePrix`, `articlePrixRemise`, `articleDescription`, `articleMarque`, `tauxRemise`, `remiseDisponible`, `unitesEnStock`, `unitesSurCommande`, `articleDisponible`, `niveau`, `dateAjoute`, `categorieID`) VALUES
@@ -108,7 +108,7 @@ INSERT INTO `article` (`articleID`, `articleNom`, `articlePrix`, `articlePrixRem
 -- --------------------------------------------------------
 
 --
--- Structure de la table `categorie`
+-- Table structure for table `categorie`
 --
 
 DROP TABLE IF EXISTS `categorie`;
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `categorie` (
 ) ENGINE=MyISAM AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `categorie`
+-- Dumping data for table `categorie`
 --
 
 INSERT INTO `categorie` (`categorieID`, `categorieNom`, `description`, `active`) VALUES
@@ -139,7 +139,7 @@ INSERT INTO `categorie` (`categorieID`, `categorieNom`, `description`, `active`)
 -- --------------------------------------------------------
 
 --
--- Structure de la table `client`
+-- Table structure for table `client`
 --
 
 DROP TABLE IF EXISTS `client`;
@@ -161,18 +161,18 @@ CREATE TABLE IF NOT EXISTS `client` (
   `panierID` int(11) DEFAULT NULL,
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `clientUserName` (`clientUserName`),
-  KEY `panierID` (`panierID`)
+  KEY `fk_panierID_client` (`panierID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `client`
+-- Dumping data for table `client`
 --
 
 INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
-(40, 'chou500', 'elamrani', 'chakir', 'elamrani.sv.laza@gmail.com', 'tanger', 'tanger', b'1', '334882', 90002, '0659630023', '$2y$10$GIDeDZ8Q3cTJ68B10HkPlOVTPiiZoRt2sELWxo7zRqgDgw4Jp8gOK', 'Quel était le nom de votre premier animal ?', 'KAKAKA', NULL);
+(40, 'chou500', 'elamrani', 'chakir', 'elamrani.sv.laza@gmail.com', 'tanger', 'tanger', b'1', '334882', 90002, '0659630023', '$2y$10$GIDeDZ8Q3cTJ68B10HkPlOVTPiiZoRt2sELWxo7zRqgDgw4Jp8gOK', 'Quel était le nom de votre premier animal ?', 'KAKAKA', 6);
 
 --
--- Déclencheurs `client`
+-- Triggers `client`
 --
 DROP TRIGGER IF EXISTS `randomNumber`;
 DELIMITER $$
@@ -183,7 +183,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Structure de la table `commentaire`
+-- Table structure for table `commentaire`
 --
 
 DROP TABLE IF EXISTS `commentaire`;
@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `commentaire` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `couleurarticle`
+-- Table structure for table `couleurarticle`
 --
 
 DROP TABLE IF EXISTS `couleurarticle`;
@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `couleurarticle` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `couleurarticle`
+-- Dumping data for table `couleurarticle`
 --
 
 INSERT INTO `couleurarticle` (`nomCouleur`, `articleID`) VALUES
@@ -224,7 +224,7 @@ INSERT INTO `couleurarticle` (`nomCouleur`, `articleID`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `demande`
+-- Table structure for table `demande`
 --
 
 DROP TABLE IF EXISTS `demande`;
@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `demande` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `demandedetails`
+-- Table structure for table `demandedetails`
 --
 
 DROP TABLE IF EXISTS `demandedetails`;
@@ -259,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `demandedetails` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `favoridetails`
+-- Table structure for table `favoridetails`
 --
 
 DROP TABLE IF EXISTS `favoridetails`;
@@ -272,16 +272,18 @@ CREATE TABLE IF NOT EXISTS `favoridetails` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `favoridetails`
+-- Dumping data for table `favoridetails`
 --
 
 INSERT INTO `favoridetails` (`articleID`, `clientID`, `dateAjoute`) VALUES
-(32, 40, '2019-07-17 17:20:10');
+(29, 40, '2019-07-22 23:12:45'),
+(30, 40, '2019-07-22 23:12:49'),
+(33, 40, '2019-07-22 23:13:46');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `imagearticle`
+-- Table structure for table `imagearticle`
 --
 
 DROP TABLE IF EXISTS `imagearticle`;
@@ -293,7 +295,7 @@ CREATE TABLE IF NOT EXISTS `imagearticle` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `imagearticle`
+-- Dumping data for table `imagearticle`
 --
 
 INSERT INTO `imagearticle` (`imageArticleNom`, `articleID`) VALUES
@@ -307,7 +309,7 @@ INSERT INTO `imagearticle` (`imageArticleNom`, `articleID`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `livraison`
+-- Table structure for table `livraison`
 --
 
 DROP TABLE IF EXISTS `livraison`;
@@ -317,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `livraison` (
 ) ENGINE=MyISAM AUTO_INCREMENT=1002 DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `livraison`
+-- Dumping data for table `livraison`
 --
 
 INSERT INTO `livraison` (`livraisonID`) VALUES
@@ -326,7 +328,7 @@ INSERT INTO `livraison` (`livraisonID`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `paiement`
+-- Table structure for table `paiement`
 --
 
 DROP TABLE IF EXISTS `paiement`;
@@ -340,63 +342,76 @@ CREATE TABLE IF NOT EXISTS `paiement` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `panierdetails`
+-- Table structure for table `panier`
+--
+
+DROP TABLE IF EXISTS `panier`;
+CREATE TABLE IF NOT EXISTS `panier` (
+  `panierID` int(11) NOT NULL AUTO_INCREMENT,
+  `dateAjoute` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`panierID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `panier`
+--
+
+INSERT INTO `panier` (`panierID`, `dateAjoute`) VALUES
+(5, '2019-07-22 16:09:52'),
+(6, '2019-07-22 16:54:51');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `panierdetails`
 --
 
 DROP TABLE IF EXISTS `panierdetails`;
 CREATE TABLE IF NOT EXISTS `panierdetails` (
-  `panierID` int(11) NOT NULL AUTO_INCREMENT,
-  `clientID` int(11) NOT NULL,
+  `panierID` int(11) NOT NULL,
   `articleID` int(11) NOT NULL,
+  `quantite` int(11) NOT NULL DEFAULT '1',
   `dateAjoute` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`panierID`,`clientID`,`articleID`),
-  KEY `fk_clientID_panierDetails` (`clientID`),
-  KEY `fk_articleID_panierDetails` (`articleID`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`panierID`,`articleID`),
+  KEY `fk_articleID_panierdetails` (`articleID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `panierdetails`
+-- Dumping data for table `panierdetails`
 --
 
-INSERT INTO `panierdetails` (`panierID`, `clientID`, `articleID`, `dateAjoute`) VALUES
-(18, 40, 32, '2019-07-17 17:19:21');
+INSERT INTO `panierdetails` (`panierID`, `articleID`, `quantite`, `dateAjoute`) VALUES
+(6, 32, 2, '2019-07-22 20:33:08');
 
 --
--- Contraintes pour les tables déchargées
+-- Constraints for dumped tables
 --
 
 --
--- Contraintes pour la table `commentaire`
+-- Constraints for table `client`
+--
+ALTER TABLE `client`
+  ADD CONSTRAINT `fk_panierID_client` FOREIGN KEY (`panierID`) REFERENCES `panier` (`panierID`);
+
+--
+-- Constraints for table `commentaire`
 --
 ALTER TABLE `commentaire`
   ADD CONSTRAINT `fk_articleID_commentaire` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`),
   ADD CONSTRAINT `fk_clientID_commentaire` FOREIGN KEY (`clientID`) REFERENCES `client` (`clientID`);
 
 --
--- Contraintes pour la table `couleurarticle`
+-- Constraints for table `couleurarticle`
 --
 ALTER TABLE `couleurarticle`
   ADD CONSTRAINT `fk_articleID_couleurarticle` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE;
 
 --
--- Contraintes pour la table `favoridetails`
---
-ALTER TABLE `favoridetails`
-  ADD CONSTRAINT `fk_articleID_favoridetails` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_clientID_favoridetails` FOREIGN KEY (`clientID`) REFERENCES `client` (`clientID`) ON DELETE CASCADE;
-
---
--- Contraintes pour la table `imagearticle`
---
-ALTER TABLE `imagearticle`
-  ADD CONSTRAINT `fk_articleID_imagearticle` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE;
-
---
--- Contraintes pour la table `panierdetails`
+-- Constraints for table `panierdetails`
 --
 ALTER TABLE `panierdetails`
-  ADD CONSTRAINT `fk_articleID_panierDetails` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_clientID_panierDetails` FOREIGN KEY (`clientID`) REFERENCES `client` (`clientID`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_articleID_panierdetails` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_panierID_panierdetails` FOREIGN KEY (`panierID`) REFERENCES `panier` (`panierID`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
