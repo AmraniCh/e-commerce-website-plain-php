@@ -12,11 +12,10 @@
 			
 		?>
 
-		<!-- BREADCRUMB -->
 		<div id="breadcrumb" class="section">
-			<!-- container -->
+			
 			<div class="container">
-				<!-- row -->
+				
 				<div class="row">
 					<div class="col-md-12">
 						<h3 class="breadcrumb-header">Accueil</h3>
@@ -31,21 +30,21 @@
 						</ul>
 					</div>
 				</div>
-				<!-- /row -->
+				
 			</div>
-			<!-- /container -->
+			
 		</div>
-		<!-- /BREADCRUMB -->
+		
 
-		<!-- SECTION -->
+		
 		<div class="section">
-			<!-- container -->
+			
 			<div class="container">
-				<!-- row -->
+				
 				<div class="row">
-					<!-- ASIDE -->
+					
 					<div id="aside" class="col-md-3">
-						<!-- aside Widget -->
+						
 						<div class="aside">
 							<h3 class="aside-title">Categories</h3>
 							<div class="checkbox-filter">
@@ -94,51 +93,51 @@
 
 							</div>
 						</div>
-						<!-- /aside Widget -->
+						
 
-						<!-- aside Widget -->
+						
 						<div class="aside">
-							<h3 class="aside-title">Price</h3>
+							<h3 class="aside-title">Prix</h3>
 							<div class="price-filter">
 								<div id="price-slider"></div>
 								<div class="input-number price-min">
-									<input id="price-min" type="number" min="0" max="9999">
+									<input id="price-min" type="number" min="0" max="9999" value="0">
 									<span class="qty-up">+</span>
 									<span class="qty-down">-</span>
 								</div>
 								<span>-</span>
 								<div class="input-number price-max">
-									<input id="price-max" type="number" min="0" max="9999">
+									<input id="price-max" type="number" min="0" max="9999" value="9999">
 									<span class="qty-up">+</span>
 									<span class="qty-down">-</span>
 								</div>
 							</div>
 						</div>
-						<!-- /aside Widget -->
+						
 
-						<!-- aside Widget -->
+						
 						<div class="aside">
 							<h3 class="aside-title">Marque</h3>
 							<div class="checkbox-filter marques-produit">
 
 							</div>
 						</div>
-						<!-- /aside Widget -->
+						
 
-						<!-- aside Widget -->
+						
 						<div class="aside">
 							<h4 id="<?php $randomCat = RandomCategoriesWidget(); echo $randomCat ?>" class="title categorie-aside"><?php echo $randomCat ?></h4>
 							<div class="section-nav">
 
 							</div>
 						</div>
-						<!-- /aside Widget -->
+						
 					</div>
-					<!-- /ASIDE -->
+					
 
-					<!-- STORE -->
+					
 					<div id="store" class="col-md-9">
-						<!-- store top filter -->
+						
 						<div class="store-filter clearfix">
 							<div class="store-sort">
 								<label>
@@ -146,8 +145,8 @@
 									<select id="filtrerPar" class="input-select">
 										<option value="Nouveau">Nouveau</option>
 										<option value="Recommonde">Recommonde</option>
-									</select>
-								</label>
+									
+								
 
 								<label>
 									Afficher : 
@@ -155,43 +154,41 @@
 										<option value="2">2</option>
 										<option value="4">4</option>
 										<option value="8">8</option>
-									</select>
-								</label>
+									
+								
 							</div>
 							<ul class="store-grid">
 								<li class="active"><i class="fa fa-th"></i></li>
 								<li><a href="#"><i class="fa fa-th-list"></i></a></li>
 							</ul>
 						</div>
-						<!-- /store top filter -->
+						
 
-						<!-- store products -->
+						
 						<div class="row produits-filter">
-							<!-- product -->
 							
-							<!-- /product -->
+							
+							
 						</div>
-						<!-- /store products -->
+						
 
-						<!-- store bottom filter -->
+						
 						<div class="store-filter clearfix">
 							<span class="store-qty"></span>
 
 							<ul class="store-pagination">
 
-								<!--
-								<li><a href="#"><i class="fa fa-angle-right"></i></a></li>-->
+								
 							</ul>
 						</div>
-						<!-- /store bottom filter -->
+						
 					</div>
-					<!-- /STORE -->
+					
 				</div>
-				<!-- /row -->
+				
 			</div>
-			<!-- /container -->
+			
 		</div>
-		<!-- /SECTION -->
 
 		<?php include_once "includes/newsletter.php" ?>
 		
@@ -247,6 +244,7 @@
 				});
 			}());
 		});
+			
 			
 		</script>
 			

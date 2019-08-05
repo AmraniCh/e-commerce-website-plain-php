@@ -21,7 +21,7 @@
           <div class="row">
               <div class="col-12">
                   <div class="card">
-                      <div class="categories-header" style="display:flex;flex-wrap:nowrap;justify-content:space-between">
+                      <div class="categories-header header-adm">
                           <h3 class="title">Les Catégories</h3>
                           <button type="button" class="btn btn-dark-blue btn-sm" data-toggle="modal" data-target="#ajouterCategorie"><i class="fas fa-plus-circle"></i>Ajouter Catégorie</button>               
                       </div>
@@ -30,7 +30,8 @@
                               <div class="row">
                                   <div class="col-md-12">
                                      <div class="table-responsive">
-                                          <table class="table table-hover categories-table">
+                                          <table id="dt_categories" class="table table-hover categories-table">
+                                             <!--
                                               <thead>
                                                   <tr>
                                                       <th>ID</th>
@@ -51,12 +52,13 @@
                                                         echo '<td class="nom">'.$row[1].'</td>';
                                                         echo '<td class="description">'.$row[2].'</td>';
                                                         echo '<td class="active" id='.$row[3].'>'.$badge.'</td>';
-                                                        echo '<td><button type="button" class="btn btn-blue btn-update-dialog open-dialog" data-toggle="modal" data-target="#modifierCategorie">Modifier</button></td>';
-                                                        echo '<td><button type="button" class="btn btn-red open-dialog" data-toggle="modal" data-target="#suppressionCategorie">Supprimer</button></td>';
+                                                        echo '<td><button type="button" class="btn btn-blue btn-update-dialog open-dialog" data-toggle="modal" data-target="#modifierCategorie"><i class="fas fa-edit icon-col"></i></button></td>';
+                                                        echo '<td><button type="button" class="btn btn-red open-dialog" data-toggle="modal" data-target="#suppressionCategorie"><i class="fas fa-trash icon-col"></i></button></td>';
                                                         echo '</tr>';
                                                     }
                                                 ?>                                  
                                               </tbody>
+                                              -->
                                           </table>
                                       </div>
                                   </div>
@@ -101,25 +103,27 @@
               </div>
               <div class="modal-body">
                 <div class="container">
-                    <div class="form-group">
-                        <label class="label">Catégorie Nom :</label>
-                        <div class="input-group">
-                            <input type="text" id="nomCatAdd" class="form-control" placeholder="Catégore Nom">
+                    <form id="ajtCat_form">
+                        <div class="form-group">
+                            <label class="label">Catégorie Nom :</label>
+                            <div class="input-group">
+                                <input type="text" id="nomCatAdd" class="form-control" placeholder="Catégore Nom">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="label">Catégorie Déscription :</label>
-                        <div class="input-group">
-                            <input type="text" id="descCatAdd" class="form-control" placeholder="Catégore Déscription">
+                        <div class="form-group">
+                            <label class="label">Catégorie Déscription :</label>
+                            <div class="input-group">
+                                <input type="text" id="descCatAdd" class="form-control" placeholder="Catégore Déscription">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                       <div class="form-check">
-                            <label class="form-check-label">
-                              <input type="checkbox" id="activeAdd" class="form-check-input" checked> Active
-                            </label>
-                          </div>
-                    </div>
+                        <div class="form-group">
+                           <div class="form-check">
+                                <label class="form-check-label">
+                                  <input type="checkbox" id="activeAdd" class="form-check-input" checked> Active
+                                </label>
+                              </div>
+                        </div>
+                    </form>
                 </div>
               </div>
               <div class="modal-footer">
@@ -174,83 +178,189 @@
             </div>
           </div>
         </div>
-    <script>
-        $(document).ready(function(){
-            var values = [];
-            
-            $(document).on("click", ".open-dialog", function() {
-                values = [];
-                var idCat = $(this).closest("tr").children(".id").html();
-                var nomCat = $(this).closest("tr").children(".nom").html();
-                var descCat = $(this).closest("tr").children(".description").html();
-                var active = $(this).closest("tr").children(".active").attr("id");
-            
-                
-                values.push(idCat,nomCat,descCat,active);
-            });
-            
-            $(document).on("click", ".btn-delete-cat", function () {
-                var idCat = values[0];
-                $.ajax({
-                    url: '../public-includes/ajax_queries.php',
-                    type: "POST",
-                    data: {function: "SupprimerCategorie", idCat: idCat},
-                    success: function()
-                    {
-                        $(".categories-table").load(" .categories-table");
-                        $(".close").click();
-                    }
-                });
-            });
-            
-            $(document).on("click", ".btn-add-cat", function () {
-                var nomCat = $("#nomCatAdd").val();
-                var descCat = $("#descCatAdd").val();
-                var active = $("#activeAdd").prop("checked");
         
-                $.ajax({
-                    url: '../public-includes/ajax_queries.php',
-                    type: "POST",
-                    data: {function: "AjouterCategorie", nomCat: nomCat, descCat: descCat, active: active},
-                    success: function()
-                    {
-                        $(".categories-table").load(" .categories-table");
-                        $(".close").click();
-                    }
-                });
-            });
+    
+        <script>
             
-            $(document).on("click",".btn-update-cat",function(){
-                var nomCat = $("#nomCatUpdate").val();
-                var descCat = $("#descCatUpdate").val();
-                var active = $("#activeUpdate").prop("checked");
-                $.ajax({
-                    url: '../public-includes/ajax_queries.php',
-                    type: "POST",
-                    data: {function: "MiseCategorie", idCat: values[0], nomCat: nomCat, descCat: descCat, active: active},
-                    success: function()
-                    {
-                        $(".categories-table").load(" .categories-table");
-                        $(".close").click();
-                    }
-                });
-            });
-            
-            $(document).on("click",".btn-update-dialog",function(){
-                setDialogInputs();
-            });
+            $(document).ready(function(){
+                
+                dataTableInitialize();
+                
+                var values = [];
 
-            function setDialogInputs(){
-              $("#nomCatUpdate").val(values[1]);
-                $("#descCatUpdate").val(values[2]);
-                if(values[3] == 0)
-                    $("#activeUpdate").prop("checked", false);
-                else
-                    $("#activeUpdate").prop("checked", true);
-            }
-        });
+                $(document).on("click", ".open-dialog", function() {
+                    values = [];
+                    var idCat = $(this).closest("tr").children(".id").html();
+                    var nomCat = $(this).closest("tr").children(".nom").html();
+                    var descCat = $(this).closest("tr").children(".description").html();
+                    var active = $(this).closest("tr").children(".active").attr("id");
+
+
+                    values.push(idCat,nomCat,descCat,active);
+                });
+
+                $(document).on("click", ".btn-delete-cat", function () {
+                    var idCat = values[0];
+                    $.ajax({
+                        url: '../public-includes/ajax_queries.php',
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            function: "SupprimerCategorie", 
+                            idCat: idCat
+                        },
+                        async: false,
+                        success: function(data){
+                            if(data != null){
+                                dataTableInitialize();
+                                $(".close").click();
+                            }
+                        }
+                    });
+                });
+
+                $(document).on("click", ".btn-add-cat", function () {
+                    var nomCat = $("#nomCatAdd").val();
+                    var descCat = $("#descCatAdd").val();
+                    var active = $("#activeAdd").prop("checked");
+                    
+                    $.ajax({
+                        url: '../public-includes/ajax_queries.php',
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            function: "AjouterCategorie", 
+                            nomCat: nomCat, 
+                            descCat: descCat, 
+                            active: active
+                        },
+                        async: false,
+                        success: function(data)
+                        {
+                            if(data != null){
+                                dataTableInitialize();
+                                $("#ajtCat_form")[0].reset();
+                                $(".close").click();
+                            }
+                        }
+                    });
+                });
+
+                $(document).on("click",".btn-update-cat",function(){
+                    var nomCat = $("#nomCatUpdate").val();
+                    var descCat = $("#descCatUpdate").val();
+                    var active = $("#activeUpdate").prop("checked");
+                    $.ajax({
+                        url: '../public-includes/ajax_queries.php',
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            function: "MiseCategorie", 
+                            idCat: values[0], 
+                            nomCat: nomCat, 
+                            descCat: descCat, 
+                            active: active
+                        },
+                        async: false,
+                        success: function(data)
+                        {
+                            if(data != null){
+                                dataTableInitialize();
+                                $(".close").click();
+                            }
+                        }
+                    });
+                });
+
+                $(document).on("click",".btn-update-dialog",function(){
+                   
+                    $("#nomCatUpdate").val(values[1]);
+
+                    $("#descCatUpdate").val(values[2]);
+                    if(values[3] == "false")
+                        $("#activeUpdate").prop("checked", false);
+                    else
+                        $("#activeUpdate").prop("checked", true);
+                    
+                });
+                
+            });
+        
+            function dataTableInitialize(){
+                $('#dt_categories').dataTable({
+                    destroy: true,
+                    "pagingType": "simple_numbers",
+                    "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Tous"] ],
+                    "language": {
+                        "sProcessing": "Traitement en cours ...",
+                        "sLengthMenu": "Afficher _MENU_ lignes",
+                        "sZeroRecords": "Aucun résultat trouvé",
+                        "sEmptyTable": "Aucune donnée disponible",
+                        "sInfo": "Lignes _START_ à _END_ sur _TOTAL_",
+                        "sInfoEmpty": "Aucune ligne affichée",
+                        "sInfoFiltered": "(Filtrer un maximum de_MAX_)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Chercher:",
+                        "sUrl": "",
+                        "sInfoThousands": ",",
+                        "oPaginate": {
+                            "sFirst": "Premier",
+                            "sLast": "Dernier",
+                            "sNext": "Suivant",
+                            "sPrevious": "Précédent"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Trier par ordre croissant",
+                            "sSortDescending": ": Trier par ordre décroissant"
+                        }
+                    },
+                    columns: [
+                        { title: 'ID' },
+                        { title: 'Nom Catégorie' },
+                        { title: 'Description' },
+                        { title: 'Status' },
+                        { title: 'Modifier' },
+                        { title: 'Supprimer' },
+                      ],
+                    ajax: {
+                        url: "../public-includes/ajax_queries",
+                        data: {
+                            function: "AfficherCategories"
+                        },
+                        method: "post",
+                        dataType: "json",
+                        async: false
+                    },
+                    'createdRow': function( row, data, dataIndex ) {
+                        var tds = $(row).children("td");
+                        for(let i = 0; i < tds.length ; i++){
+                            switch(i){ 
+                                case 0:
+                                    tds[i].setAttribute("class", "id");
+                                    tds[i].setAttribute("id", data[0]);
+                                break;
+                                case 1:
+                                    tds[i].setAttribute("class", "nom");
+                                break;
+                                case 2:
+                                    tds[i].setAttribute("class", "description");
+                                break;
+                                case 3:
+                                    if(tds[i].innerText == "Active")
+                                        var bool = true;
+                                    else
+                                        var bool = false;
+                                    tds[i].setAttribute("id", bool);
+                                    tds[i].setAttribute("class", "active");
+                                break;
+                            }
+                        }
+                    }
+                });
+            };
+
                         
-    </script>
+        </script>
         
     <?php require_once 'includes/footer.php' ?>
 <?php

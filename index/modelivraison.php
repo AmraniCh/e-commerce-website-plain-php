@@ -3,7 +3,8 @@
 		<?php
 			
 			if(!isset($_SESSION['clientID']) && empty($_SESSION['clientID']) || !isset($_SESSION['panier'])):
-				header('Location: ../login.php');
+
+				header('Location: ../errors/400.php');
 				exit();
 			
 			else:
@@ -19,45 +20,87 @@
 			
 			endif;
 
+			switch(true){
+					
+				case isset($_POST['rtn']):
+					header('Location: panier.php');
+					exit();
+				break;
+				
+				case isset($_POST['c1']):
+					$_SESSION['modelivraison'] = "c1";
+					header('Location: verification.php');
+					exit();
+				break;
+					
+				case isset($_POST['c2']):
+					$_SESSION['modelivraison'] = "c1";
+					header('Location: verification.php');
+					exit();
+				break;
+			}	
+
+			
+
 			
 		?>
-
-		<!-- SECTION -->
-		<div class="section" style="padding-top:90px;padding-bottom:70px">
-			<!-- container -->
+		
+		<div id="breadcrumb" class="section">
+				
 			<div class="container">
-				<div class="row flex-container" style="display:flex;justify-content:space-between">
-                    <div class="lt-container">
-                   		<div class="mth-container">
-                   			<div class="mth-header">
-                   				Vous etes au ville de case ?
-                   			</div>
-                   			<div class="mth-image" style="background-image:url('img/Livraison-Gratuite-175x219@2x.png');">
-                   				
-                   			</div>
-                   			<div class="mth-btn">
-                   				<button type="button" id="mthBtn1" class="btn btn-danger btn-blue">Choisir</button>
-                   			</div>
-                   		</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h3 class="breadcrumb-header"><a href="index.php">Accueil</a></h3>
+						<ul class="breadcrumb-tree">
+							<li class="active"><a href="panier.php">/ Mon Panier</a></li>
+							<li class="active"><a>Type Livraison</a></li>
+						</ul>
 					</div>
-               		<div class="rt-container">
-                   		<div class="mth-container">
-                   			<div class="mth-header">
-                   				Vous etes Hors de ville de case ?
-                   			</div>
-                   			<div class="mth-image" style="background-image:url('img/icon_amana.png');">
-                   			</div>
-                   			<form action="" method="post">
-                   			<div class="mth-btn">
-                   				<button type="button" id="mthBtn1" class="btn btn-danger btn-blue">Choisir</button>
-                   			</div>
-                   		</div>
-					</div>
-                </div>
+				</div>
+
 			</div>
-			<!-- /container -->
+				
 		</div>
-		<!-- /SECTION -->
+		
+
+		<div class="section md-liv-section">
+			
+			<div class="container">
+				<form action="" method="post">
+					<div class="row flex-container md-liv-flex-div">
+						<div class="lt-container">
+							<div class="mth-container">
+								<div class="mth-header">
+									Vous êtes au ville de casablanca ?
+								</div>
+								<div class="mth-image">
+								</div>
+								<div class="mth-btn">
+									<button type="submit" name="c1" id="mthBtn1" class="btn btn-danger blue-idx etapes-btn">Étape Suivant<i class="fa fa-chevron-circle-right"></i></button>
+								</div>
+							</div>
+						</div>
+						<div class="rt-container">
+							<div class="mth-container">
+								<div class="mth-header">
+									Vous êtes hors de ville de casablanca ?
+								</div>
+								<div class="mth-image">
+								</div>
+								<div class="mth-btn">
+									<button type="submit" name="c2" id="mthBtn1" class="btn btn-danger blue-idx etapes-btn">Étape Suivant<i class="fa fa-chevron-circle-right"></i></button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="previous-page-btn text-center">
+						<button type="submit" name="rtn" id="retourpanierBtn" class="btn btn-dark-red etapes-btn"><i class="fa fa-chevron-circle-left"></i>Retour Au Panier</button>	
+					</div>
+				</form>
+			</div>
+			
+		</div>
 		
 		<?php include_once "includes/loading.html" ?>
 		

@@ -8781,7 +8781,6 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
   padding-left: 1.25rem; }
 
 .form-check-input {
-  position: absolute;
   margin-top: 0.3rem;
   margin-left: -1.25rem; }
   .form-check-input:disabled ~ .form-check-label {
@@ -11099,8 +11098,12 @@ button.close {
   overflow: scroll; }
 
 @media (min-width: 576px) {
-  .modal-dialog {
+  .modal-dialog:not(#overrideWidth) {
     max-width: 500px;
+    margin: 30px auto; }
+    
+    #overrideWidth{
+    max-width: 80%;
     margin: 30px auto; }
   .modal-dialog-centered {
     min-height: calc(100% - (30px * 2)); }

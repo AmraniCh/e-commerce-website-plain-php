@@ -75,7 +75,7 @@
 						<!-- LOGO -->
 						<div class="col-md-3">
 							<div class="header-logo">
-								<a href="#" class="logo">
+								<a href="index.php" class="logo">
 									<img src="./img/logo.png" alt="">
 								</a>
 							</div>
@@ -117,13 +117,13 @@
 						<div class="col-md-3 clearfix">
 							<div class="header-ctn">
 								<!-- Favoris -->
-								<div class="dropdown fav-toggle" style="cursor:pointer">
+								<div class="dropdown fav-toggle">
 									<a class="dropdown-toggle">
 										<i class="fa fa-heart-o"></i>
 										<span>Mes Favoris</span>
 										<div class="qty qty-favori">0</div>
 									</a>	
-									<div class="cart-dropdown fav-dropdown" style="cursor:initial">
+									<div class="cart-dropdown fav-dropdown" >
 										<div class="cart-list cart-list-favori">
 											
 											
@@ -135,21 +135,20 @@
 											</small>
 										</div>
 										<div class="cart-btns">
-											<a href='favoris.php' style="width:100%">Mes Favoris</a>
+											<a href='favoris.php'><button type="button" class="ovr-button-styles">Mes Favoris</button></a>
 										</div>
 									</div>
 								</div>
 								<!-- /Favoris -->
 								<!-- Cart -->
-								<div class="dropdown pan-toggle" style="cursor:pointer">
+								<div class="dropdown pan-toggle">
 									<a class="dropdown-toggle">
 										<i class="fa fa-shopping-cart"></i>
 										<span>Panier</span>
 										<div class="qty qty-panier"></div>
 									</a>	
-									<div class="cart-dropdown pan-dropdown" style="cursor:initial">
+									<div class="cart-dropdown pan-dropdown" >
 										<div class="cart-list cart-list-panier">
-											
 											
 										</div>
 										<div class="cart-summary">
@@ -160,8 +159,7 @@
 											<h5>Total: <span id="prixTotal">0 DHS</span></h5>
 										</div>
 										<div class="cart-btns">
-											<a href="panier.php">Voir mon Panier</a>
-											<a>Checkout <i class="fa fa-arrow-circle-right"></i></a>
+											<a href="panier.php"><button type="button" class="ovr-button-styles">Voir mon Panier</button></a>
 										</div>
 									</div>
 								</div>

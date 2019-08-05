@@ -2,13 +2,12 @@
 
 		<?php include_once "includes/navigation.php" ?>
 		
-			<!-- SECTION -->
 			<div class="section">
-				<!-- container -->
+				
 				<div class="container">
-					<!-- row -->
+					
 					<div class="row">
-						<!-- shop -->
+						
 						<div class="col-md-4 col-xs-6">
 							<div class="shop">
 								<div class="shop-img">
@@ -20,9 +19,9 @@
 								</div>
 							</div>
 						</div>
-						<!-- /shop -->
+						
 
-						<!-- shop -->
+						
 						<div class="col-md-4 col-xs-6">
 							<div class="shop">
 								<div class="shop-img">
@@ -34,9 +33,9 @@
 								</div>
 							</div>
 						</div>
-						<!-- /shop -->
+						
 
-						<!-- shop -->
+						
 						<div class="col-md-4 col-xs-6">
 							<div class="shop">
 								<div class="shop-img">
@@ -48,22 +47,22 @@
 								</div>
 							</div>
 						</div>
-						<!-- /shop -->
+						
 					</div>
-					<!-- /row -->
+					
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /SECTION -->
+			
 
-			<!-- SECTION -->
+			
 			<div class="section">
-				<!-- container -->
+				
 				<div class="container">
-					<!-- row -->
+					
 					<div class="row">
 
-						<!-- section title -->
+						
 						<div class="col-md-12">
 							<div class="section-title">
 								<h3 class="title">Nouveautés</h3>
@@ -80,37 +79,37 @@
 								</div>
 							</div>
 						</div>
-						<!-- /section title -->
+						
 
-						<!-- Products tab & slick -->
+						
 						<div class="col-md-12">
 							<div class="row">
 								<div class="products-tabs">
-									<!-- tab -->
+									
 									<div id="tab1" class="tab-pane active">
 										<div class="products-slick" data-nav="#slick-nav-1">
-											<!-- product -->
-											<!-- /product -->		
+											
+													
 										</div>
 										<div id="slick-nav-1" class="products-slick-nav"></div>
 									</div>
-									<!-- /tab -->
+									
 								</div>
 							</div>
 						</div>
-						<!-- Products tab & slick -->
+						
 					</div>
-					<!-- /row -->
+					
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /SECTION -->
+			
 
-			<!-- HOT DEAL SECTION -->
+			
 			<div id="hot-deal" class="section">
-				<!-- container -->
+				
 				<div class="container">
-					<!-- row -->
+					
 					<div class="row">
 						<div class="col-md-12">
 							<div class="hot-deal">
@@ -146,20 +145,20 @@
 							</div>
 						</div>
 					</div>
-					<!-- /row -->
+					
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /HOT DEAL SECTION -->
+			
 
-			<!-- SECTION -->
+			
 			<div class="section">
-				<!-- container -->
+				
 				<div class="container">
-					<!-- row -->
+					
 					<div class="row">
 
-						<!-- section title -->
+						
 						<div class="col-md-12">
 							<div class="section-title">
 								<h3 class="title">Meilleures ventes</h3>
@@ -176,37 +175,37 @@
 								</div>
 							</div>
 						</div>
-						<!-- /section title -->
+						
 
-						<!-- Products tab & slick -->
+						
 						<div class="col-md-12">
 							<div class="row">
 								<div class="products-tabs">
-									<!-- tab -->
+									
 									<div id="tab2" class="tab-pane fade in active">
 										<div class="products-slick" data-nav="#slick-nav-2">
-											<!-- product -->
-											<!-- /product -->
+											
+											
 										</div>
 										<div id="slick-nav-2" class="products-slick-nav"></div>
 									</div>
-									<!-- /tab -->
+									
 								</div>
 							</div>
 						</div>
-						<!-- /Products tab & slick -->
+						
 					</div>
-					<!-- /row -->
+					
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /SECTION -->
+			
 
-			<!-- SECTION -->
+			
 			<div class="section">
-				<!-- container -->
+				
 				<div class="container">
-					<!-- row -->
+					
 					<div class="row">
 						<div class="col-md-4 col-xs-6">
 							<div class="section-title">
@@ -249,11 +248,10 @@
 						</div>
 
 					</div>
-					<!-- /row -->
+					
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /SECTION -->
 		<?php include_once "includes/newsletter.php" ?>
 		
 		<script>
@@ -268,7 +266,7 @@
 				
 				setTimeout(function(){
        				SlickNav1();
-					SlickNav2();
+       				SlickNav2();
 					SlickWidget1();
 					SlickWidget2();
 					SlickWidget3();

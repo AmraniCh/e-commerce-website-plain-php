@@ -1,3 +1,4 @@
+/* add to cart animation  */
 @keyframes add-to-cart-icon-anim
 {
   0% {transform: scale(1);}
@@ -37,3 +38,72 @@
 .produit-panier{
   animation: add-to-cart-anim 0.5s linear;
 }
+
+/* add to wishlist animation */
+@keyframes add-to-wishlist-anim
+{
+	from { transform: scale(1.2) }
+}
+
+-webkit-@keyframes add-to-wishlist-anim
+{
+	from { transform: scale(1.2) }
+}
+
+.favoris-anim{
+	animation: add-to-wishlist-anim 0.3s linear;
+}
+
+/* checkout button animation */
+@keyframes checkoutBtn-anim
+{
+	from { margin-left: 18px; opacity: .2 },
+	60% { position: initial; margin-left: 10px; opacity: .4 },
+	40% { margin-left: 8px; opacity: .6 },
+	20% { margin-left: 6px; opacity: .8 },
+}
+
+-webkit-@keyframes checkoutBtn-anim
+{
+	from { margin-left: 18px; opacity: .2 },
+	60% { position: initial; margin-left: 10px; opacity: .4 },
+	40% { margin-left: 8px; opacity: .6 },
+	20% { margin-left: 6px; opacity: .8 },
+}
+
+#checkoutBtn:hover > .fa-chevron-circle-right{
+	animation: checkoutBtn-anim .4s linear;
+}
+
+@keyframes retourpanierBtn-anim
+{
+	from { margin-right: 18px; opacity: .2 },
+	60% { margin-left: 10px; opacity: .4 },
+	40% { margin-right: 8px; opacity: .6 },
+	20% { margin-right: 6px; opacity: .8 },
+}
+
+-webkit-@keyframes retourpanierBtn-anim
+{
+	from { margin-right: 18px; opacity: .2 },
+	60% { margin-right: 10px; opacity: .4 },
+	40% { margin-right: 8px; opacity: .6 },
+	20% { margin-right: 6px; opacity: .8 },
+}
+
+#retourpanierBtn:hover > .fa-chevron-circle-left{
+	animation: retourpanierBtn-anim .4s linear;
+}
+
+/* show more span animation */
+
+@keyframes showMore {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+-webkit-@keyframes showMore {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+

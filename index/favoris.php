@@ -11,11 +11,10 @@
 			
 		?>
 
-		<!-- BREADCRUMB -->
 		<div id="breadcrumb" class="section">
-			<!-- container -->
+			
 			<div class="container">
-				<!-- row -->
+				
 				<div class="row">
 					<div class="col-md-12">
 						<h3 class="breadcrumb-header">Accueil</h3>
@@ -25,15 +24,15 @@
 						</ul>
 					</div>
 				</div>
-				<!-- /row -->
+				
 			</div>
-			<!-- /container -->
+			
 		</div>
-		<!-- /BREADCRUMB -->
+		
 
-		<!-- SECTION -->
+		
 		<div class="section">
-			<!-- container -->
+			
 			<div class="container">
 				<div class="row product-container">
 					<?php
@@ -92,9 +91,8 @@
 					?>
 				</div>
 			</div>
-			<!-- /container -->
+			
 		</div>
-		<!-- /SECTION -->
 
 		<?php include_once "includes/newsletter.php" ?>
 		
@@ -110,8 +108,9 @@
 			function SubstructArtilceDesc(){
 				var descriptions = $(".produit-description > span");
 				descriptions.each(function(){
-					var desc = $(this).html();
-					$(this).html(desc.substr(0, 40)+" ...");
+					var desc = $(this).text();
+					if($(this).text().length > 20)
+						$(this).text(desc.substr(0, 40)+" ...");
 				});
 			}
 			

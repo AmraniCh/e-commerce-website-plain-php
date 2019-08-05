@@ -71,6 +71,12 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="coupons.php?admin=<?php echo $_SESSION['admin'] ?>">
+              <i class="menu-icon fas fa-percent"></i>
+              <span class="menu-title">Coupons</span>
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="pages/icons/font-awesome.html">
               <i class="menu-icon fas fa-history"></i>
               <span class="menu-title">Historique de Livraison</span>

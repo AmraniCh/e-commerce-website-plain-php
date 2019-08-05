@@ -22,54 +22,15 @@
           <div class="row">
               <div class="col-12">
                   <div class="card">
-                      <div class="categories-header" style="display:flex;flex-wrap:nowrap;justify-content:space-between">
+                      <div class="categories-header header-adm">
                           <h3 class="title">Clients</h3>        
                       </div>
                       <div class="profile-content">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table id="clientsTable" class="table table-hover table-bordered small-col">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Username</th>
-                                                <th>Prenom</th>
-                                                <th>Nom</th>
-                                                <th>Email</th>
-                                                <th>Téléphone</th>
-                                                <th>Adresse</th>
-                                                <th>Ville</th>
-                                                <th>Mot de passe</th>
-                                                <th>Email validé</th>
-                                                <th>Code postal</th>
-                                                <th>Envoyer Message</th>
-                                                <th>Supprimer le compte</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                    $client = new client();
-                                                    $result = $client->AfficherClients();
-                                                    while($row = $result->fetch_array()){
-                                                        $valide = $client->EmailValide($row['emailValid']);
-                                                        echo '<tr><td class="id">'.$row[0].'</td>';
-                                                        echo '<td>'.$row[1].'</td>';
-                                                        echo '<td>'.$row[2].'</td>';
-                                                        echo '<td>'.$row[3].'</td>';
-                                                        echo '<td>'.$row[4].'</td>';
-                                                        echo '<td>'.$row['telephone'].'</td>';
-                                                        echo '<td>'.$row['adresse'].'</td>';
-                                                        echo '<td>'.$row['ville'].'</td>';
-                                                        echo '<td>'.$row['motdepasse'].'</td>';
-                                                        echo '<td>'.$valide.'</td>';
-                                                        echo '<td>'.$row['codePostal'].'</td>';
-                                                        echo '<td><button type="button" id="btnMessage" class="btn btn-blue btn-column-icon"><i class="fas fa-envelope icon-col"></i></button></td>';
-                                                        echo '<td><button id="btnSupprimer" type="button" class="btn btn-red btn-column-icon" data-toggle="modal" data-target="#suppressionClient"><i class="fas fa-trash icon-col"></i></button></td>';
-                                                        echo '</tr>';
-                                                    }
-                                                ?>
-                                        </tbody>
+                                    <table id="dt_clients" class="table table-hover table-bordered small-col clients-table">
+    
                                     </table>
                                 </div>
                             </div>
@@ -111,6 +72,9 @@
         
     <script>
         $(document).ready(function(){
+            
+            dataTableInitialize();
+            
             var values = [];
             
             $(document).on('click','#btnSupprimer',function(){
@@ -120,14 +84,20 @@
             });
             
             $("#btnSupprimerDialog").click(function(){
-               alert(values[0]);
+
                 $.ajax({
                    url: '../public-includes/ajax_queries.php',
                     method: "POST",
-                    data: {function: "SupprimerClient", clientID: values[0]},
-                    success: function(){
-                        $("#clientsTable").load(" #clientsTable");
-                        $("button[data-dismiss]").click(); 
+                    data: {
+                        function: "SupprimerClient", 
+                        clientID: values[0]
+                    },
+                    async: false,
+                    success: function(data){
+                        if(data != null){
+                            $("button[data-dismiss]").click(); 
+                            dataTableInitialize();
+                        }
                     }
                 });
                 
@@ -135,6 +105,71 @@
             
             
         });
+        
+        // custom dataTable configurations
+        function dataTableInitialize(){
+            $('#dt_clients').dataTable({
+                destroy: true,
+                "pagingType": "simple_numbers",
+                "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Tous"] ],
+                "language": {
+                    "sProcessing": "Traitement en cours ...",
+                    "sLengthMenu": "Afficher _MENU_ lignes",
+                    "sZeroRecords": "Aucun résultat trouvé",
+                    "sEmptyTable": "Aucune donnée disponible",
+                    "sInfo": "Lignes _START_ à _END_ sur _TOTAL_",
+                    "sInfoEmpty": "Aucune ligne affichée",
+                    "sInfoFiltered": "(Filtrer un maximum de_MAX_)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Chercher:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "oPaginate": {
+                        "sFirst": "Premier",
+                        "sLast": "Dernier",
+                        "sNext": "Suivant",
+                        "sPrevious": "Précédent"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Trier par ordre croissant",
+                        "sSortDescending": ": Trier par ordre décroissant"
+                    }
+                },
+                columns: [
+                    { title: 'Message' },
+                    { title: 'Supprimer' },
+                    { title: 'ID' },
+                    { title: 'Pseudo' },
+                    { title: 'Prenom' },
+                    { title: 'Nom' },
+                    { title: 'Email' },
+                    { title: 'Email Validé' },
+                    { title: 'Téléphone' },
+                    { title: 'Adresse' },
+                    { title: 'Ville'},
+                    { title: 'Code Postal'}
+                ],
+                ajax: {
+                    url: "../public-includes/ajax_queries",
+                    data: {
+                        function: "AfficherClients"
+                    },
+                    method: "post",
+                    dataType: "json",
+                    async: false
+                },
+                'createdRow': function( row, data, dataIndex ) {
+                    var tds = $(row).children("td");
+                    for(let i = 0; i < tds.length ; i++){
+                        switch(i){ 
+                            case 2:
+                                tds[i].setAttribute("class", "id");
+                            break;
+                        }
+                    }
+                }
+            });
+        };
                         
     </script>
         

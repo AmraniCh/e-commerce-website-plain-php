@@ -27,8 +27,10 @@
             $adminame = $con->escape_string($_POST['username-lg']);
             $pass = $con->escape_string($_POST['password-lg']);
 
-            $query = mysqli_query($con,"SELECT * FROM admin WHERE adminName = '$adminame' AND motdepasse = '$pass'");    
+            $query = $con->query("SELECT * FROM admin WHERE adminName = '$adminame' AND motdepasse = '$pass'");    
+        
             if($query->num_rows > 0){
+              
                 $_SESSION['admin'] = $adminame;
                 header ('Location: index.php?admin='.$adminame);
             }
@@ -82,14 +84,6 @@
                     </label>
                   </div>
                 </div>
-                <div class="form-group">
-                  <button class="btn btn-block g-login" type="button">
-                    <i class="mdi mdi-lock-open-outline"></i>J'ai oublié mon mot de passe !</button>
-                </div>
-                <div class="text-block text-center my-3">
-                  <span class="text-small font-weight-semibold">Pas un membre ?</span>
-                  <a href="register.php" class="text-black text-small">Créer un nouveau compte</a>
-              </div>
             </div>
             </form>
             <p class="footer-text text-center">copyright © 2019 M.G.A All rights reserved.</p>

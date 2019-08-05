@@ -22,81 +22,9 @@
               <div class="col-12">
                   <div class="card">
                      <div class="table-responsive">
-                        <table id="produitsTable" class="table table-hover table-bordered small-col">
-                            <thead>
-                                <tr class="table-primary">
-                                    <th>ID</th>
-                                    <th>Nom Produit</th>
-                                    <th>Description</th>
-                                    <th>Marque</th>
-                                    <th>Couleurs</th>
-                                    <th>Prix Initial</th>
-                                    <th>Remise Disponible</th>
-                                    <th>Prix Avec Remise</th>
-                                    <th>Taux Remise</th>
-                                    <th>En Stock</th>
-                                    <th>Sur Commande</th>
-                                    <th>Produit Disponible</th>
-                                    <th>Niveau</th>
-                                    <th>Categorie</th>
-                                    <th>Modifier</th>
-                                    <th>Supprimer</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php 
-                                    $article = new article();
-                                    $categorie = new Categorie();
-                                    $query_res1 = $article->AfficherArticles();
-                                    while($row = $query_res1->fetch_assoc()){
-                                        $categorieNom = $categorie->CategorieNomParID($row['categorieID']);
-                                        $couleurs = CouleursArticle($row['articleID']);
-                                        ($row['articleDisponible'] == true) ? $articleDisponibe = "oui" : $articleDisponibe = "non";
-                                        ($row['remiseDisponible'] == true) ? $remiseDisponible = "oui" : $remiseDisponible = "non";
-                                        echo '<tr><td id="articleID">'.$row['articleID'].'</td>';
-                                        echo '<td>'.$row['articleNom'].'</td>';
-                                        echo '<td>'.$row['articleDescription'].'</td>';
-                                        if($row['articleMarque'] != '')
-                                            echo '<td>'.$row['articleMarque'].'</td>';
-                                        else
-                                            echo '<td>N/A</td>';
-                                        echo '<td>';
-                                        if($couleurs != null){
-                                            foreach($couleurs as $couleur){ 
-                                                echo $couleur.', '; 
-                                            };
-                                        }
-                                        else
-                                            echo 'N/A';
-                                        echo '</td>';
-                                        echo '<td>'.$row['articlePrix'].' DHS</td>';
-                                        echo '<td>'.$remiseDisponible.'</td>';
-                                        if($remiseDisponible == "non"){
-                                            echo '<td class="mask-column">N/A</td>';
-                                            echo '<td class="mask-column">N/A</td>';
-                                        }
-                                        else{
-                                            echo '<td>'.$row['articlePrixRemise'].' DHS</td>';
-                                            echo '<td>'.$row['tauxRemise'].'%</td>';
-                                        } 
-                                        echo '<td>'.$row['unitesEnStock'].'</td>';
-                                        echo '<td>'.$row['unitesSurCommande'].'</td>';
-                                        echo '<td>'.$articleDisponibe.'</td>';
-                                        echo '<td>';
-                                        $count = $row['niveau'];
-                                        for($i=0;$i<$count;$i++){
-                                            echo '<i class="fas fa-star"></i>';
-                                        }
-                                        echo '</td>';
-                                        echo '<td>'.$categorieNom.'</td>';
-                                        echo '<td><button type="button" id="btnModifier" class="btn btn-blue btn-column-icon"><i class="fas fa-edit icon-col"></i></button></td>';
-                                        echo '<td><button id="btnSupprimer" type="button" class="btn btn-red btn-column-icon" data-toggle="modal" data-target="#messageSuppresion"><i class="fas fa-trash icon-col"></i></button></td>';
-                                        echo '</tr>';
-                                    }
-                                  ?>
-                            </tbody>
-                            <?php echo "<input type='hidden' id='HSV' value='".$_SESSION['admin']."'/>" ?>
+                        <table id="dt_produits" class="table table-hover table-bordered small-col">
                         </table>
+                        <?php echo "<input type='hidden' id='HSV' value='".$_SESSION['admin']."'/>" ?>
                     </div>
                   </div>
               </div>
@@ -127,23 +55,31 @@
             
             $(document).ready(function(){
                 
+                dataTableInitialize();
+                
                 var values = [];
                 
                 $(document).on("click","#btnSupprimer",function(){
                     values = [];
-                    var articleID = $(this).closest("tr").children("#articleID").html();
-                    values.push(articleID);
-                    
+                    var articleID = $(this).closest("tr").children("#articleID").text();
+                    values.push(articleID); 
                 });
                 
                 $("#btnSupprimerDialog").click(function(e){
                     $.ajax({
                         url: '../public-includes/ajax_queries.php',
                         method: 'POST',
-                        data: {function: "SupprimerArticle", articleID: values[0]},
+                        dataType: "JSON",
+                        data: {
+                            function: "SupprimerArticle", 
+                            articleID: values[0]
+                        },
+                        async: false,
                         success: function(data){
-                            (data == true) ? $("#produitsTable").load(" #produitsTable") : null;
-                            $("button[data-dismiss]").click();
+                            if(data != null){
+                                $("button[data-dismiss]").click();
+                                dataTableInitialize();
+                            }
                         }
                         
                     }); 
@@ -158,6 +94,73 @@
 
             });
             
+            function dataTableInitialize(){
+                $('#dt_produits').dataTable({
+                    destroy: true,
+                    "pagingType": "simple_numbers",
+                    "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Tous"] ],
+                    "language": {
+                        "sProcessing": "Traitement en cours ...",
+                        "sLengthMenu": "Afficher _MENU_ lignes",
+                        "sZeroRecords": "Aucun résultat trouvé",
+                        "sEmptyTable": "Aucune donnée disponible",
+                        "sInfo": "Lignes _START_ à _END_ sur _TOTAL_",
+                        "sInfoEmpty": "Aucune ligne affichée",
+                        "sInfoFiltered": "(Filtrer un maximum de_MAX_)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Chercher:",
+                        "sUrl": "",
+                        "sInfoThousands": ",",
+                        "oPaginate": {
+                            "sFirst": "Premier",
+                            "sLast": "Dernier",
+                            "sNext": "Suivant",
+                            "sPrevious": "Précédent"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Trier par ordre croissant",
+                            "sSortDescending": ": Trier par ordre décroissant"
+                        }
+                    },
+                    columns: [
+                        { title: 'Modifier' },
+                        { title: 'Supprimer' },
+                        { title: 'ID' },
+                        { title: 'Nom' },
+                        { title: 'Description' },
+                        { title: 'Marque' },
+                        { title: 'Couleurs' },
+                        { title: 'Prix Initial' },
+                        { title: 'Remise Disponible' },
+                        { title: 'Prix Avec Remise' },
+                        { title: 'Taux Remise'},
+                        { title: 'En Stock'},
+                        { title: 'Sur Commande'},
+                        { title: 'Disponible'},
+                        { title: 'Niveau'},
+                        { title: 'Categorie'}
+                      ],
+                    ajax: {
+                        url: "../public-includes/ajax_queries",
+                        data: {
+                            function: "AfficherProduits"
+                        },
+                        method: "post",
+                        dataType: "json",
+                        async: false
+                    },
+                    'createdRow': function( row, data, dataIndex ) {
+                        var tds = $(row).children("td");
+                        for(let i = 0; i < tds.length ; i++){
+                            switch(i){ 
+                                case 2:
+                                    tds[i].setAttribute("id", "articleID");
+                                break;
+                            }
+                        }
+                    }
+                });
+            };
             
         </script>
                     

@@ -146,6 +146,7 @@ textarea.input {
   border: 1px solid #E4E7ED;
   background-color: #FFF;
   padding: 0px 35px 0px 15px;
+  font-size: 120%
 }
 
 .input-number .qty-up, .input-number .qty-down {
@@ -435,7 +436,7 @@ textarea.input {
 }
 
 .header-links li i {
-  color: #D10024;
+  color: var(--blue-idx);
   margin-right: 5px;
 }
 
@@ -483,7 +484,7 @@ textarea.input {
 .header-search form .search-btn {
   height: 40px;
   width: 100px;
-  background: #D10024;
+  background: var(--dark-red-color);
   color: #FFF;
   font-weight: 700;
   border: none;
@@ -548,10 +549,18 @@ textarea.input {
   position: absolute;
   width: 300px;
   background: #FFF;
-  padding: 15px;
   z-index: 9999;
   right: 0;
   display: none;
+  border-radius: 10px
+}
+
+.cart-btns{
+  position: relative;
+
+width: 100%;
+
+display: inline-block;
 }
 
 .dropdown.open>.cart-dropdown {
@@ -563,6 +572,7 @@ textarea.input {
   max-height: 180px;
   overflow-y: scroll;
   margin-bottom: 15px;
+  padding: 15px
 }
 
 .cart-dropdown .cart-list .product-widget {
@@ -584,10 +594,6 @@ textarea.input {
   color: #2B2D42;
 }
 
-.cart-dropdown .cart-btns {
-  margin: 0px -17px -17px;
-}
-
 .cart-dropdown .cart-btns>a {
   display: inline-block;
   width: calc(50% - 0px);
@@ -602,8 +608,9 @@ textarea.input {
 }
 
 .cart-dropdown .cart-btns>a:first-child {
-  margin-right: -4px;
   background-color: #1e1f29;
+  width: 100%;
+  border-radius: 0 0 10px 10px
 }
 
 .cart-dropdown .cart-btns>a:hover {
@@ -858,6 +865,7 @@ textarea.input {
   border: .5px solid #eee;
   border-radius: 2px;
   transition: 0.2s all;
+  margin-bottom: 25px;
 }
 
 .product:hover {
@@ -1343,7 +1351,7 @@ textarea.input {
   float: right;
 }
 
-.store-pagination li {
+.store-pagination li, .reviews-pagination li {
   display: inline-block;
   width: 40px;
   height: 40px;
@@ -1355,16 +1363,16 @@ textarea.input {
   transition: 0.2s all;
 }
 
-.store-pagination li+li {
+.store-pagination li+li, .reviews-pagination li+li {
   margin-left: 5px;
 }
 
-.store-pagination li:hover {
+.store-pagination li:hover, .reviews-pagination li:hover {
   background-color: #E4E7ED;
   color: #D10024;
 }
 
-.store-pagination li.active {
+.store-pagination li.active, .reviews-pagination li.active {
   background-color: #D10024;
   border-color: #D10024;
   color: #FFF;
@@ -1372,7 +1380,7 @@ textarea.input {
   cursor: pointer;
 }
 
-.store-pagination li a {
+.store-pagination li a, .reviews-pagination li a {
   display: block;
 }
 
@@ -1480,6 +1488,7 @@ textarea.input {
 }
 
 .product-details .product-rating>i.fa-star {
+  margin: 0 2px;
   color: #D10024;
 }
 
@@ -1678,7 +1687,7 @@ textarea.input {
   margin-left: 10px;
 }
 
-.rating-avg .rating-stars, .rating .rating-stars {
+.rating-avg .rating-stars, .rating .rating-avg .rating-avg-stars {
   display: inline-block;
 }
 
@@ -1686,8 +1695,8 @@ textarea.input {
   color: #E4E7ED;
 }
 
-.rating-avg .rating-stars>i.fa-star, .rating .rating-stars>i.fa-star {
-  color: #D10024;
+.fa-star-o {
+  color: #E4E7ED;
 }
 
 .rating li {
@@ -1784,8 +1793,8 @@ textarea.input {
 }
 
 .reviews-pagination li.active {
-  background-color: #D10024;
-  border-color: #D10024;
+  background-color: var(--blue-idx);
+  border-color: #eee;
   color: #FFF;
   cursor: default;
 }
@@ -1809,7 +1818,7 @@ textarea.input {
   vertical-align: top;
 }
 
-.review-form .input-rating .stars input[type="radio"] {
+.review-form .input-rating .stars input[type="checkbox"] {
   display: none;
 }
 
@@ -1982,7 +1991,7 @@ textarea.input {
   width: 160px;
   height: 40px;
   font-weight: 700;
-  background: #D10024;
+  background-color: var(--blue-idx);
   color: #FFF;
   border: none;
   border-radius: 0px 40px 40px 0px;
@@ -2053,7 +2062,7 @@ textarea.input {
 
 .footer-links li i {
   margin-right: 15px;
-  color: #D10024;
+  color: var(--blue-idx);
   width: 14px;
   text-align: center;
 }
@@ -2211,6 +2220,6 @@ textarea.input {
   }
 }
 
-.store-pagination li {
+.store-pagination li, .reviews-pagination li {
   cursor: pointer;
 }

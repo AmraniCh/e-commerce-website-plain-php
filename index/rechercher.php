@@ -2,11 +2,10 @@
 
 		<?php include_once "includes/navigation.php" ?>
 		
-			<!-- BREADCRUMB -->
 			<div id="breadcrumb" class="section">
-				<!-- container -->
+				
 				<div class="container">
-					<!-- row -->
+					
 					<div class="row">
 						<div class="col-md-12">
 							<h3 class="breadcrumb-header">Accueil</h3>
@@ -15,15 +14,15 @@
 							</ul>
 						</div>
 					</div>
-					<!-- /row -->
+					
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /BREADCRUMB -->
+			
 
-			<!-- SECTION -->
+			
 			<div class="section">
-				<!-- container -->
+				
 				<div class="container">
 					<?php 
 						if(isset($_GET['categorie']) && isset($_GET['rechercher'])){
@@ -83,9 +82,8 @@
 						}
 					?>
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /SECTION -->
 
 		<?php include_once "includes/newsletter.php" ?>
 		

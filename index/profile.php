@@ -44,28 +44,27 @@ if(mysqli_num_rows($result)>0) {
 
 
 
-			<!-- BREADCRUMB -->
 			<div id="breadcrumb" class="section">
-				<!-- container -->
+				
 				<div class="container">
-					<!-- row -->
+					
 					<div class="row">
 						<div class="col-md-12">
-							<h3 class="breadcrumb-header">Accueil</h3>
+							<h3 class="breadcrumb-header"><a href="index.php">Accueil</a></h3>
 							<ul class="breadcrumb-tree">
 								<li class="active"><a href="#">/ Mon profile</a></li>
 							</ul>
 						</div>
 					</div>
-					<!-- /row -->
+					
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /BREADCRUMB -->
+			
 
-			<!-- SECTION -->
+			
 			<div class="section">
-				<!-- container -->
+				
 				<div class="container">
 					<div class="col-sm-12 col-md-6">
 						<div class="profile-details">
@@ -73,7 +72,7 @@ if(mysqli_num_rows($result)>0) {
 								<h3 class="title">Profile</h3>
 							</div>
 							<div class="form-group">
-								<input class="form-control" id="username" type="text" name="username" placeholder="Pseudo" disabled value="<?php echo $clientUserName?>">
+								<input class="form-control" id="username" type="text" name="username" placeholder="Pseudo" disabled="disabled" value="<?php echo $clientUserName?>">
 							</div>
 							<div class="form-group">
 								<input class="form-control" id="prenom" type="text" name="prenom" placeholder="Prenom" value="<?php echo $prenom?>">
@@ -101,7 +100,7 @@ if(mysqli_num_rows($result)>0) {
                                     <option value="Quelle était le nom de votre école primaire ?" <?php echo $question3?>>Quelle était le nom de votre école primaire ?</option>
                                     <option value="Quelle est votre équipe sportive favorite ?" <?php echo $question4?>>Quelle est votre équipe sportive favorite ?</option>
                                     <option value="Quelle est votre couleur préférée ?" <?php echo $question5?>>Quelle est votre couleur préférée ?</option>
-								</select>
+								
 							</div>
 							<div class="form-group">
 								<input class="form-control" id="reponse" tele type="tel" name="reponse" placeholder="Réponse" value="<?php echo $reponseQuestion?>">
@@ -194,9 +193,8 @@ if(mysqli_num_rows($result)>0) {
 						</div>
 					</div>
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /SECTION -->
 
 		<?php include_once "includes/newsletter.php" ?>
 		

@@ -31,20 +31,22 @@
 			$niveau = $article->echoNiveau($get);
 			$categorieID = $row['categorieID'];
 
-			$colors =  echocolors($get);
+			$colors = echocolors($get);
 			$images = echoImages($get);
+			
+			// nbr reviews
+			$article = new Article();
+			$nbr_reviews = $article->NbrArticleReviews($articleID);
 
-			global $con;
 			$result = $con->query("SELECT categorieNom from categorie WHERE categorieID = $categorieID");
 			$row2 = mysqli_fetch_assoc($result);
 			$categoryName = $row2['categorieNom']; 
 			
 ?>
-		<!-- BREADCRUMB -->
 		<div id="breadcrumb" class="section">
-			<!-- container -->
+			
 			<div class="container">
-				<!-- row -->
+				
 				<div class="row">
 					<div class="col-md-12">
 						<h3 class="breadcrumb-header">Accueil</h3>
@@ -59,19 +61,19 @@
 						</ul>
 					</div>
 				</div>
-				<!-- /row -->
+				
 			</div>
-			<!-- /container -->
+			
 		</div>
-		<!-- /BREADCRUMB -->
+		
 
-		<!-- SECTION -->
+		
 		<div class="section">
-			<!-- container -->
+			
 			<div class="container">
-				<!-- row -->
+				
 				<div class="row">
-					<!-- Product main img -->
+					
 					<div class="col-md-5 col-md-push-2">
 						<div id="product-main-img">
                             <?php
@@ -79,19 +81,19 @@
                             ?>
 						</div>
 					</div>
-					<!-- /Product main img -->
+					
 
-					<!-- Product thumb imgs -->
-					<div class="col-md-2  col-md-pull-5">
+					
+					<div class="col-md-2 col-md-pull-5">
 						<div id="product-imgs">
                             <?php
                             echo $images;
                             ?>
 						</div>
 					</div>
-					<!-- /Product thumb imgs -->
+					
 
-					<!-- Product details -->
+					
 					<div class="col-md-5">
 						<div class="product-details">
 							<h2 class="product-name"><?php echo $articleNom?></h2>
@@ -99,14 +101,17 @@
 								<div class="product-rating">
 									<?php echo $niveau?>
 								</div>
-								<a class="review-link" href="#">10 Review(s) | Add your review</a>
+								<a class="review-link" href="#"><?php echo $nbr_reviews ?> Review(s) | Add your review</a>
 							</div>
 							<div>
 								<h3 class="product-price"> <?php  if ($articlePrixRemise!=''){echo $articlePrixRemise.' DHS ';} else{echo $articlePrix.' DHS '; }?><del class="product-old-price"><?php if ($articlePrixRemise!=''){echo $articlePrix.' DHS';} ?></del></h3>
 								<span class="product-available">In Stock</span>
 							</div>
 							<p><?php echo $articleDescription?></p>
-
+							
+							<?php 
+								if($colors != ''):
+							?>
 							<div class="product-options">
 								<label>
 									Color
@@ -117,12 +122,13 @@
 									</select>
 								</label>
 							</div>
+							<?php endif; ?>
 
 							<div class="add-to-cart">
 								<div class="qty-label">
-									Qty
+									Quantité : 
 									<div class="input-number">
-										<input type="number" value="0">
+										<input type="number" class="qty-article" value="1">
 										<span class="qty-up">+</span>
 										<span class="qty-down">-</span>
 									</div>
@@ -131,11 +137,9 @@
 							</div>
 
 							<ul class="product-btns">
-								<li><a href="#"><i class="fa fa-heart-o"></i> Ajouter aux Favoris</a></li>
-								<li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li>
+								<li><button type="button" id="<?php echo $articleID ?>" class="btn add-to-wishlist"><i class="fa fa-heart-o"></i> Ajouter aux Favoris</button></li>
 							</ul>
-
-							<ul class="product-links">
+							<ul class="product-links" style="display:inline-block">
 								<li>Category:</li>
 								<li><a href="store.php?categorie=<?php echo $categorieID?>"> <?php echo $categoryName?></a></li>
 							</ul>
@@ -150,22 +154,21 @@
 
 						</div>
 					</div>
-					<!-- /Product details -->
+					
 
-					<!-- Product tab -->
+					
 					<div class="col-md-12">
 						<div id="product-tab">
-							<!-- product tab nav -->
+							
 							<ul class="tab-nav">
 								<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
-								<li><a data-toggle="tab" href="#tab2">Details</a></li>
 								<li><a data-toggle="tab" href="#tab3">Reviews (3)</a></li>
 							</ul>
-							<!-- /product tab nav -->
+							
 
-							<!-- product tab content -->
+							
 							<div class="tab-content">
-								<!-- tab1  -->
+								
 								<div id="tab1" class="tab-pane fade in active">
 									<div class="row">
 										<div class="col-md-12">
@@ -173,32 +176,17 @@
 										</div>
 									</div>
 								</div>
-								<!-- /tab1  -->
+								
 
-								<!-- tab2  -->
-								<div id="tab2" class="tab-pane fade in">
-									<div class="row">
-										<div class="col-md-12">
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-										</div>
-									</div>
-								</div>
-								<!-- /tab2  -->
-
-								<!-- tab3  -->
+								
 								<div id="tab3" class="tab-pane fade in">
 									<div class="row">
-										<!-- Rating -->
+										
 										<div class="col-md-3">
-											<div id="rating">
+											<div class="rating">
 												<div class="rating-avg">
-													<span>4.5</span>
-													<div class="rating-stars">
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star-o"></i>
+													<span id="ratingAvg"></span>
+													<div class="rating-avg-stars">
 													</div>
 												</div>
 												<ul class="rating">
@@ -211,9 +199,9 @@
 															<i class="fa fa-star"></i>
 														</div>
 														<div class="rating-progress">
-															<div style="width: 80%;"></div>
+															<div style="width: 100%;"></div>
 														</div>
-														<span class="sum">3</span>
+														<span id="sumReviews5" class="sum"></span>
 													</li>
 													<li>
 														<div class="rating-stars">
@@ -226,7 +214,7 @@
 														<div class="rating-progress">
 															<div style="width: 60%;"></div>
 														</div>
-														<span class="sum">2</span>
+														<span id="sumReviews4" class="sum"></span>
 													</li>
 													<li>
 														<div class="rating-stars">
@@ -239,7 +227,7 @@
 														<div class="rating-progress">
 															<div></div>
 														</div>
-														<span class="sum">0</span>
+														<span id="sumReviews3" class="sum"></span>
 													</li>
 													<li>
 														<div class="rating-stars">
@@ -252,7 +240,7 @@
 														<div class="rating-progress">
 															<div></div>
 														</div>
-														<span class="sum">0</span>
+														<span id="sumReviews2" class="sum"></span>
 													</li>
 													<li>
 														<div class="rating-stars">
@@ -265,119 +253,73 @@
 														<div class="rating-progress">
 															<div></div>
 														</div>
-														<span class="sum">0</span>
+														<span id="sumReviews1" class="sum"></span>
 													</li>
 												</ul>
 											</div>
 										</div>
-										<!-- /Rating -->
+										
 
-										<!-- Reviews -->
+										
 										<div class="col-md-6">
-											<div id="reviews">
+											<div class="reviews-container">
 												<ul class="reviews">
-													<li>
-														<div class="review-heading">
-															<h5 class="name">John</h5>
-															<p class="date">27 DEC 2018, 8:0 PM</p>
-															<div class="review-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star-o empty"></i>
-															</div>
-														</div>
-														<div class="review-body">
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-														</div>
-													</li>
-													<li>
-														<div class="review-heading">
-															<h5 class="name">John</h5>
-															<p class="date">27 DEC 2018, 8:0 PM</p>
-															<div class="review-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star-o empty"></i>
-															</div>
-														</div>
-														<div class="review-body">
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-														</div>
-													</li>
-													<li>
-														<div class="review-heading">
-															<h5 class="name">John</h5>
-															<p class="date">27 DEC 2018, 8:0 PM</p>
-															<div class="review-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star-o empty"></i>
-															</div>
-														</div>
-														<div class="review-body">
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-														</div>
-													</li>
 												</ul>
 												<ul class="reviews-pagination">
-													<li class="active">1</li>
-													<li><a href="#">2</a></li>
-													<li><a href="#">3</a></li>
-													<li><a href="#">4</a></li>
-													<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
 												</ul>
 											</div>
 										</div>
-										<!-- /Reviews -->
+										
 
-										<!-- Review Form -->
+										
 										<div class="col-md-3">
 											<div id="review-form">
-												<form class="review-form">
-													<input class="input" type="text" placeholder="Your Name">
-													<input class="input" type="email" placeholder="Your Email">
-													<textarea class="input" placeholder="Your Review"></textarea>
-													<div class="input-rating">
-														<span>Your Rating: </span>
-														<div class="stars">
-															<input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
-															<input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
-															<input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
-															<input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
-															<input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
+											<?php
+												if(isset($_SESSION['clientID'])){
+													$clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);
+													$query = $con->query("SELECT COUNT(*) FROM commentaire WHERE articleID = $articleID AND clientID = $clientID");
+													$row = $query->fetch_row();
+													if($row[0] == 0)
+														include_once("includes/reviewform.html");
+													else{
+												?>
+												<div class="review-submit-ctr">
+													<div class="submit-success">
+														<span class="submit-success-msg">Merci pour votre évaluation de notre produit ! <i class="fa fa-heart"></i></span>
+														<div class="submit-success-img">
+															<img src="img/thank-you.png">
 														</div>
 													</div>
-													<button class="primary-btn">Submit</button>
-												</form>
+												</div>
+												<?php
+													}
+												}
+												else
+													include_once("includes/reviewform.html");
+												?>
 											</div>
 										</div>
-										<!-- /Review Form -->
+										
 									</div>
 								</div>
-								<!-- /tab3  -->
+								
 							</div>
-							<!-- /product tab content  -->
+							
 						</div>
 					</div>
-					<!-- /product tab -->
+					
 				</div>
-				<!-- /row -->
+				
 			</div>
-			<!-- /container -->
+			
 		</div>
-		<!-- /SECTION -->
+		
 
-		<!-- Section -->
+		
 		<div class="section">
-			<!-- container -->
+			
 			<div class="container">
-				<!-- row -->
+				
 				<div class="row">
 
 					<div class="col-md-12">
@@ -386,7 +328,7 @@
 						</div>
 					</div>
 
-					<!-- product -->
+					
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
 							<div class="product-img">
@@ -412,9 +354,9 @@
 							</div>
 						</div>
 					</div>
-					<!-- /product -->
+					
 
-					<!-- product -->
+					
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
 							<div class="product-img">
@@ -445,11 +387,11 @@
 							</div>
 						</div>
 					</div>
-					<!-- /product -->
+					
 
 					<div class="clearfix visible-sm visible-xs"></div>
 
-					<!-- product -->
+					
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
 							<div class="product-img">
@@ -477,9 +419,9 @@
 							</div>
 						</div>
 					</div>
-					<!-- /product -->
+					
 
-					<!-- product -->
+					
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
 							<div class="product-img">
@@ -502,14 +444,13 @@
 							</div>
 						</div>
 					</div>
-					<!-- /product -->
+					
 
 				</div>
-				<!-- /row -->
+				
 			</div>
-			<!-- /container -->
+			
 		</div>
-		<!-- /Section -->
 	<?php											}
 			else
 				echo '<script>AucunResultat($(".full-container"))</script>';
@@ -519,5 +460,209 @@
 <?php include_once "includes/newsletter.php" ?>
 
 <?php include_once "includes/loading.html" ?>
+
+<script>
+	window.onload = function(){
+		ReviewsPagination();
+		AfficherReviews();
+		ReviewsTotalStars();
+	}
+	
+	$(document).on("click", ".pagination", function(){
+		
+		$(".pagination").each(function(){
+			if(!$(this).hasClass("active")){
+				$(this).toggleClass("active");
+				$(this).children("a").css("color","#fff");
+			}
+			else{
+				$(this).removeClass("active");
+				$(this).children("a").css("color","#333");
+			}
+		});
+		
+		AfficherReviews();
+	});
+	
+	$("#btnSendReview").click(function(){
+		
+		var niveau = 0;
+		var id = $(".stars > input:checked").attr("id");
+		$("input[name='rating']").each(function(){
+			if($(this).prop("checked"))
+				niveau+=1;
+		});
+		
+		if( $("#reviewTitle").val().length > 0 && $("#reviewText").val().length > 0 && niveau !== 0)
+		{
+			var titre = $("#reviewTitle").val();
+			var commentaire = $("#reviewText").val();
+			var articleID = $(".add-to-cart-btn").attr("id");
+			
+			$.ajax({
+				url: "../public-includes/ajax_queries",
+				method: "POST",
+				dataType: "JSON",
+				async: false,	
+				data: { 
+					function: "ReviewSubmit",
+					titre: titre,
+					commentaire: commentaire,
+					niveau: niveau,
+					articleID: articleID
+				},
+				beforeSend: function(){
+					$(".review-form").append('<div class="loading-review-submit"><img src="img/loading145px.svg"></div>');
+				},
+				success: function(data){
+					$("#btnSendReview").remove();
+					setTimeout(function(){
+						
+						if(data != null)
+							$("#review-form").load(" #review-form");
+						else
+							$(location).attr("href", "../register.php");
+						
+					}, 1800);
+				}
+				
+			});
+		}
+	});
+	
+	$("input[name='rating']").click(function(){
+		var value = $(this).val();
+		for( let i = 1 ; i < value ; i++ )
+		{
+			$("input[value='"+i+"']").prop("checked", true);
+		}
+	});
+	
+	$(document).on("click",".qty-up, .qty-down",function(e){
+		$(".qty-article").trigger("input");
+	});
+	
+	function AfficherReviews(){
+		var articleID = $(".add-to-cart-btn").attr("id");
+		var page_nbr = $(".reviews-pagination > li[class*='active']").attr("id");
+		
+		$.ajax({
+			url: "../public-includes/ajax_queries",
+			method: "POST",
+			dataType: "JSON",
+			async: false,
+			data: { 
+				function: "AfficherReviews",
+				articleID: articleID,
+				page_nbr: page_nbr	  
+			},
+			success: function(data){
+				if(data != null){
+					
+					$(".reviews").empty();
+					
+					for( let i = 0; i < data.length ; i++)
+					{
+						var starts = "<i class='fa fa-star'></i>";
+						for( let j = 1 ; j < Math.round(data[i].niveau) ; j++)
+						{
+							starts += "<i class='fa fa-star'></i>";
+						}
+
+						for( let j = 5 ;  j > Math.round(data[i].niveau) ; j-- )
+						{
+							starts += "<i class='fa fa-star-o'></i>";
+						}
+
+						$(".reviews").append("<li><div class='review-heading'><h5 class='name'>"+ data[i].prenom + " " + data[i].nom +"</h5><p class='date'>"+ data[i].dateComm +"</p><div class='review-rating'>"+ starts +"</div></div><div class='review-body'><div class='review-title-ctr'><span class='review-title'><h5>"+ data[i].titre +"</h5></span></div><p>"+ data[i].commentaire +"</p></div></li>");
+					}
+				}
+			}
+		});
+		
+	}
+	
+	function ReviewsPagination(){
+		var articleID = $(".add-to-cart-btn").attr("id");
+		$.ajax({
+			url: "../public-includes/ajax_queries",
+			method: "POST",
+			dataType: "JSON",
+			async: false,
+			data: { 
+				function: "ReviewsPagination",
+				articleID: articleID
+			},
+			success: function(data){
+
+				if(data != null){
+					for( var i=1 ; i <= data.nbr_pages ; i++ ){
+						if(1 == i)
+							$(".reviews-pagination").append("<li id='"+i+"' class='active pagination'>"+i+"</li>");
+						else
+							$(".reviews-pagination").append("<li id='"+i+"' class='pagination'>"+i+"</li>");
+					}
+				}
+				else
+					$(".reviews-pagination").html("<div class='msg text-center'>Aucun Commentaire Pour Cette Article</div>");
+			}
+		});
+	}
+	
+	function ReviewsTotalStars(){
+		var articleID = $(".add-to-cart-btn").attr("id");
+		$.post(
+			"../public-includes/ajax_queries",
+			{ 
+				function: "ReviewsTotalStars", 
+				articleID: articleID 
+			},
+			function(data){
+				if(data !== null){
+					
+					$(".rating-avg-stars").empty();
+					
+					$("#ratingAvg").text(data[0].avg);
+					
+					for( let i = 0 ; i < Math.round(data[0].avg) ; i++ )
+					{
+						$(".rating-avg-stars").append("<i class='fa fa-star'></i>");
+					}
+					
+					for( let i = 5 ; i > Math.round(data[0].avg) ; i-- )
+					{
+						$(".rating-avg-stars").append("<i class='fa fa-star-o'></i>");
+					}
+					
+					for( let i = 0 ; i < data.length ; i++ )
+					{
+						if( i !== 0){ // override first object
+							$("#sumReviews5").text(data[i].niveau5);
+							$("#sumReviews4").text(data[i].niveau4);
+							$("#sumReviews4").text(data[i].niveau4);
+							$("#sumReviews3").text(data[i].niveau3);
+							$("#sumReviews2").text(data[i].niveau2);
+							$("#sumReviews1").text(data[i].niveau1);
+						}
+					}
+				}
+				else{
+					$("#sumReviews5").text("0");
+					$("#sumReviews4").text("0");
+					$("#sumReviews4").text("0");
+					$("#sumReviews3").text("0");
+					$("#sumReviews2").text("0");
+					$("#sumReviews1").text("0");
+					$(".rating-avg-stars").append("0 ");
+					for( let i = 0 ; i < 5 ; i++){
+						$(".rating-avg-stars").append("<i class='fa fa-star-o'></i>");
+					}
+				}
+			},
+			"JSON"
+		);
+	}
+	
+</script>
 
 <?php include_once "includes/footer.php" ?>
