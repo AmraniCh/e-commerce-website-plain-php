@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 06, 2019 at 12:32 AM
+-- Generation Time: Aug 19, 2019 at 09:18 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -82,32 +82,24 @@ CREATE TABLE IF NOT EXISTS `article` (
   `tauxRemise` float DEFAULT NULL,
   `remiseDisponible` bit(1) NOT NULL DEFAULT b'0',
   `unitesEnStock` int(11) NOT NULL DEFAULT '1',
-  `unitesSurCommande` int(11) DEFAULT '0',
+  `unitesCommandees` int(11) DEFAULT '0',
   `articleDisponible` bit(1) NOT NULL DEFAULT b'1',
   `niveau` int(11) DEFAULT '5',
   `dateAjoute` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `categorieID` int(11) NOT NULL,
   PRIMARY KEY (`articleID`),
+  UNIQUE KEY `articleNom` (`articleNom`),
   KEY `categorieID` (`categorieID`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `article`
 --
 
-INSERT INTO `article` (`articleID`, `articleNom`, `articlePrix`, `articlePrixRemise`, `articleDescription`, `articleMarque`, `tauxRemise`, `remiseDisponible`, `unitesEnStock`, `unitesSurCommande`, `articleDisponible`, `niveau`, `dateAjoute`, `categorieID`) VALUES
-(27, 'LENOVO 541', '5000.00', NULL, 'LENOVO 541', 'LENOVO', NULL, b'0', 2, 0, b'1', 5, '2019-07-09 17:38:17', 40),
-(30, 'HP 640', '5000.00', '4500.00', 'HP 640', 'HP', 10, b'1', 2, 0, b'1', 5, '2019-07-09 17:38:56', 40),
-(31, 'CAMERA HD SONY 14000', '6000.00', '3600.00', 'CAMERA HD SONY 14000', 'SONY', 40, b'1', 1, 0, b'1', 5, '2019-07-09 18:58:55', 31),
-(32, 'Iphone6 S', '1500.00', '1350.00', 'Iphone6 S', 'Iphone', 10, b'1', 1, 0, b'1', 5, '2019-07-09 19:50:39', 36),
-(34, 'LENOVO 541', '5000.00', '4500.00', 'LENOVO 541', 'LENOVO', 10, b'1', 2, 0, b'1', 5, '2019-07-09 17:38:17', 40),
-(35, 'LENOVO 541', '5000.00', NULL, 'LENOVO 541', 'LENOVO', NULL, b'0', 2, 0, b'1', 5, '2019-07-09 17:38:17', 40),
-(36, 'LENOVO 541', '5000.00', '4500.00', 'LENOVO 541', 'LENOVO', 10, b'1', 2, 0, b'1', 5, '2019-07-09 17:38:26', 40),
-(38, 'HP 640', '5000.00', '4500.00', 'HP 640', 'HP', 10, b'1', 2, 0, b'1', 5, '2019-07-09 17:38:56', 40),
-(39, 'CAMERA HD SONY 14000', '6000.00', '3600.00', 'CAMERA HD SONY 14000', 'SONY', 40, b'1', 1, 0, b'1', 5, '2019-07-09 18:58:55', 31),
-(40, 'Iphone6 S', '1500.00', '1350.00', 'Iphone6 S', 'Iphone', 10, b'1', 1, 0, b'1', 5, '2019-07-09 19:50:39', 36),
-(41, 'Samsung', '2500.00', '2000.00', 'Samsung', 'Samsung', 20, b'1', 1, 0, b'1', 5, '2019-07-09 19:51:25', 36),
-(42, 'LENOVO 541', '5000.00', '4500.00', 'LENOVO 541', 'LENOVO', 10, b'1', 2, 0, b'1', 5, '2019-07-09 17:38:17', 40);
+INSERT INTO `article` (`articleID`, `articleNom`, `articlePrix`, `articlePrixRemise`, `articleDescription`, `articleMarque`, `tauxRemise`, `remiseDisponible`, `unitesEnStock`, `unitesCommandees`, `articleDisponible`, `niveau`, `dateAjoute`, `categorieID`) VALUES
+(46, 'HP 8741', '5000.00', '4500.00', 'Using POST as opposed to GET will “hide” the parameters in a packet and not send them in the URL. You may need to change the way your server-side code accepts the request. Java Servlets for instance, have separate method that need to be implemented for GET and POST. Furthermore if your site is HTTPS, all the traffic will be encrypted. This is assuming of course that you are not going cross domain for AJAX. In terms of hiding the actual script’s name, the best you can do is obfuscate it.', 'hp', 10, b'1', 8, 2, b'1', 5, '2019-08-09 20:49:55', 40),
+(47, 'CAMERA HD SONY 14000 CAMERA HD SONY 14000 CAMERA HD SONY 14000', '4500.00', NULL, 'CAMERA HD SONY 14000', 'sony', NULL, b'0', 8, 2, b'1', 5, '2019-08-10 07:20:34', 31),
+(48, 'Handphones 2055', '500.00', NULL, 'Handphones 2055', '', NULL, b'0', 7, 3, b'1', 5, '2019-08-14 13:54:44', 41);
 
 -- --------------------------------------------------------
 
@@ -122,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `categorie` (
   `description` text,
   `active` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`categorieID`)
-) ENGINE=MyISAM AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `categorie`
@@ -131,11 +123,9 @@ CREATE TABLE IF NOT EXISTS `categorie` (
 INSERT INTO `categorie` (`categorieID`, `categorieNom`, `description`, `active`) VALUES
 (36, 'Tablettes &amp; Smartphones', 'Tablettes &amp; Smartphones', b'1'),
 (41, 'Accessoires &amp; Périph', 'Accessoires &amp; Périphériques', b'1'),
-(57, 'Impression', 'Impression', b'1'),
 (31, 'Image & Son', 'Image & Son', b'1'),
 (32, 'Serveurs', 'Serveurs', b'1'),
-(33, 'Logiciel', 'Logiciel', b'1'),
-(34, 'Bonnes affaires', 'Bonnes affaires', b'1'),
+(34, 'Impression', 'Impression', b'1'),
 (35, 'Réseaux', 'Réseaux', b'1'),
 (40, 'PC Portable', 'PC Portable', b'1'),
 (37, 'PC Bureau', 'PC Bureau', b'1');
@@ -157,6 +147,7 @@ CREATE TABLE IF NOT EXISTS `client` (
   `ville` varchar(100) NOT NULL,
   `emailValid` bit(1) NOT NULL DEFAULT b'0',
   `codeEmail` varchar(100) DEFAULT NULL,
+  `codeRec` varchar(100) DEFAULT NULL,
   `codePostal` int(11) DEFAULT NULL,
   `telephone` varchar(100) NOT NULL,
   `motdepasse` varchar(100) NOT NULL,
@@ -166,14 +157,16 @@ CREATE TABLE IF NOT EXISTS `client` (
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `clientUserName` (`clientUserName`),
   KEY `fk_panierID_client` (`panierID`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `client`
 --
 
-INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
-(46, 'chou500', 'chakir', 'el amrani', 'elamrani.sv.laza@gmail.com', 'tanger', 'tanger', b'1', '247001', 90002, '0659630023', '$2y$10$29PASy6y1i15UatstpF0teWAvGHl7n6WA0DPmoMbuWGOc2iskoSDO', 'Quel était le nom de votre premier animal ?', 'orio', 7);
+INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codeRec`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
+(46, 'chou500', 'EL AMRANI', 'CHAKIR', '', 'BNI MAKADA', 'Tanger', b'1', '247001', NULL, 90002, '0651487088', '$2y$10$bSlqi8xJEeyek62yrnleie6eo4r3XRdo6anKBwq/RomgU0Pq0/SFi', 'Quel était le nom de votre premier animal ?', 'orioo', 130),
+(63, 'ahmed', 'ahmed', 'el amrani', 'ahmed@gmail.com', 'tanger', 'casa', b'0', '928322', NULL, 445585, '+212144710547', '$2y$10$MOOoqR0/lknqaALxuB41b.FB67cmvO3gsNHolD2LmVm.tdek5Vqt2', 'Quel était le nom de votre premier animal ?', 'oodf', 133),
+(70, 'chou500d', 'chakira', 'qsdqsdqsdqs', 'elamrani.sv.laza@gmail.com', 'qsdqsqsddqs', 'casa', b'1', '787235', NULL, 2312321, '+212144710547', '$2y$10$oc8t0d7s.XpU6rOjDMFtgepTFovk4V0v2j6yvFPEzhweBthz0HXXC', 'Quel était le nom de votre premier animal ?', 'DDSQD', 134);
 
 --
 -- Triggers `client`
@@ -187,34 +180,86 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `commande`
+--
+
+DROP TABLE IF EXISTS `commande`;
+CREATE TABLE IF NOT EXISTS `commande` (
+  `commandeID` int(11) NOT NULL AUTO_INCREMENT,
+  `clientID` int(11) NOT NULL,
+  `commandeDate` datetime DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) DEFAULT NULL,
+  `nbrArticles` int(11) NOT NULL,
+  `totalApayer` float NOT NULL,
+  `typeLivraison` varchar(100) NOT NULL,
+  `couponUtilise` bit(1) DEFAULT b'0',
+  `vu` bit(1) DEFAULT b'0',
+  PRIMARY KEY (`commandeID`),
+  KEY `fk_clientID_commande` (`clientID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10089 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `commande`
+--
+
+INSERT INTO `commande` (`commandeID`, `clientID`, `commandeDate`, `status`, `nbrArticles`, `totalApayer`, `typeLivraison`, `couponUtilise`, `vu`) VALUES
+(10087, 46, '2019-08-18 11:40:56', 1, 1, 500, 'amana', b'0', b'1'),
+(10088, 46, '2019-08-17 11:59:04', 1, 3, 9500, 'gratuit', b'0', b'1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `commandedetails`
+--
+
+DROP TABLE IF EXISTS `commandedetails`;
+CREATE TABLE IF NOT EXISTS `commandedetails` (
+  `commandeID` int(11) NOT NULL,
+  `articleID` int(11) NOT NULL,
+  `quantite` int(11) DEFAULT NULL,
+  `couleur` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`commandeID`,`articleID`),
+  KEY `fk_articleId_commandedetails` (`articleID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `commandedetails`
+--
+
+INSERT INTO `commandedetails` (`commandeID`, `articleID`, `quantite`, `couleur`) VALUES
+(10087, 48, 1, 'Noir'),
+(10088, 46, 1, 'Gris'),
+(10088, 47, 1, 'Blue'),
+(10088, 48, 1, 'Noir');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `commentaire`
 --
 
 DROP TABLE IF EXISTS `commentaire`;
 CREATE TABLE IF NOT EXISTS `commentaire` (
+  `commentaireID` int(11) NOT NULL AUTO_INCREMENT,
   `clientID` int(11) NOT NULL,
   `articleID` int(11) NOT NULL,
   `accepte` bit(1) NOT NULL DEFAULT b'0',
-  `niveau` int(11) NOT NULL DEFAULT '1',
+  `niveau` int(11) DEFAULT NULL,
   `commentaire` text NOT NULL,
-  `titre` varchar(100) DEFAULT NULL,
+  `titre` text,
   `dateComm` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`clientID`,`articleID`),
+  PRIMARY KEY (`commentaireID`),
   KEY `fk_articleID_commentaire` (`articleID`),
   KEY `fk_clientID_commentaire` (`clientID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `commentaire`
 --
 
-INSERT INTO `commentaire` (`clientID`, `articleID`, `accepte`, `niveau`, `commentaire`, `titre`, `dateComm`) VALUES
-(11, 32, b'1', 3, 'Excellent', 'Excellent', '2019-07-27 19:09:29'),
-(12, 27, b'1', 4, 'sqdqsd', 'sdqqsd', '2019-07-27 19:25:06'),
-(13, 27, b'1', 4, 'qsdqsd', 'qdsqds', '2019-07-27 02:20:25'),
-(38, 27, b'1', 3, 'Excellent', 'Excellent', '2019-07-27 19:09:29'),
-(41, 27, b'1', 4, 'sqdqsd', 'sdqqsd', '2019-07-27 19:25:06'),
-(42, 27, b'1', 4, 'qsdqsd', 'qdsqds', '2019-07-27 02:20:25');
+INSERT INTO `commentaire` (`commentaireID`, `clientID`, `articleID`, `accepte`, `niveau`, `commentaire`, `titre`, `dateComm`) VALUES
+(3, 46, 46, b'1', 3, '\r\nUsing POST as opposed to GET will “hide” the parameters in a packet and not send them in the URL. You may need to change the way your server-side code accepts the request. Java Servlets for instance, have separate method that need to be implemented for GET and POST. Furthermore if your site is HTTPS, all the traffic will be encrypted. This is assuming of course that you are not going cross domain for AJAX. In terms of hiding the actual script’s name, the best you can do is obfuscate it.\r\n', '  Using POST as opposed to GET will “hide” the parameters in a packet and not send them in the URL. You may need to change the way your server-side code accepts the request. Java Servlets for instance, have separate method that need to be implemented for GET and POST. Furthermore if your site is HTTPS, all the traffic will be encrypted. This is assuming of course that you are not going cross domain for AJAX. In terms of hiding the actual script’s name, the best you can do is obfuscate it.', '2019-08-18 00:32:18'),
+(5, 46, 48, b'1', 3, 'Bon produit', 'Bon produit', '2019-08-18 06:49:04');
 
 -- --------------------------------------------------------
 
@@ -235,7 +280,10 @@ CREATE TABLE IF NOT EXISTS `couleurarticle` (
 --
 
 INSERT INTO `couleurarticle` (`nomCouleur`, `articleID`) VALUES
-('Blue', 27);
+('Gris', 46),
+('Noir', 46),
+('Blue', 47),
+('Noir', 48);
 
 -- --------------------------------------------------------
 
@@ -257,15 +305,14 @@ CREATE TABLE IF NOT EXISTS `coupon` (
   `dateAjoute` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`couponID`),
   UNIQUE KEY `couponCode` (`couponCode`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `coupon`
 --
 
 INSERT INTO `coupon` (`couponID`, `couponNom`, `couponCode`, `valide`, `taux`, `dateDebut`, `dateFin`, `appliquerAu`, `filter`, `dateAjoute`) VALUES
-(3, 'ZZZZ', '7KUFY7', b'1', 44, '2019-08-05', '2019-08-29', 'tous', 'tous', '2019-08-05 08:36:43'),
-(4, '213', '1P30VU', b'1', 22, '2019-08-05', '2019-08-21', 'tous', 'tous', '2019-08-05 08:36:52');
+(1, 'COUPON HP', 'N022YV', b'1', 40, '2019-08-13', '2019-08-30', 'tous', 'tous', '2019-08-13 04:13:40');
 
 -- --------------------------------------------------------
 
@@ -286,65 +333,9 @@ CREATE TABLE IF NOT EXISTS `coupondetails` (
 --
 
 INSERT INTO `coupondetails` (`articleID`, `couponID`) VALUES
-(27, 3),
-(27, 4),
-(30, 3),
-(30, 4),
-(31, 3),
-(31, 4),
-(32, 3),
-(32, 4),
-(34, 3),
-(34, 4),
-(35, 3),
-(35, 4),
-(36, 3),
-(36, 4),
-(38, 3),
-(38, 4),
-(39, 3),
-(39, 4),
-(40, 3),
-(40, 4),
-(41, 3),
-(41, 4),
-(42, 3),
-(42, 4);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `demande`
---
-
-DROP TABLE IF EXISTS `demande`;
-CREATE TABLE IF NOT EXISTS `demande` (
-  `demandeID` int(11) NOT NULL AUTO_INCREMENT,
-  `paiementDate` datetime NOT NULL,
-  `paye` int(11) DEFAULT NULL,
-  `termine` bit(1) NOT NULL DEFAULT b'0',
-  `dateDemende` datetime NOT NULL,
-  `dateLivraison` datetime DEFAULT NULL,
-  `dateEnvoi` datetime DEFAULT NULL,
-  `poidsTotal` decimal(15,3) DEFAULT NULL,
-  PRIMARY KEY (`demandeID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `demandedetails`
---
-
-DROP TABLE IF EXISTS `demandedetails`;
-CREATE TABLE IF NOT EXISTS `demandedetails` (
-  `demandeDetailsID` int(11) NOT NULL AUTO_INCREMENT,
-  `demandeID` int(11) NOT NULL,
-  `articleID` int(11) NOT NULL,
-  PRIMARY KEY (`demandeDetailsID`),
-  KEY `demandeID` (`demandeID`),
-  KEY `articleID` (`articleID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+(46, 1),
+(47, 1),
+(48, 1);
 
 -- --------------------------------------------------------
 
@@ -369,11 +360,8 @@ INSERT INTO `favoridetails` (`articleID`, `clientID`, `dateAjoute`) VALUES
 (27, 40, '2019-07-27 20:17:30'),
 (30, 40, '2019-07-27 22:54:55'),
 (31, 40, '2019-07-26 19:38:54'),
-(31, 46, '2019-08-05 23:41:57'),
 (32, 40, '2019-07-27 19:51:01'),
-(39, 46, '2019-08-05 22:55:06'),
-(41, 46, '2019-08-05 22:55:04'),
-(42, 46, '2019-08-05 22:55:05');
+(46, 46, '2019-08-17 11:21:52');
 
 -- --------------------------------------------------------
 
@@ -383,8 +371,9 @@ INSERT INTO `favoridetails` (`articleID`, `clientID`, `dateAjoute`) VALUES
 
 DROP TABLE IF EXISTS `imagearticle`;
 CREATE TABLE IF NOT EXISTS `imagearticle` (
-  `imageArticleNom` varchar(256) NOT NULL,
+  `imageArticleNom` varchar(512) NOT NULL,
   `articleID` int(11) NOT NULL,
+  `principale` bit(1) DEFAULT b'0',
   PRIMARY KEY (`imageArticleNom`,`articleID`),
   KEY `fk_articleID_imagearticle` (`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -393,15 +382,13 @@ CREATE TABLE IF NOT EXISTS `imagearticle` (
 -- Dumping data for table `imagearticle`
 --
 
-INSERT INTO `imagearticle` (`imageArticleNom`, `articleID`) VALUES
-('product01.png', 27),
-('product06.png', 27),
-('product08.png', 27),
-('shop02.png', 31),
-('product07.png', 32),
-('product04.png', 33),
-('download.png', 43),
-('download.png', 44);
+INSERT INTO `imagearticle` (`imageArticleNom`, `articleID`, `principale`) VALUES
+('product01.png', 46, b'0'),
+('product02.png', 48, b'1'),
+('product03.png', 48, b'0'),
+('product04.png', 48, b'0'),
+('product08.png', 46, b'1'),
+('product09.png', 47, b'1');
 
 -- --------------------------------------------------------
 
@@ -412,29 +399,57 @@ INSERT INTO `imagearticle` (`imageArticleNom`, `articleID`) VALUES
 DROP TABLE IF EXISTS `livraison`;
 CREATE TABLE IF NOT EXISTS `livraison` (
   `livraisonID` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`livraisonID`)
-) ENGINE=MyISAM AUTO_INCREMENT=1002 DEFAULT CHARSET=utf8;
+  `commandeID` int(11) NOT NULL,
+  `confirmationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`livraisonID`,`commandeID`),
+  KEY `fk_commandeID_livraison` (`commandeID`)
+) ENGINE=MyISAM AUTO_INCREMENT=79 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `livraison`
 --
 
-INSERT INTO `livraison` (`livraisonID`) VALUES
-(1001);
+INSERT INTO `livraison` (`livraisonID`, `commandeID`, `confirmationDate`) VALUES
+(42, 10074, '2019-08-16 09:55:47'),
+(41, 10072, '2019-08-15 07:39:59'),
+(43, 10074, '2019-08-16 10:04:47'),
+(44, 10074, '2019-08-16 10:14:42'),
+(45, 10074, '2019-08-16 10:16:40'),
+(46, 10074, '2019-08-16 10:17:44'),
+(47, 10073, '2019-08-16 10:22:38'),
+(67, 10085, '2019-08-18 11:38:40'),
+(77, 10088, '2019-08-18 17:30:16'),
+(78, 10087, '2019-08-18 17:30:17');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `paiement`
+-- Table structure for table `notification`
 --
 
-DROP TABLE IF EXISTS `paiement`;
-CREATE TABLE IF NOT EXISTS `paiement` (
-  `paiementID` int(11) NOT NULL AUTO_INCREMENT,
-  `paiementType` varchar(100) NOT NULL,
-  `permis` bit(1) NOT NULL DEFAULT b'1',
-  PRIMARY KEY (`paiementID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE IF NOT EXISTS `notification` (
+  `notID` int(11) NOT NULL AUTO_INCREMENT,
+  `titre` text,
+  `dateNot` datetime DEFAULT CURRENT_TIMESTAMP,
+  `type` varchar(100) DEFAULT NULL,
+  `vu` bit(1) DEFAULT b'0',
+  PRIMARY KEY (`notID`)
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `notification`
+--
+
+INSERT INTO `notification` (`notID`, `titre`, `dateNot`, `type`, `vu`) VALUES
+(9, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-17 18:32:49', 'commande', b'1'),
+(10, 'Nouveau Commentaire de [CHAKIR EL AMRANI]', '2019-08-18 06:49:04', 'commentaire', b'1'),
+(11, 'Nouveau Client Enregistré', '2019-08-18 10:50:58', 'client', b'1'),
+(12, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-18 11:38:08', 'commande', b'1'),
+(13, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-18 11:39:44', 'commande', b'1'),
+(14, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-18 11:40:56', 'commande', b'1'),
+(15, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-18 11:59:04', 'commande', b'1'),
+(16, 'Nouveau Commentaire de [CHAKIR EL AMRANI]', '2019-08-18 11:59:20', 'commentaire', b'1');
 
 -- --------------------------------------------------------
 
@@ -447,138 +462,18 @@ CREATE TABLE IF NOT EXISTS `panier` (
   `panierID` int(11) NOT NULL AUTO_INCREMENT,
   `dateAjoute` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`panierID`)
-) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `panier`
 --
 
 INSERT INTO `panier` (`panierID`, `dateAjoute`) VALUES
-(5, '2019-07-22 16:09:52'),
-(6, '2019-07-22 16:54:51'),
-(7, '2019-08-01 07:30:48'),
-(8, '2019-08-05 09:36:25'),
-(9, '2019-08-05 09:37:49'),
-(10, '2019-08-05 09:38:38'),
-(11, '2019-08-05 09:57:13'),
-(12, '2019-08-05 09:57:32'),
-(13, '2019-08-05 09:58:06'),
-(14, '2019-08-05 09:58:29'),
-(15, '2019-08-05 09:58:33'),
-(16, '2019-08-05 09:58:51'),
-(17, '2019-08-05 09:59:04'),
-(18, '2019-08-05 09:59:08'),
-(19, '2019-08-05 10:48:06'),
-(20, '2019-08-05 10:48:43'),
-(21, '2019-08-05 10:49:16'),
-(22, '2019-08-05 10:49:27'),
-(23, '2019-08-05 10:49:33'),
-(24, '2019-08-05 10:50:14'),
-(25, '2019-08-05 10:51:19'),
-(26, '2019-08-05 10:52:04'),
-(27, '2019-08-05 10:52:08'),
-(28, '2019-08-05 10:52:21'),
-(29, '2019-08-05 10:54:43'),
-(30, '2019-08-05 10:54:47'),
-(31, '2019-08-05 10:55:11'),
-(32, '2019-08-05 10:56:14'),
-(33, '2019-08-05 10:56:59'),
-(34, '2019-08-05 10:57:39'),
-(35, '2019-08-05 10:58:37'),
-(36, '2019-08-05 10:58:50'),
-(37, '2019-08-05 10:59:09'),
-(38, '2019-08-05 10:59:26'),
-(39, '2019-08-05 10:59:39'),
-(40, '2019-08-05 11:00:06'),
-(41, '2019-08-05 11:01:05'),
-(42, '2019-08-05 11:01:16'),
-(43, '2019-08-05 11:01:20'),
-(44, '2019-08-05 11:01:56'),
-(45, '2019-08-05 11:02:03'),
-(46, '2019-08-05 11:02:58'),
-(47, '2019-08-05 11:03:13'),
-(48, '2019-08-05 11:03:37'),
-(49, '2019-08-05 11:03:50'),
-(50, '2019-08-05 11:06:11'),
-(51, '2019-08-05 11:06:28'),
-(52, '2019-08-05 11:06:50'),
-(53, '2019-08-05 11:07:58'),
-(54, '2019-08-05 11:08:12'),
-(55, '2019-08-05 11:08:59'),
-(56, '2019-08-05 11:09:09'),
-(57, '2019-08-05 11:10:26'),
-(58, '2019-08-05 11:10:36'),
-(59, '2019-08-05 11:10:43'),
-(60, '2019-08-05 11:10:59'),
-(61, '2019-08-05 11:11:05'),
-(62, '2019-08-05 11:11:23'),
-(63, '2019-08-05 11:11:31'),
-(64, '2019-08-05 11:11:39'),
-(65, '2019-08-05 11:44:32'),
-(66, '2019-08-05 11:44:46'),
-(67, '2019-08-05 11:47:14'),
-(68, '2019-08-05 11:47:44'),
-(69, '2019-08-05 11:47:54'),
-(70, '2019-08-05 11:48:02'),
-(71, '2019-08-05 11:48:09'),
-(72, '2019-08-05 11:54:43'),
-(73, '2019-08-05 12:35:07'),
-(74, '2019-08-05 12:35:41'),
-(75, '2019-08-05 12:35:48'),
-(76, '2019-08-05 12:36:03'),
-(77, '2019-08-05 12:36:55'),
-(78, '2019-08-05 12:37:04'),
-(79, '2019-08-05 12:37:15'),
-(80, '2019-08-05 12:38:10'),
-(81, '2019-08-05 12:38:16'),
-(82, '2019-08-05 12:38:45'),
-(83, '2019-08-05 12:39:22'),
-(84, '2019-08-05 12:39:34'),
-(85, '2019-08-05 12:40:37'),
-(86, '2019-08-05 12:40:59'),
-(87, '2019-08-05 12:41:09'),
-(88, '2019-08-05 12:41:35'),
-(89, '2019-08-05 12:43:58'),
-(90, '2019-08-05 12:44:32'),
-(91, '2019-08-05 12:44:50'),
-(92, '2019-08-05 12:45:19'),
-(93, '2019-08-05 12:45:26'),
-(94, '2019-08-05 12:45:47'),
-(95, '2019-08-05 12:46:07'),
-(96, '2019-08-05 12:47:57'),
-(97, '2019-08-05 12:48:24'),
-(98, '2019-08-05 12:48:50'),
-(99, '2019-08-05 12:49:18'),
-(100, '2019-08-05 12:50:47'),
-(101, '2019-08-05 12:50:53'),
-(102, '2019-08-05 12:50:56'),
-(103, '2019-08-05 12:51:17'),
-(104, '2019-08-05 12:51:29'),
-(105, '2019-08-05 12:51:54'),
-(106, '2019-08-05 12:52:54'),
-(107, '2019-08-05 12:53:47'),
-(108, '2019-08-05 12:54:27'),
-(109, '2019-08-05 12:54:38'),
-(110, '2019-08-05 13:00:47'),
-(111, '2019-08-05 13:01:19'),
-(112, '2019-08-05 13:01:45'),
-(113, '2019-08-05 13:01:59'),
-(114, '2019-08-05 13:02:22'),
-(115, '2019-08-05 13:03:35'),
-(116, '2019-08-05 13:04:04'),
-(117, '2019-08-05 13:06:22'),
-(118, '2019-08-05 13:07:05'),
-(119, '2019-08-05 13:07:38'),
-(120, '2019-08-05 13:07:56'),
-(121, '2019-08-05 13:08:28'),
-(122, '2019-08-05 13:08:51'),
-(123, '2019-08-05 13:09:26'),
-(124, '2019-08-05 13:09:45'),
-(125, '2019-08-05 13:10:50'),
-(126, '2019-08-05 13:16:38'),
-(127, '2019-08-05 13:17:26'),
-(128, '2019-08-05 13:18:14'),
-(129, '2019-08-05 13:18:25');
+(130, '2019-08-10 04:23:09'),
+(131, '2019-08-15 09:55:09'),
+(132, '2019-08-15 12:35:29'),
+(133, '2019-08-16 08:05:59'),
+(134, '2019-08-18 10:51:06');
 
 -- --------------------------------------------------------
 
@@ -592,18 +487,32 @@ CREATE TABLE IF NOT EXISTS `panierdetails` (
   `articleID` int(11) NOT NULL,
   `quantite` int(11) NOT NULL DEFAULT '1',
   `dateAjoute` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `couleur` varchar(100) DEFAULT 'N/A',
   PRIMARY KEY (`panierID`,`articleID`),
   KEY `fk_articleID_panierdetails` (`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `panierdetails`
+-- Table structure for table `statistiques`
 --
 
-INSERT INTO `panierdetails` (`panierID`, `articleID`, `quantite`, `dateAjoute`) VALUES
-(7, 27, 1, '2019-08-06 00:30:25'),
-(7, 31, 10, '2019-08-05 23:41:43'),
-(7, 32, 1, '2019-08-06 00:30:28');
+DROP TABLE IF EXISTS `statistiques`;
+CREATE TABLE IF NOT EXISTS `statistiques` (
+  `valeur` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(100) DEFAULT NULL,
+  `dateStat` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`valeur`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `statistiques`
+--
+
+INSERT INTO `statistiques` (`valeur`, `type`, `dateStat`) VALUES
+(1, 'visite', '2019-08-18 08:29:36'),
+(2, 'visite', '2019-08-19 08:29:36');
 
 --
 -- Constraints for dumped tables
@@ -614,6 +523,26 @@ INSERT INTO `panierdetails` (`panierID`, `articleID`, `quantite`, `dateAjoute`) 
 --
 ALTER TABLE `client`
   ADD CONSTRAINT `fk_panierID_client` FOREIGN KEY (`panierID`) REFERENCES `panier` (`panierID`);
+
+--
+-- Constraints for table `commande`
+--
+ALTER TABLE `commande`
+  ADD CONSTRAINT `fk_clientID_commande` FOREIGN KEY (`clientID`) REFERENCES `client` (`clientID`);
+
+--
+-- Constraints for table `commandedetails`
+--
+ALTER TABLE `commandedetails`
+  ADD CONSTRAINT `fk_articleId_commandedetails` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`),
+  ADD CONSTRAINT `fk_commandeID_commandedetails` FOREIGN KEY (`commandeID`) REFERENCES `commande` (`commandeID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `commentaire`
+--
+ALTER TABLE `commentaire`
+  ADD CONSTRAINT `fk_articleID_commentaire` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_clientID_commentaire` FOREIGN KEY (`clientID`) REFERENCES `client` (`clientID`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `couleurarticle`
@@ -629,11 +558,16 @@ ALTER TABLE `coupondetails`
   ADD CONSTRAINT `fk_couponID_coupondetails` FOREIGN KEY (`couponID`) REFERENCES `coupon` (`couponID`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `imagearticle`
+--
+ALTER TABLE `imagearticle`
+  ADD CONSTRAINT `fk_articleID_imagearticle` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `panierdetails`
 --
 ALTER TABLE `panierdetails`
-  ADD CONSTRAINT `fk_articleID_panierdetails` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`),
-  ADD CONSTRAINT `fk_panierID_panierdetails` FOREIGN KEY (`panierID`) REFERENCES `panier` (`panierID`);
+  ADD CONSTRAINT `fk_articleID_panierdetails` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
