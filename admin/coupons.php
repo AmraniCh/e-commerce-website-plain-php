@@ -296,60 +296,8 @@
               <div class="modal-body">
                 <div class="container">
                   <div class="table-responsive">
-                   <table id="tb" class="table table-hover dt-pag-btrp">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>ID</th>
-                                <th>Image</th>
-                                <th>Nom</th>
-                                <th>Description</th>
-                                <th>Article Prix</th>
-                                <th>Article Taux Remise</th>
-                                <th>Article Prix Remise</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php
+                   <table id="dt_articles" class="table table-hover dt-pag-btrp">
 
-                            $article = new Article();
-                            $query = $article->AfficherArticles();
-                            if($query != null):
-
-                                while($row = $query->fetch_assoc()){
-                                    $articleImage = $article->ImageArticle($row['articleID']);
-                                    
-                                    if($row['remiseDisponible'] == false):
-                                        $tauxRemise = "N/A";
-                                        $articlePrixRemise = "N/A";
-                                    else:
-                                        $tauxRemise = $row['tauxRemise'];
-                                        $articlePrixRemise = $row['articlePrixRemise'];
-                                    endif;
-                                    
-                                    
-                                    echo '<tr>';
-                                    echo '<td><div class="form-group override-margin">
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input name="cpnArtFilter" data-id="'.$row['articleID'].'" type="checkbox" class="form-check-input override-position">
-                                            </label>
-                                        </div>
-                                    </div></td>';
-                                    echo '<td data-id="'.$row['articleID'].'">'.$row['articleID'].'</td>';
-                                    echo '<td><img class="img-responsive" src="'.$articleImage.'"></td>';
-                                    echo '<td data-id="'.$row['articleNom'].'">'.$row['articleNom'].'</td>';
-                                    echo '<td data-id="'.$row['articleDescription'].'">'.$row['articleDescription'].'</td>';
-                                    echo '<td data-id="'.$row['articlePrix'].'">'.$row['articlePrix'].'</td>';
-                                    echo '<td data-id="'.$tauxRemise.'">'.$tauxRemise.'</td>';
-                                    echo '<td data-id="'.$articlePrixRemise.'">'.$articlePrixRemise.'</td>';
-                                    echo '</tr>';
-                                }
-
-
-                            endif;
-                        ?>
-                        </tbody>
                      </table>
                     </div>
                 </div>
@@ -370,7 +318,7 @@
                 
                 dataTableInitialize();
                 SubstructCategories();
-                            
+                 
                 var cpnModalPassingData = [];
                 var cpnData = [];
                 var cpnDataFilterCat = [];
@@ -457,6 +405,7 @@
                             dataType: "JSON",
                             async: false,
                             success: function(data){
+            
                                 if(data != null)
                                 {
                                     $("#form_ajtCpn")[0].reset();
@@ -492,11 +441,19 @@
 
                         cpnData.push(cpnModalPassingData[0], nomCpn, codeCpn, valideCpn, tauxCpn, cpnDb, cpnDf);
 
-                        var filterData = (cpnDataFilterCat.length > 0) ? cpnDataFilterCat : (cpnDataFilterArt.length > 0) ? cpnDataFilterArt : "tous";
-                        
-                        if(cpnDataFilterCat.length === 0 && cpnDataFilterArt.length === 0) // checked but no data selected
+                        if(cpnDataFilterCat.length > 0){
+                            filterData = cpnDataFilterCat;
+                            filter = "categories";
+                        }
+                        else if(cpnDataFilterArt.length > 0){
+                            filterData = cpnDataFilterArt;
+                            filter = "articles";
+                        }
+                        else{
+                            filterData = "tous";
                             filter = "tous";
-                    
+                        }
+                        
                         $.ajax({
                             url: "../public-includes/ajax_queries",
                             method: "POST",
@@ -567,6 +524,11 @@
 
                     switch(id)
                     {
+                        case "tous":
+                            cpnDataFilterArt.length = 0;
+                            cpnDataFilterCat.length = 0;
+                            resetFilterArt();
+                            resetFilterCat();break;
                         case "categories":
                             cpnDataFilterArt.length = 0;
                             resetFilterArt();
@@ -654,7 +616,7 @@
 
                 $(document).on("click", "button[data-target='#mdfCpnMDL']", function(){
 
-                    if(cpnModalPassingData[4] == 0)
+                    if(cpnModalPassingData[4] === "false")
                         var bool = false;
                     else
                         var bool = true;
@@ -673,9 +635,15 @@
                             cpnID: cpnModalPassingData[0]
                         },
                         function(data){
-                            $("input[name='cpnFilter'][data-id='"+data+"']").prop("checked", true);
+                            $("input[name='cpnFilter'][data-id='"+data.filter+"']").prop("checked", true);
+                            if(data.filter == "articles")
+                            {
+                                $.each(data.data, function(index, element){
+                                    cpnDataFilterArt.push(data.data[index]);
+                                });
+                            }
                         },
-                        "JSON"
+                        "json"
                     );
 
                 });
@@ -754,14 +722,15 @@
                     else
                         $(this).text(cats_array[0]);
                     
-                    $(tds).css("width", "10%");
                 });
             }
             
             // custom dataTable configurations
             function dataTableInitialize(){
+                
                 $('#dt_coupons').dataTable({
                     destroy: true,
+                    "order":[[10, "desc"]],
                     "pagingType": "simple_numbers",
                     "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Tous"] ],
                     "language": {
@@ -797,7 +766,7 @@
                         { title: 'Taux' },
                         { title: 'Appliqué Au' },
                         { title: 'Date Début' },
-                        { title: 'Date Fin' },
+                        { title: 'Date D\'expiration' },
                         { title: 'Date D\'ajoute '},
                       ],
                     ajax: {
@@ -839,6 +808,7 @@
                                 break;
                                 case 7: 
                                     tds[i].setAttribute("data-src", "appliquerAu"); 
+                                    $(tds[i]).css("width", "10%"); 
                                 break;
                                 case 8: 
                                     tds[i].setAttribute("data-src", "dateDbCpn");
@@ -853,6 +823,65 @@
                         }
                     }
                 });
+                
+                $('#dt_articles').dataTable({
+                    destroy: true,
+                    "order":[[1, "desc"]],
+                    "pagingType": "simple_numbers",
+                    "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Tous"] ],
+                    "language": {
+                        "sProcessing": "Traitement en cours ...",
+                        "sLengthMenu": "Afficher _MENU_ lignes",
+                        "sZeroRecords": "Aucun résultat trouvé",
+                        "sEmptyTable": "Aucune donnée disponible",
+                        "sInfo": "Lignes _START_ à _END_ sur _TOTAL_",
+                        "sInfoEmpty": "Aucune ligne affichée",
+                        "sInfoFiltered": "(Filtrer un maximum de_MAX_)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Chercher:",
+                        "sUrl": "",
+                        "sInfoThousands": ",",
+                        "oPaginate": {
+                            "sFirst": "Premier",
+                            "sLast": "Dernier",
+                            "sNext": "Suivant",
+                            "sPrevious": "Précédent"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Trier par ordre croissant",
+                            "sSortDescending": ": Trier par ordre décroissant"
+                        }
+                    },
+                    columns: [
+                        { title: '' },
+                        { title: 'ID' },
+                        { title: 'Image' },
+                        { title: 'Nom' },
+                        { title: 'Description' },
+                        { title: 'Prix' },
+                        { title: 'Taux Remise' },
+                        { title: 'Prix Remise' }
+                      ],
+                    ajax: {
+                        url: "../public-includes/ajax_queries",
+                        data: {
+                            function: "AfficherArticlesCoupon"
+                        },
+                        method: "post",
+                        dataType: "json",
+                        async: false
+                    },
+                    'createdRow': function( row, data, dataIndex ) {
+                        var tds = $(row).children("td");
+                        for(let i = 0; i < tds.length ; i++){
+                            switch(i){ 
+                                case 4: 
+                                    tds[i].setAttribute("data-src", "description");
+                            }
+                        }
+                    }
+                });
+                
             };
                         
         </script>

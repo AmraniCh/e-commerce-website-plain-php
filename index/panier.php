@@ -67,7 +67,7 @@
 							</div>
 							<div class="line" style="border-top: 1px solid #ddd"></div>
 							<div class="text-center"><span id="nbrArticles">Article(s)</span></div>
-							<form action="" method="post">
+							<form id="checkout_form" action="" method="post">
 								<div class="checkout-cnt">
 									<button type="submit" name="submit" id="checkoutBtn" class="btn btn-dark-red etapes-btn">Étape Suivant<i class="fa fa-chevron-circle-right"></i></button>
 								</div>
@@ -80,12 +80,11 @@
 		</div>
 
 		
-		<?php include_once "includes/loading.html" ?>
-		
 		<script>
             $(function(){
 				
 				var cpnBtnClick = false;
+				var paramValue;
 				
 				RemplirPagePanier();
 				
@@ -107,18 +106,10 @@
 						}	
 					});
 				}());
-				
-				(function SubstructArtilceDesc(){
-					var descriptions = $(".produit-description > span");
-					descriptions.each(function(){
-						var desc = $(this).html();
-						$(this).html(desc.substr(0, 120)+" ...");
-					});
-				}());
 			
 				$(document).on("click", ".product-panier", function() {
 					var articleID = $(this).attr("id");
-					$(location).attr("href", "produit.php?id="+articleID);
+					$(location).attr("href", "produit.php?produit="+paramValue);
 				});
 
 				$(document).on("click", ".btn-delete-panier", function(e){	
@@ -126,7 +117,10 @@
 					var articleID = $(this).attr("id");
 					$.post(
 						'../public-includes/ajax_queries',
-						{ function: "SupprimerAuPanier", articleID: articleID },
+						{ 
+							function: "SupprimerAuPanier", 
+							articleID: articleID 
+						},
 						function(data){
 							if (data != false) {
 								RemplirPagePanier();
@@ -145,54 +139,61 @@
 				$(document).on("click",".qty-up, .qty-down",function(e){
 					e.stopPropagation();
 
-					input = $(this).parent().find(".qty-article");
-
+					var input = $(this).parent().find(".qty-article");
+					
 					if($(this).hasClass("qty-up")){
 						var oldValue = parseInt(input.val());
-						if(oldValue < 20)
-							input.val(oldValue + 1);
+						input.val(oldValue + 1);
 					}
 					else{
-						input = $(this).parent().find(".qty-article");
 						var oldValue = parseInt(input.val());
 						if(oldValue > 1)
 							input.val(oldValue - 1);
 					}
 
-					$(".qty-article").trigger("input");
+					
+					$(input).trigger("input");
 				});
 
-				$(document).on("input", ".qty-article", function(){
+				$(document).on("input", ".qty-article", function(event){
 					var articleID = $(this).attr("id");
-					var qty = parseInt($(this).val());
-
-					if(qty > 0 && qty < 20){
-						$.ajax({
-							url: '../public-includes/ajax_queries',
-							method: 'POST',
-							data: {
-								function: "IncrementArticleQtyPanier",
-								articleID: articleID,
-								qty: qty
-							},
-							dataType: "JSON",
-							async: false,
-							beforeSend: function(){
-								$(this).prop("disabled",true);
-							},
-							success: function(data){
-								if(data != null)
-								{
-									RemplirCheckoutInfo();
+					var qty = parseInt($(event.target).val());
+				
+					$.ajax({
+						url: '../public-includes/ajax_queries',
+						method: 'POST',
+						data: {
+							function: "IncrementArticleQtyPanier",
+							articleID: articleID,
+							qty: qty
+						},
+						dataType: "JSON",
+						async: false,
+						beforeSend: function(){
+							$('#overlayAjaxLoading').show();
+						},
+						success: function(data){
+							console.log(data);
+							if(data != true && data != null){
+								$(event.target).val(data);
+								if($("#overlayAjaxError").css("display") == "none"){
+									$("#overlayAjaxError").show();
+									$("#ajaxErrorText").text("Il n'y a pas assez de produits en stock.");
+									hideErrorDiv();
 								}
 							}
-						});
-						
-						if($("#appliquerCpnBtn").data("clicked"))
-							$("#appliquerCpnBtn").trigger("click");
-					}
+						},
+						complete: function(){
+							setTimeout(function () {
+								$('#overlayAjaxLoading').hide();
+								RemplirCheckoutInfo();
+								if($("#appliquerCpnBtn").data("clicked"))
+									$("#appliquerCpnBtn").trigger("click");
+							}, 200);
+						}
+					});
 				});
-				
+			
 				$("#appliquerCpnBtn").click(function(){
 					
 					$(this).data("clicked", true);
@@ -217,10 +218,8 @@
 									cpnCode: cpnCode,
 								},
 								beforeSend: function(){
-
 									$("#cpnCode").attr("disabled", true);
 									$(this).attr("disabled", true);
-
 								},
 								success: function(data){
 
@@ -257,8 +256,8 @@
 						},
 						async: false,
 						success: function(data){
-							//alert(data);
 							if(data != null){
+								$(".product-container").empty();
 								$("#subTotalPrix").text(data[data.length - 2]+ " DHS");
 								$("#prixPromotion").text(data[data.length - 3]+ " DHS");
 								$("#totalPrix").text(data[data.length - 4]+ " DHS");
@@ -282,8 +281,8 @@
 							},
 							success: function(data){
 								if(data != null){
-									AppliquerCoupon(data);
 									$("#cpnCode").val(data);
+									AppliquerCoupon(data);
 								}
 							}
 						});
@@ -309,22 +308,21 @@
 				}
 
 				function LoadPagePanierData(data, ele){	
-					if(data != null)
+					for(var i=0;i<data.length - 4;i++)  
 					{
-						ele.empty();
-						for(var i=0;i<data.length - 4;i++)  
-						{							
-							if(data[i].remiseDisponible == true)
-								ele.append("<div id='" + data[i].articleID +"' class='product product-panier'><div class='product-body'><div class='product-header'><div class='produit-image'><img src='"+ data[i].imageArticle +"'></div><div class='product-name'><a href='produit.php?id="+ data[i].articleID +"'>"+ data[i].articleNom +"</a></div></div><div class='produit-description'><span>" + data[i].articleDescription + "</span></div><div class='product-price'><span>"+data[i].articlePrixRemise+" DHS</span><del class='product-old-price'> "+ data[i].articlePrix +" DHS</del></div><div class='delete-favori'><button id='" + data[i].articleID +"' type='button' class='btn-delete-panier'><i class='fa fa-times-circle'></i></button></div><div class='quantite-ctn'><div class='input-number'><input id='"+ data[i].articleID +"' class='qty-article' type='number' min='1' max='20' value='"+data[i].quantite+"'><span class='qty-up'>+</span><span class='qty-down'>-</span></div></div></div></div>");
-							else
-								ele.append("<div id='" + data[i].articleID +"' class='product product-panier'><div class='product-body'><div class='product-header'><div class='produit-image'><img src='"+ data[i].imageArticle +"'></div><div class='product-name'><a href='produit.php?id="+ data[i].articleID +"'>"+ data[i].articleNom +"</a></div></div><div class='produit-description'><span>" + data[i].articleDescription + "</span></div><div class='product-price'><span>"+ data[i].articlePrix +" DHS</span></div><div class='delete-favori'><button id='" + data[i].articleID +"' type='button' class='btn-delete-panier'><i class='fa fa-times-circle'></i></button></div><div class='quantite-ctn'><div class='input-number'><input id='"+ data[i].articleID +"' class='qty-article' type='number' min='1' max='20' value='"+data[i].quantite+"'><span class='qty-up'>+</span><span class='qty-down'>-</span></div></div></div></div>");
+						paramValue = data[i].param;
+						if(data[i].remiseDisponible == true)
+							ele.append("<div id='" + data[i].articleID +"' class='product product-panier'><div class='product-body'><div class='product-header'><div class='produit-image'><img src='"+ data[i].imageArticle +"'></div><div class='product-name'><a href='produit.php?id="+ data[i].articleID +"'>"+ data[i].articleNom +"</a></div></div><div class='produit-description'><span>" + data[i].articleDescription + "</span></div><div class='product-price'><span>"+data[i].articlePrixRemise+" DHS</span><del class='product-old-price'> "+ data[i].articlePrix +" DHS</del></div><div class='delete-favori'><button id='" + data[i].articleID +"' type='button' class='btn-delete-panier'><i class='fa fa-times-circle'></i></button></div><div class='quantite-ctn'><div class='input-number'><input id='"+ data[i].articleID +"' class='qty-article' type='number' min='1' max='20' value='"+data[i].quantite+"'><span class='qty-up'>+</span><span class='qty-down'>-</span></div></div></div></div>");
+						else
+							ele.append("<div id='" + data[i].articleID +"' class='product product-panier'><div class='product-body'><div class='product-header'><div class='produit-image'><img src='"+ data[i].imageArticle +"'></div><div class='product-name'><a href='produit.php?id="+ data[i].articleID +"'>"+ data[i].articleNom +"</a></div></div><div class='produit-description'><span>" + data[i].articleDescription + "</span></div><div class='product-price'><span>"+ data[i].articlePrix +" DHS</span></div><div class='delete-favori'><button id='" + data[i].articleID +"' type='button' class='btn-delete-panier'><i class='fa fa-times-circle'></i></button></div><div class='quantite-ctn'><div class='input-number'><input id='"+ data[i].articleID +"' class='qty-article' type='number' min='1' max='20' value='"+data[i].quantite+"'><span class='qty-up'>+</span><span class='qty-down'>-</span></div></div></div></div>");
 
-						}
 					}
 				}
 				
+				
 			});
-			
+
+				
 				
 		</script>
 			

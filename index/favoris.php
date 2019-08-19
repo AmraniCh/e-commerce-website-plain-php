@@ -95,8 +95,7 @@
 		</div>
 
 		<?php include_once "includes/newsletter.php" ?>
-		
-		<?php include_once "includes/loading.html" ?>
+	
 		
 		<script>
             
@@ -126,7 +125,7 @@
 					url: "../public-includes/ajax_queries",
 					method: "POST",
 					data: {
-						function: "SupprimerAuxFavoris",
+						function: "SupprimerAuFavoris",
 						articleID: articleID
 					},
 					async: false,

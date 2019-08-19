@@ -14,9 +14,15 @@
             {
                 $categorie = new Categorie();
                 $articleID = $_GET['edit'];
-                $couleurs = CouleursArticle($articleID);
-                $result = ArticleParID($articleID);
-                while($row = $result->fetch_assoc())
+                
+                $article = new Article();
+                $couleurs = $article->CouleursArticle($articleID);
+                
+                $query = $con->query("SELECT *
+							FROM article 
+							WHERE articleID = $articleID");
+                
+                while($row = $query->fetch_assoc())
                 {
                     $articleNom = $row['articleNom'];
                     $articleDescription = $row['articleDescription'];
@@ -30,7 +36,9 @@
                     $tauxRemise = $row['tauxRemise'];
                     $articlePrixRemise = $row['articlePrixRemise'];
                 }
-                $images = ImagesArticle($articleID);
+                
+                
+
             }                                       
                                                     
 
@@ -225,23 +233,36 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                         <div class="photos-container" style="max-width:100%;width:100%">
+                                         <div class="photos-container">
                                              <label style="display:block">Ajouter des photos pour le produit ici :</label>
-                                             <div class="add-photos-canvas col-xs-6" style="display:inline-block">
+                                             <div class="add-photos-canvas col-xs-6">
                                                  <div class="form-group">
                                                      <label for="photoPr">
-                                                         <img src="plus.png" class="img-responsive img-upload" style="cursor:pointer;border-radius:10px">
+                                                         <img src="plus.png" class="img-responsive img-upload">
                                                      </label>
-                                                     <input id="photoPr" name="files[]" type="file" multiple style="display:none">
+                                                     <input id="photoPr" name="files[]" type="file" multiple>
                                                  </div>
                                              </div>
+                                             <form id="images_form" action="" method="post">
                                              <?php 
                                                 if(isset($_GET['edit'])){
-                                                    while($rows = $images->fetch_row()){
-                                                        echo '<div class="photo-produit col-xs-6 col-sm-6 col-md-4 col-lg-6" style="background-image: url(../uploaded/articles-images/'.$rows[0].');background-size: contain;background-repeat: no-repeat;background-position:center"></div>';
+                                                    
+                                                    $query = $con->query("SELECT * 
+                                                                        FROM imagearticle 
+                                                                        WHERE articleID = $articleID");
+                                                    
+                                                    while($row = $query->fetch_row()){
+                                                        
+                                                        if($row[2] == 1)
+                                                            $class = 'class="photo-produit col-xs-6 col-sm-6 col-md-4 col-lg-6 selected-image"';
+                                                        else
+                                                            $class = 'class="photo-produit col-xs-6 col-sm-6 col-md-4 col-lg-6"';
+                                                        
+                                                        echo '<div '.$class.' style="background-image: url(../uploaded/articles-images/'.$row[0].');background-size: contain;background-repeat: no-repeat;background-position:center"><div class="supp-image"><button type="button" class="ovr-button-styles supp-image-btn"><i class="fa fa-times-circle"></i></button></div></div>';
                                                     }
                                                 }
                                              ?>
+                                             </form>
                                          </div>
                                      </div>
                                  </div>
@@ -257,6 +278,7 @@
                                 </div>
                             </div>
                             <input type="hidden" id="articleID" value="<?php if(isset($_GET['edit'])) echo $articleID ?>">
+                            <?php echo "<input type='hidden' id='HSV' value='".$_SESSION['admin']."'/>" ?>
                           </form>
                         </div>
                       </div>
@@ -275,10 +297,6 @@
               </div>
               <div class="modal-body">
                 <h5>Produit ajouté avec success !</h5>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-light btn-red" data-dismiss="modal"><i class="fas fa-arrow-circle-left"></i>Ok</button>
-
               </div>
             </div>
           </div>
@@ -306,6 +324,34 @@
         
            <script>
             $(document).ready(function(){
+                
+                $(document).on("click", ".photo-produit", function(){
+                    $(".selected-image").each(function(){
+                       $(this).removeClass("selected-image"); 
+                    });
+          
+                    $(this).addClass("selected-image"); 
+                });
+                
+                $(document).on("click", ".supp-image-btn", function(){
+                   
+                    var imageNom = image_nom($(this).closest(".photo-produit"));    
+                    
+                    var $this = $(this);
+                    $.post(
+                        "../public-includes/ajax_queries",
+                        { 
+                            function: "SupprimerImageArticle",
+                            imageNom: imageNom
+                        },
+                        function(data){
+                            $this.closest(".photo-produit").remove();
+                        },
+                        "JSON"
+                    );
+                    
+                });
+
                 CalculerPrixFinal();
                 
                 function CalculerPrixInitial(){
@@ -319,8 +365,7 @@
                     return null;
                 }
                 
-                function CalculerPrixFinal()
-                {
+                function CalculerPrixFinal(){
                     if($("input[name='radioRemise']:checked").attr("id") == "radioRemOui"){
                         $("#taux").prop("disabled",false); 
                         $("#prixFinal").val(CalculerPrixInitial());
@@ -336,10 +381,11 @@
                     CalculerPrixFinal();
                 });
                 
-               $(document).on("change","#photoPr",function(){
+                $(document).on("change", "#photoPr", function(){
                    var formData = new FormData();
                    
                    [].forEach.call(this.files, function (file) {
+                       console.log(file)
                         formData.append('files[]', file);
                     });
                    
@@ -352,11 +398,11 @@
                         processData: false,
                         success: function(data){
                             $(".photos-container").append(data);
+                            $(".photo-produit:first").addClass("selected-image");
                         }
                    });
                });
                 
-
                 $(document).on("click","#btnAjouter, #btnModifier",function(e){
                     e.preventDefault();
                     
@@ -383,32 +429,91 @@
                     
                     var couleurs = $("#couleurPr").val();
                     
+                    var selected_image_name = image_nom($(".selected-image"));
+                    
                     if($(this).attr("id") == "btnAjouter"){
-                 
+                    
                         $.ajax({
-                           url: '../public-includes/ajax_queries.php',
+                           url: '../public-includes/ajax_queries',
                             method: "POST",
-                            data: { function: "AjouterArtcile", couleurs: couleurs, articleNom: nomPr, articlePrix: prixPr, articlePrixRemise: prixFinal, artcileDescription: descPr, articleMarque: marquePr, tauxRemise: taux, remiseDisponible: remiseDisponible, unitesEnStock: unitesStock, articleDisponible: articleDisponible, categorieID: categorieID},
+                            dataType: "JSON",
+                            data: { 
+                                function: "AjouterArticle", 
+                                imagePrincipal: selected_image_name,
+                                couleurs: couleurs, 
+                                articleNom: nomPr, 
+                                articlePrix: prixPr, 
+                                articlePrixRemise: prixFinal, 
+                                artcileDescription: descPr, 
+                                articleMarque: marquePr, 
+                                tauxRemise: taux, 
+                                remiseDisponible: remiseDisponible, 
+                                unitesEnStock: unitesStock, 
+                                articleDisponible: articleDisponible, 
+                                categorieID: categorieID
+                            },
                             success: function(data){
-                                (data == true) ? $('#messageAjoute').modal('toggle') : null;
+                                alert(data);
+                                if(data != null){
+                                    $('#messageAjoute').modal('toggle');
+                                    var admin  = $("#HSV").val();
+                                    setTimeout(function(){
+                                       $(location).attr("href", "produits.php?admin="+admin); 
+                                    }, 800);
+                                }
                             }
                         });
                     }
                     
                     if($(this).attr("id") == "btnModifier"){
-                  
+                        
+                        var images_names = [];
+                        
+                        $(".photo-produit").each(function(){
+                            images_names.push(image_nom($(this)));
+                        });
+                        
+                        console.log(images_names);
+                        
                         var articleID = $("#articleID").val();
+                        
                         $.ajax({
                            url: '../public-includes/ajax_queries.php',
                             method: "POST",
-                            data: { function: "ModifierArticle", couleurs: couleurs, articleID: articleID, articleNom: nomPr, articlePrix: prixPr, articlePrixRemise: prixFinal, artcileDescription: descPr, articleMarque: marquePr, tauxRemise: taux, remiseDisponible: remiseDisponible, unitesEnStock: unitesStock, articleDisponible: articleDisponible, categorieID: categorieID},
+                            dataType: "JSON",
+                            data: { 
+                                function: "ModifierArticle", 
+                                imagePrincipal: selected_image_name,
+                                imagesNoms: images_names,
+                                couleurs: couleurs, 
+                                articleID: articleID, 
+                                articleNom: nomPr, 
+                                articlePrix: prixPr, 
+                                articlePrixRemise: prixFinal,
+                                artcileDescription: descPr,
+                                articleMarque: marquePr,
+                                tauxRemise: taux,
+                                remiseDisponible: remiseDisponible,
+                                unitesEnStock: unitesStock,
+                                articleDisponible: articleDisponible,
+                                categorieID: categorieID
+                            },
                             success: function(data){
-                                alert(data);
+
                                 (data == true) ? $('#messageModification').modal('toggle') : null;
                             }
                         });
                     }
+                    
                 });
+                
+                function image_nom(ele){
+                    var array = ele.css("background-image").split("/");
+                    var filter = array[array.length - 1];
+                    var name = filter.substr(0, filter.length - 2);
+
+                    return name;
+                }
             });
         </script>
                     

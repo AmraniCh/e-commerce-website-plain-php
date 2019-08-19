@@ -6,6 +6,8 @@
         $nom = $row['nom'];
         $role = $row['role'];
         
+
+        
   ?>
     <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
@@ -14,7 +16,7 @@
             <div class="nav-link">
               <div class="user-wrapper">
                 <div class="profile-image">
-                  <img src="images/faces/face1.jpg" alt="profile image">
+                  <img src="images/boss.png" alt="profile image">
                 </div>
                 <div class="text-wrapper">
                   <p class="profile-name"><?php echo $prenom.' '.$nom ?></p>
@@ -24,9 +26,11 @@
                   </div>
                 </div>
               </div>
-              <button class="btn btn-red btn-block">Nouveau Produit
-                <i class="mdi mdi-plus"></i>
-              </button>
+              <a class="anchor-btn" href="produit.php?admin=<?php echo $_SESSION['admin']?>">
+                <button class="btn btn-red btn-block">Nouveau Produit
+                  <i class="mdi mdi-plus"></i>
+                </button>
+              </a>
             </div>
           </li>
           <li class="nav-item">
@@ -61,7 +65,7 @@
           <li class="nav-item">
             <a class="nav-link" href="commandes.php?admin=<?php echo $_SESSION['admin'] ?>">
               <i class="menu-icon fas fa-truck"></i>
-              <span class="menu-title">Commandes</span>
+              <span class="menu-title">Commandes<span class="not-commandes-count"></span></span>
             </a>
           </li>
           <li class="nav-item">
@@ -71,13 +75,19 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="commentaires.php?admin=<?php echo $_SESSION['admin'] ?>">
+              <i class="mdi-menu-icon mdi mdi-comment-processing"></i>
+              <span class="menu-title">Commentraies<span class="not-comment-count"></span></span>
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="coupons.php?admin=<?php echo $_SESSION['admin'] ?>">
               <i class="menu-icon fas fa-percent"></i>
               <span class="menu-title">Coupons</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/icons/font-awesome.html">
+            <a class="nav-link" href="livraisons.php?admin=<?php echo $_SESSION['admin'] ?>">
               <i class="menu-icon fas fa-history"></i>
               <span class="menu-title">Historique de Livraison</span>
             </a>

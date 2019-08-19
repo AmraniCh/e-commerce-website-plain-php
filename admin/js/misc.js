@@ -50,8 +50,9 @@
     $(".form-check label,.form-radio label").append('<i class="input-helper"></i>');
 
 
-    $(".purchace-popup .popup-dismiss").on("click",function(){
-      $(".purchace-popup").slideToggle();
+    $(document).on("click", ".purchace-popup .popup-dismiss", function(){
+      var popup = $(this).closest("div[class*='purchace-popup']");
+      popup.slideToggle();
     });
   });
 })(jQuery);

@@ -184,10 +184,10 @@ textarea.input {
 /*-- Select input --*/
 
 .input-select {
-  padding: 0px 15px;
-  background: #FFF;
-  border: 1px solid #E4E7ED;
+  width: 25%;
   height: 40px;
+  display: inline-block;
+  border-radius: 40px 0 0 40px;
 }
 
 /*-- checkbox & radio input --*/
@@ -472,8 +472,7 @@ textarea.input {
 }
 
 .header-search form .input-select {
-  margin-right: -4px;
-  border-radius: 40px 0px 0px 40px;
+  margin-right: -5px;
 }
 
 .header-search form .input {
@@ -545,22 +544,20 @@ textarea.input {
 
 .cart-dropdown {
   border: 1px solid #eee;
-  box-shadow: 0 0 2px .4px #eee;
   position: absolute;
   width: 300px;
   background: #FFF;
   z-index: 9999;
   right: 0;
   display: none;
-  border-radius: 10px
+  border-radius: 10px;
+  top: 56px
 }
 
 .cart-btns{
   position: relative;
+  width: 100%
 
-width: 100%;
-
-display: inline-block;
 }
 
 .dropdown.open>.cart-dropdown {
@@ -592,6 +589,7 @@ display: inline-block;
 
 .cart-dropdown .cart-list .product-widget .product-body .product-price {
   color: #2B2D42;
+  text-align: left
 }
 
 .cart-dropdown .cart-btns>a {
@@ -610,7 +608,12 @@ display: inline-block;
 .cart-dropdown .cart-btns>a:first-child {
   background-color: #1e1f29;
   width: 100%;
-  border-radius: 0 0 10px 10px
+  border-radius: 0 0 9px 9px;
+  margin: 0 0 -1px -1px
+}
+
+#header > div > div > div.col-md-3.clearfix > div > div.dropdown.fav-toggle > div > div.cart-btns > a{
+  margin-left: .6px; 
 }
 
 .cart-dropdown .cart-btns>a:hover {
@@ -619,8 +622,8 @@ display: inline-block;
 
 .cart-dropdown .cart-summary {
   border-top: 1px solid #E4E7ED;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 /*=========================================================
@@ -862,7 +865,7 @@ display: inline-block;
 
 .product {
   position: relative;
-  border: .5px solid #eee;
+  border: 1px solid #eee;
   border-radius: 2px;
   transition: 0.2s all;
   margin-bottom: 25px;
@@ -1043,7 +1046,7 @@ display: inline-block;
   transform: translateY(100%);
 }
 
-.product .add-to-cart .add-to-cart-btn {
+.add-to-cart-btn {
   position: relative;
   border: 2px solid transparent;
   height: 40px;
@@ -1057,7 +1060,7 @@ display: inline-block;
   transition: 0.2s all;
 }
 
-.product .add-to-cart .add-to-cart-btn>i {
+.add-to-cart-btn>i {
   position: absolute;
   left: 0;
   top: 0;
@@ -1069,7 +1072,7 @@ display: inline-block;
   visibility: hidden;
 }
 
-.product .add-to-cart .add-to-cart-btn:hover {
+.add-to-cart-btn:hover {
   text-align: center;
   line-height: 80%;
   background-color: #FFF;
@@ -1077,9 +1080,13 @@ display: inline-block;
   border-color: #D10024;
 }
 
-.product .add-to-cart .add-to-cart-btn:hover>i {
+.add-to-cart-btn:hover>i {
   opacity: 1;
   visibility: visible;
+}
+
+.product-btns{
+  margin-bottom: 15px;
 }
 
 /*----------------------------*\
@@ -1119,6 +1126,7 @@ display: inline-block;
 .product-widget .product-body .product-name {
   text-transform: uppercase;
   font-size: 12px;
+  text-align: left
 }
 
 .product-widget .product-body .product-name>a {
@@ -1148,15 +1156,8 @@ display: inline-block;
 .product-widget .delete {
   position: absolute;
   top: 0;
-  left: 0;
-  height: 14px;
-  width: 14px;
-  text-align: center;
-  font-size: 10px;
-  padding: 0;
-  background: #1e1f29;
-  border: none;
-  color: #FFF;
+  right: 0;
+  font-size: 125%
 }
 
 /*----------------------------*\
@@ -1520,7 +1521,7 @@ display: inline-block;
 
 .product-details .product-options {
   margin-top: 30px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .product-details .product-options label {
@@ -1539,7 +1540,7 @@ display: inline-block;
   margin-bottom: 30px;
 }
 
-.product-details .add-to-cart .add-to-cart-btn {
+.product-btns  .add-to-cart-btn {
   position: relative;
   border: 2px solid transparent;
   height: 40px;
@@ -1553,7 +1554,7 @@ display: inline-block;
   transition: 0.2s all;
 }
 
-.product-details .add-to-cart .add-to-cart-btn>i {
+.product-btns .add-to-cart-btn>i {
   position: absolute;
   left: 0;
   top: 0;
@@ -1565,19 +1566,19 @@ display: inline-block;
   visibility: hidden;
 }
 
-.product-details .add-to-cart .add-to-cart-btn:hover {
+.product-btns  .add-to-cart-btn:hover {
   background-color: #FFF;
   color: #D10024;
   border-color: #D10024;
   padding: 0px 30px 0px 50px;
 }
 
-.product-details .add-to-cart .add-to-cart-btn:hover>i {
+.product-btns .add-to-cart-btn:hover>i {
   opacity: 1;
   visibility: visible;
 }
 
-.product-details .add-to-cart .qty-label {
+.product-options .qty-label {
   display: inline-block;
   font-weight: 500;
   font-size: 12px;
@@ -1586,7 +1587,7 @@ display: inline-block;
   margin-bottom: 0px;
 }
 
-.product-details .add-to-cart .qty-label .input-number {
+.product-options .qty-label .input-number {
   width: 90px;
   display: inline-block;
 }

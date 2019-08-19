@@ -1,12 +1,12 @@
 
 	 
-	   <!-- FOOTER -->
+	   
 		<footer id="footer">
-			<!-- top footer -->
+			
 			<div class="section">
-				<!-- container -->
+				
 				<div class="container">
-					<!-- row -->
+					
 					<div class="row">
 						<div class="col-md-3 col-xs-6">
 							<div class="footer">
@@ -61,16 +61,16 @@
 							</div>
 						</div>
 					</div>
-					<!-- /row -->
+					
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /top footer -->
+			
 
-			<!-- bottom footer -->
+			
 			<div id="bottom-footer" class="section">
 				<div class="container">
-					<!-- row -->
+					
 					<div class="row">
 						<div class="col-md-12 text-center">
 							<ul class="footer-payments">
@@ -82,26 +82,43 @@
 								<li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
 							</ul>
 							<span class="copyright">
-								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+								
 								Copyright &copy;<script>document.write(new Date().getFullYear());</script> Tous les droits sont réservés
-							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+							
 							</span>
 						</div>
 					</div>
-						<!-- /row -->
+						
 				</div>
-				<!-- /container -->
+				
 			</div>
-			<!-- /bottom footer -->
+			
 		</footer>
-		<!-- /FOOTER -->
 		
-		<audio id="audio" style="display:none;">
-			<source src="img/Ambient_Game_Bubble_UI_1.mp3">
+		<div id="overlayAjaxLoading">
+			<div class="progstatContent">
+				<img src="img/5-1">
+			</div>
+		</div>
+		
+		<div id="overlayAjaxError">
+			<div class="error-text-ctr">
+				<span id="ajaxErrorText"></span>
+			</div>
+		</div>
+		
+		<div id="overlayLoadingPage">
+			<div class="progstatContent">
+				<img src="img/loading.svg">
+			</div>
+		</div>
+		
+		<audio id="popupSound">
+			<source src="assets/popup.mp3">
 		</audio>
 		
-		<!-- jQuery Plugins -->
 		<script src="js/bootstrap.min.js"></script>
+		<script src="js/validation.js"></script>
 		<script src="js/nouislider.min.js"></script>
 		<script src="js/jquery.zoom.min.js"></script>
 		
@@ -109,9 +126,6 @@
 			<script src="js/slick.min.js"></script>
 			<script src="js/main.js"></script>
 		</div>
-			
-	</body>
-</html>
 <?php
 	ob_end_flush();
 ?>

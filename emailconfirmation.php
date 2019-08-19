@@ -9,11 +9,12 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Se connecter</title>
+		<title>Confirmation adresse email</title>
 		<!-- Bootstrap -->
 		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
         <link href="index/css/main.css" rel="stylesheet" />		
-        <link href="index/css/mainstyle.css" rel="stylesheet" />		
+        <link href="index/css/mainstyle.css" rel="stylesheet" />	
+        <link href="index/css/animation.css" rel="stylesheet" />	
         <link href="index/css/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,9 +28,13 @@
   <body>
     <?php
     
-      // email confirmation code here
-
-    if(isset($_SESSION['clientUserName'])){
+        if(!isset($_SESSION['clientUserName']) && empty($_SESSION['clientUserName'])):
+          
+          header("Location: errors/400.php");
+          exit();
+    
+        endif;
+      
       
         $username = $_SESSION['clientUserName'];
         
@@ -37,7 +42,6 @@
         $result = $con->query($sql);
       
         if ($result->num_rows > 0) {
-          // output data of each row
           while($row = $result->fetch_assoc()) {
             $code = $row["codeEmail"];
             $clientID = $row["clientID"];
@@ -92,10 +96,10 @@
                     </div>
                     <div class="form-group text-center" style="margin-top:1.8rem!important">
                       <input type="submit" name="submitCfr" value="Confirmer mon email" class="btn btn-dark-red submit-btn btn-block">
-                      <button class="btn btn-primary submit-btn btn-block" type="submit" name="submitPsm" style="background-color:#0083ff!important">Pas maintenant</button>
+                      <button class="btn btn-primary submit-btn btn-block lg-rg-btn-primary" type="submit" name="submitPsm">Pas maintenant</button>
                     </div>
                     <div class="form-group">
-                      <button class="btn btn-block g-login" type="button">
+                      <button class="btn btn-block g-login msg-toggle" type="button">
                         <i class="mdi mdi-comment-question"></i>Je n'ai pas reçu le code !</button>
                     </div>
                 </div>
@@ -109,9 +113,31 @@
         <!-- page-body-wrapper ends -->
       </div>
       <script src="index/js/validation.js"></script>
+      <div class="overlay-msg-ctr">
+        <div class="msg-ctr">
+          <div class="msg-image">
+            <img src="index/img/round-error-symbol.png"> 
+          </div>
+          <div class="msg-text-ctr">
+            <span class="msg-text">
+              Le message de confirmation parfois peut prendre un peu de temps. Si vous êtes sûr de ne pas avoir reçu de message, vous devrez peut-être essayez plus tard.
+            </span>
+          </div>
+          <div class="msg-close">
+            <button type="button" class="msg-close-btn ovr-button-styles"><i class="mdi mdi-close-circle"></i></button>
+          </div>
+        </div>
+      </div>
+      <script>
+      $(function(){
+        $(".msg-toggle").click(function(){
+          $(".overlay-msg-ctr").show();
+        });
+        
+        $(".msg-close-btn").click(function(){
+          $(".overlay-msg-ctr").hide();
+        });
+      });
+      </script>
   </body>
 </html>
-
-<?php
-    }
-?>

@@ -61,25 +61,46 @@
             return $row[0];
 		}
 		
-		public function ArticlePanierExiste($articleID, $qty){
+		public function ArticlePanierExiste($articleID, $qty, $couleur){
+			$panierID = $this->PanierClient();
 			$clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);
+			
 			$query = $this->con->query("select *
-						from panierdetails pd 
-						INNER join panier p
-						on pd.panierID = p.panierID 
-						inner join client c 
-						on c.panierID = p.panierID
-						where c.clientID = $clientID AND pd.articleID = $articleID");
+						FROM panierdetails pd 
+						INNER JOIN panier p
+						ON pd.panierID = p.panierID 
+						INNER JOIN client c 
+						ON c.panierID = p.panierID
+						WHERE c.clientID = $clientID 
+						AND pd.articleID = $articleID");
+			$row = $query->fetch_assoc();
 			
 			if($this->con->affected_rows > 0):
 			
-				$panierID = $this->PanierClient();
-				$row = $query->fetch_assoc();
-				$quantite = $row['quantite'];
-				$query = $this->con->query("UPDATE panierdetails SET quantite = quantite + $qty WHERE panierID = $panierID AND articleID = $articleID");
+				$nouvelle_qty = $row['quantite'] + $qty;
 			
-				return true;
+				$article = new Article();
+				$verfie = $article->VerifierQuantite($articleID, $nouvelle_qty);
 			
+				if($verfie != null){
+                    
+                    $couleur = $article->CouleursArticle($articleID)[0];
+                    if( $couleur != null)
+                        $_couleur = $couleur;
+                    else
+                        $_couleur = 'N/A';
+					
+					$query = $this->con->query("UPDATE panierdetails 
+												SET quantite = $nouvelle_qty,
+                                                couleur = '$couleur'
+												WHERE panierID = $panierID 
+												AND articleID = $articleID");
+
+					return true;
+				}
+				else
+					return -1;
+					
 			endif;
 			
 			return null;
@@ -97,6 +118,43 @@
 				return "<label class='badge badge-success'>Validé</label>";
 			return null;
         }
+		
+		public function ClientNomPrenom($clientID){
+			
+			$query = $this->con->query(" SELECT nom, prenom
+										FROM client
+										WHERE clientID = $clientID");
+			
+			if($query->num_rows > 0)
+			{
+				$row = $query->fetch_row();
+				
+				return strtoupper($row[0]).' '.strtoupper($row[1]);
+			}
+			
+			return null;
+		}
+		
+		public function InfoClientParCommande(){
+			
+            $query = $this->con->query(" SELECT clientID
+                                    FROM commande
+                                    WHERE commandeID = $commandeID
+                                ");
+            $row = $query->fetch_row();
+            $clientID = $row[0];
+			
+			$query = $this->con->query(" SELECT * 
+										FROM client
+										WHERE clientID = $clientID
+									");
+			
+			if($query->num_rows > 0)
+				return $query;
+			
+			return null;
+			
+		}
 	}
 
 	final class Article{
@@ -110,7 +168,10 @@
 		}
 
 		public function AfficherArticles(){
-			$query = $this->con->query("SELECT * FROM article WHERE articleDisponible = TRUE ORDER BY dateAjoute DESC");
+			
+			$query = $this->con->query("SELECT * FROM article 
+										WHERE articleDisponible = TRUE 
+										ORDER BY dateAjoute DESC");
 			
 			if($query->num_rows > 0)
 				return $query;
@@ -119,11 +180,14 @@
 		}
 
 		public function ImageArticle($articleID){
-			$result = $this->con->query("SELECT * FROM imagearticle WHERE articleID = $articleID limit 1");
+			$result = $this->con->query("SELECT * 
+								FROM imagearticle 
+								WHERE articleID = $articleID 
+								AND principale = 1");
 			if($row = $result->fetch_row())
-			$image = '../uploaded/articles-images/'.$row[0];
+				$image = '../uploaded/articles-images/'.$row[0];
 			else
-			$image = '../index/img/not-founded.jpg';
+				$image = '../index/img/not-founded.jpg';
 			return $image;
 		}
 
@@ -139,18 +203,29 @@
 		}
 
 		public function ProduitsParCategorie($categorie){
-			$result = $this->con->query("SELECT * FROM article inner join categorie
-			on article.categorieID = categorie.categorieID
-			where categorie.categorieNom = '$categorie' AND article.articleDisponible = TRUE ORDER BY dateAjoute DESC");
+			$result = $this->con->query(" SELECT * 
+										FROM article inner join categorie
+										on article.categorieID = categorie.categorieID
+										where categorie.categorieNom = '$categorie' 
+										AND article.articleDisponible = TRUE
+										ORDER BY dateAjoute DESC"
+									   );
+			
 			if($result->num_rows > 0)
 					return $result;
+			
 			return null;
 		}
 		
 		public function NouveauxProduitsAleatoire(){
-			$result = $this->con->query("SELECT * FROM article WHERE articleDisponible = TRUE ORDER BY RAND()");
+			$result = $this->con->query(" SELECT * 
+										FROM article 
+										WHERE articleDisponible = TRUE 
+										ORDER BY RAND()");
+			
 			if($result->num_rows > 0)
 					return $result;
+			
 			return null;
 		}
 
@@ -179,13 +254,18 @@
 	}
 		
 		public function NbrProduits(){
-			$query = $this->con->query("SELECT COUNT(*) FROM article WHERE articleDisponible = TRUE");
+			$query = $this->con->query("SELECT COUNT(*)
+									FROM article 
+									WHERE articleDisponible = TRUE");
 			$row = $query->fetch_row();
 			return $row[0];	
 		}
 		
 		public function NbrProduitsParCategorie($categorieID){
-			$query = $this->con->query("SELECT COUNT(*) FROM article WHERE categorieID = $categorieID AND articleDisponible = TRUE");
+			$query = $this->con->query("SELECT COUNT(*) 
+									FROM article 
+									WHERE categorieID = $categorieID
+									AND articleDisponible = TRUE");
 			if($query->num_rows > 0)
 			{
 				$row = $query->fetch_row();
@@ -230,8 +310,7 @@
 			return $data;
 		}
 		
-		public function ArticlePrix($articleID)
-		{
+		public function ArticlePrix($articleID){
 			$query = $this->con->query("SELECT a.*, p.* 
 											FROM article a INNER JOIN panierdetails p
 											ON a.articleID = p.articleID
@@ -264,6 +343,66 @@
 		
 			return null;
 		}
+		
+		public function VerifierQuantite($articleID, $qty_commande){
+			
+			$query = $this->con->query("SELECT unitesEnStock FROM article WHERE articleID = $articleID");
+			$row = $query->fetch_assoc();
+			$qty_dispo = $row['unitesEnStock'];
+			
+			if($qty_commande <= $qty_dispo)
+				return true;
+				
+			return null;
+		}
+		
+		public function urlProduitParameterValue($articleID){
+			global $con;
+
+			$query = $con->query(" SELECT articleNom 
+								FROM article 
+								WHERE articleID = $articleID ");
+			$row = $query->fetch_row();
+			$articleNom = $row[0];
+			
+			$parameter_value = $articleID.'-'.strtolower(str_replace(' ', '-', $articleNom));
+			
+			return $parameter_value;
+		}
+        
+        public function CouleursArticle($articleID){
+            
+            $couleurs = array();
+            
+            $query = $this->con->query("SELECT nomCouleur FROM couleurarticle WHERE articleID = $articleID");
+        
+            if( $query->num_rows > 0 ){
+                
+                while($row = $query->fetch_row()){
+                    
+                    $couleurs[] = $row[0];
+                    
+                }
+                
+                return $couleurs;
+            }
+            return null;
+        }
+		
+		public function echoImages($articleID){
+			$result = $this->con->query(" SELECT * 
+										FROM imagearticle
+										WHERE articleID = $articleID");
+			$images = '';
+
+			 while( $row = mysqli_fetch_array($result)){
+				 $images = $images.' <div class="product-preview">
+										<img src=img/'.$row['imageArticleNom'].'  alt="">
+									</div> ';
+			 }
+
+			return $images;
+		} 
 
 	}
 
@@ -441,3 +580,138 @@
 		}
 		
 	}
+
+	final class Commande{
+		
+		private $con;
+		
+		public function __construct(){
+			global $con;
+			$this->con = $con;
+		}
+		
+		public function AfficherCommandes(){
+			
+			$query = $this->con->query(" SELECT *
+										FROM commande
+										WHERE status = 0 OR status = 2 OR status = -2
+										ORDER BY commandeDate DESC
+										");
+			
+			if( $query->num_rows > 0 )
+				return $query;
+			
+			return null;	
+		}
+		
+		public function AfficherArtilcesCommande($commandeID){
+			
+			$query = $this->con->query(" SELECT *
+										FROM article a INNER JOIN commandedetails cd
+										ON a.articleID = cd.articleID
+										WHERE cd.commandeID = $commandeID
+										");
+			
+			if( $query->num_rows > 0 )
+				return $query;
+			
+			return null;
+		}
+		
+		public function VerifieCommandeID($commandeID){
+			
+			$clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);
+			
+			$query = $this->con->query(" SELECT commandeID 
+										FROM commande 
+										WHERE clientID = $clientID");
+			if( $query->num_rows > 0 )
+				return true;
+			
+			return null;
+		}
+		
+	}
+
+	final class Livraison{
+		
+		private $con;
+		
+		public function __construct(){
+			global $con;
+			$this->con = $con;
+		}
+		
+		public function AfficherLivraisons(){
+			
+			$query = $this->con->query(" SELECT * 
+										FROM livraison l INNER JOIN commande c
+										ON l.commandeID = c.commandeID
+										WHERE c.status = 1
+										ORDER BY confirmationDate DESC
+										");
+			
+			if( $query->num_rows > 0 )
+				return $query;
+			
+			return null;
+		}
+		
+	}
+
+	final class Commentaire{
+		private $con;
+		
+		public function __construct(){
+			global $con;
+			$this->con = $con;
+		}
+		
+		public function AfficherCommentaires(){
+			
+			$query = $this->con->query(" SELECT * 
+										FROM commentaire
+										ORDER BY dateComm DESC ");
+			if( $query->num_rows > 0 )
+				return $query;
+			
+			return null;
+		}
+	}
+
+    final class Notification{
+      private $con;
+		
+      public function __construct(){
+          global $con;
+          $this->con = $con;
+      }
+      
+      public function NouveauNotification($type, $clientID){
+        
+        $client = new Client();
+        $nom_prenom = $client->ClientNomPrenom($clientID);
+        
+        switch($type){
+          case "client":
+            $titre = "Nouveau Client Enregistré";
+          break;
+          case "commande":
+            $titre = "Nouveau Commande de [".$nom_prenom."]";
+          break;
+          case "commentaire":
+            $titre = "Nouveau Commentaire de [".$nom_prenom."]";
+          break;
+        }
+        
+        $this->con->query(" INSERT INTO notification VALUES(
+                        null,
+                        '$titre',
+                        default,
+                        '$type',
+                        default) ");
+        
+      }
+      
+      
+    }

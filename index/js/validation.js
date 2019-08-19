@@ -1,29 +1,28 @@
+"use strict";
 
 // register page validation
-$(function () {
+(function () {
 
     // validation variables
-    var username_error = true;
-    var email_error = true;
-    var prenom_error = true;
-    var nom_error = true;
-    var adresse_error = true;
-    var tele_error = true;
-    var reponse_error = true;
-    var password_error = true;
-    var pass_match_error = true;
-    var code_postal_error = true;
-
-    // inputs
-    var username = $("#username");
-    var email = $("#email");
-    var prenom = $("#prenom");
-    var nom = $("#nom");
-    var adresse = $("#adresse");
-    var tele = $("#tele");
-    var reponse = $("#reponse");
-    var code_postal = $("#code_postal");
-    var passowrd = $("#password");
+    var username_error = true,
+        email_error = true,
+        prenom_error = true,
+        nom_error = true,
+        adresse_error = true,
+        tele_error = true,
+        reponse_error = true,
+        password_error = true,
+        pass_match_error = true,
+        code_postal_error = true,
+        username = $("#username"),
+        email = $("#email"),
+        prenom = $("#prenom"),
+        nom = $("#nom"),
+        adresse = $("#adresse"),
+        tele = $("#tele"),
+        reponse = $("#reponse"),
+        code_postal = $("#code_postal"),
+        passowrd = $("#password");
 
     // detect text change 
     $('#username').on('input', function (ev) {
@@ -255,7 +254,7 @@ $(function () {
                 $("#password2_error").css("visibility", "visible");
                 pass_match_error = true;
                 icon_change_color(span, icon);
-                $("#password2_error").html("* Les deux mots de passe sont pas identiques ! Réssayez");
+                $("#password2_error").html("* Les mots de passe ne correspondent pas.");
             } else {
                 $("#password2_error").css("visibility", "hidden");
                 pass_match_error = false;
@@ -284,10 +283,10 @@ $(function () {
             return false;
         }
     });
-});
+}());
 
 // login page validation
-$(function(){
+(function(){
 
     // validation variables
     var username_error = true;
@@ -358,10 +357,10 @@ $(function(){
             return false;
         }
     });
-});
+}());
 
 // emailconfirmation validation
-$(function(){
+(function(){
     
     // validation variables
     var codemail_error = true;
@@ -411,30 +410,174 @@ $(function(){
         }
     });
     
-});
+}());
 
-//validation ajouter article
-$(function(){
-    let startsubmit = false;
+// profile validation
+function ValidationProfile(){
+    
+    $("#validMsg").empty();
+    
+    var username_error = true,
+        email_error = true,
+        prenom_error = true,
+        nom_error = true,
+        adresse_error = true,
+        ville_error = true,
+        tele_error = true,
+        code_postal_error = true,
+        adresse_error = true,
+        reponse_error = true,
+        password_error,
+        pass_match_error,
+        username = $("#username"),
+        email = $("#email"),
+        prenom = $("#prenom"),
+        nom = $("#nom"),
+        adresse = $("#adresse"),
+        ville = $("#ville"),
+        tele = $("#tele"),
+        reponse = $("#reponse"),
+        code_postal = $("#code_postal"),
+        motdepasse = $("#motdepasse"),
+        motdepasse2 = $("#cnfPasse");
 
-    $("#nomPr").focusout(function () {
-        if ($(this).val().length<6||$(this).val()==""){
-            $(this).css("background-color","red");
-            startsubmit=false;
+    function check_prenom() {
+        if (!validName(prenom)) {
+            showValidationMsg("* Un prénom doit contient des caractères entre 3 et 30 & contient uniquement des caractères.");
+            prenom_error = true;
         }
-        else {
-            $(this).css("background-color","");
-            startsubmit=true;
-        }
-    });
-
-
-
-
-    function validation1(){
-        alert();
-        console.log("ddd");
-        return startsubmit;
+        else
+            prenom_error = false;
+        
+        return prenom_error;
     }
-});
+    
+    function check_nom() {
 
+        if (!validName(nom)) {
+            showValidationMsg("* Un nom doit contient des caractères entre 3 et 30 & contient uniquement des caractères.");
+            nom_error = true;
+        }
+        else
+            nom_error = false;
+
+        return nom_error;
+    }
+    
+    function check_email() {
+        
+        if (!validLength(email, 3, 30)) {
+            showValidationMsg("* Adresse email incorrect.");
+            email_error = true;
+        }
+        else
+            email_error = false;
+    }
+    
+    function check_adresse() {
+        
+        if (!validLength(adresse, 3, 50)) {
+            showValidationMsg("* Une adresse doit contient au minimaum 3 caractères et maximaux 50.");
+            adresse_error = true;
+        } 
+        else
+            adresse_error = false;
+    }
+    
+    function check_ville() {
+        
+        if (!validLength(ville, 3, 30)) {
+            showValidationMsg("* Un nom de ville ddoit contient des caractères entre 3 et 30.");
+            ville_error = true;
+        } 
+        else
+            ville_error = false;
+    }
+    
+    function check_postal() {
+        
+         if (!allNumbers(code_postal) || !validLength(code_postal, 4, 8)) {
+            showValidationMsg("* Code postal invalide.");
+            code_postal_error = true;
+        } 
+        else
+            code_postal_error = false;
+    }
+    
+    function check_tele() {
+        
+        if (!check_numberPhone(tele) || !validLength(tele, 10, 10) && !validLength(tele, 13, 13)){
+            showValidationMsg("* Numéro téléphone invalide.");
+            tele_error = true;
+        } 
+        else
+            tele_error = false;
+    }
+    
+    function check_reponse() {
+
+        if (!validName(reponse)) {
+            showValidationMsg("* Un réponse doit contient des caractères entre 3 et 30 & contient uniquement des caractères.");
+            reponse_error = true;
+        }
+        else
+            reponse_error = false;
+
+        return reponse_error;
+    }
+    
+    function check_password() {
+
+        if(motdepasse.val().length > 0){
+            password_error = true;
+            if (!validLength(motdepasse, 3, 30)) {
+                showValidationMsg("* Un mot de passe doit contient des caractères entre 3 et 30.");
+                password_error = true;
+            }
+            else
+                password_error = false;
+        }
+
+        return password_error;
+       
+    }
+    
+    function check_password2() {
+        
+        if(motdepasse.val().length > 0){
+            pass_match_error = true;
+            if(motdepasse2.val() != motdepasse.val()){
+                showValidationMsg("* Les mots de passe ne correspondent pas.");
+                pass_match_error = true;
+            }
+            else
+                pass_match_error = false;
+        }
+
+        return pass_match_error;
+    }
+    
+    function showValidationMsg(msg){
+        $("#validMsg").removeClass("valid-msg-success").addClass("valid-msg-error");
+        $("#validMsg").append(msg+"<br>");
+    }
+    
+    check_prenom();
+    check_nom();
+    check_email();
+    check_adresse();
+    check_ville();
+    check_postal();
+    check_tele();
+    check_reponse();
+    check_password();
+    check_password2();
+
+    if(prenom_error == false && nom_error == false && email_error == false && adresse_error == false && ville_error == false && code_postal_error == false && tele_error == false && reponse_error == false && password_error != true && pass_match_error != true){
+        $("#validMsg").empty();
+        return true;
+    }
+    else
+        return false;
+    
+};

@@ -61,11 +61,12 @@
                 
                 $(document).on("click","#btnSupprimer",function(){
                     values = [];
-                    var articleID = $(this).closest("tr").children("#articleID").text();
+                    var articleID = $(this).closest("tr").find("td[data-src='articleID']").attr("data-id");
                     values.push(articleID); 
                 });
                 
                 $("#btnSupprimerDialog").click(function(e){
+
                     $.ajax({
                         url: '../public-includes/ajax_queries.php',
                         method: 'POST',
@@ -74,7 +75,6 @@
                             function: "SupprimerArticle", 
                             articleID: values[0]
                         },
-                        async: false,
                         success: function(data){
                             if(data != null){
                                 $("button[data-dismiss]").click();
@@ -84,11 +84,10 @@
                         
                     }); 
                 });
-                
-                
+
                 $(document).on("click","#btnModifier",function(){
                     var admin  = $("#HSV").val();
-                    var id = $(this).closest("tr").children("#articleID").html();              
+                    var id = $(this).closest("tr").find("td[data-src='articleID']").attr("data-id");       
                     window.location.href = "produit.php?admin="+admin+"&edit="+id;
                });
 
@@ -97,6 +96,7 @@
             function dataTableInitialize(){
                 $('#dt_produits').dataTable({
                     destroy: true,
+                    "order":[[2, "desc"]],
                     "pagingType": "simple_numbers",
                     "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Tous"] ],
                     "language": {
@@ -126,6 +126,7 @@
                         { title: 'Modifier' },
                         { title: 'Supprimer' },
                         { title: 'ID' },
+                        { title: 'Image' },
                         { title: 'Nom' },
                         { title: 'Description' },
                         { title: 'Marque' },
@@ -135,7 +136,7 @@
                         { title: 'Prix Avec Remise' },
                         { title: 'Taux Remise'},
                         { title: 'En Stock'},
-                        { title: 'Sur Commande'},
+                        { title: 'Ventes'},
                         { title: 'Disponible'},
                         { title: 'Niveau'},
                         { title: 'Categorie'}
@@ -148,13 +149,15 @@
                         method: "post",
                         dataType: "json",
                         async: false
+
                     },
                     'createdRow': function( row, data, dataIndex ) {
                         var tds = $(row).children("td");
                         for(let i = 0; i < tds.length ; i++){
                             switch(i){ 
                                 case 2:
-                                    tds[i].setAttribute("id", "articleID");
+                                    tds[i].setAttribute("data-src", "articleID");
+                                    tds[i].setAttribute("data-id", data[2]);
                                 break;
                             }
                         }

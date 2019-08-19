@@ -2,7 +2,7 @@
 		
 		<?php
 			
-			if(!isset($_SESSION['clientID']) && empty($_SESSION['clientID']) || !isset($_SESSION['modelivraison']) || !isset($_SESSION['totalApayer'])):
+			if(!isset($_SESSION['clientID']) && empty($_SESSION['clientID']) || !isset($_SESSION['typelivraison']) || !isset($_SESSION['totalApayer'])):
 
 				header('Location: ../errors/400.php');
 				exit();
@@ -20,11 +20,15 @@
 			
 			endif;	
 
+
 			if(isset($_POST['rtn'])):
-
-				header('Location: modelivraison.php');
+				header('Location: index.php');
 				exit();
+			endif;
 
+			if(isset($_POST['sbm_commandes'])):
+				header('Location: commandes.php');
+				exit();
 			endif;
 
 
@@ -43,7 +47,7 @@
 					$code_postal = $row['codePostal'];
 				}
 				
-				$total_a_payer = filter_var($_SESSION['totalApayer'], FILTER_SANITIZE_NUMBER_INT);
+				$total_a_payer = filter_var($_SESSION['totalApayer'], FILTER_SANITIZE_NUMBER_FLOAT);
 				
 				$nbr_articles = $client->NbrArticlesPanier();
 					
@@ -79,11 +83,15 @@
 			<div class="container">
 				<form action="" method="post">
 					<div class="div-verif-info-ctr">
+						<div class="loading-verif-ctr">
+							<img class='img-responisive laoding-verfi' src='img/index.shopping-cart-loader-icon.svg'>
+							<span id="ajx_message"></span>
+						</div>
 						<div class="row div-verif-info">			
 							<div class="hdr-verif-info">
 								<span class="title-verif-info">
 									<p>Confirmation des information du commande</p>
-								
+								</span>
 								<div class="img-verif-info-ctr">
 									<img class="img-verif-info" src="img/confirm.png">
 								</div>
@@ -142,7 +150,7 @@
                             		<small id="erreurInfo" class="form-text text-muted erreur-info"></small>
                         		</div>
 								<div class="action-verif-info">
-									<button type="button" id="commandeBtn" class="btn btn-dark-red etapes-btn blue-idx">Commander</button>	
+									<button type="button" id="commandeBtn" class="btn btn-dark-red etapes-btn blue-idx">Commander</button>
 								</div>
 							</div>
 						</div>
@@ -150,28 +158,41 @@
 							<button type="submit" name="rtn" id="retourpanierBtn" class="btn btn-dark-red etapes-btn"><i class="fa fa-chevron-circle-left"></i>Types De Livraison</button>	
 						</div>
 					</div>
-					<input type="hidden" name="mdlv" value="<?php echo $_SESSION['modelivraison'] ?>">
 				</form>
 			</div>
 			
 		</div>
 		
-		<?php include_once "includes/loading.html" ?>
+		<div class="changetele-overlay">
+			<div class="changetele-overlay-content">
+				<div class="changetele-overlay-items">
+					<label for="numTele">Saisis Votre numéro Teléphone : </label>
+					<input type="text" id="numTele" class="from-control" placeholder="Numéro Téléphone">
+					<div class="changeTele-msg">
+						<span id="teleValidateMsg"></span>
+					</div>
+					<button type="button" id="changerTeleBtn" class="btn ovr-button-styles">Changer</button>
+				</div>
+				<div class="changeTele-overlay-close">
+					
+					<button type="button" id="closeOverlay" class="btn ovr-button-styles"><i class="fa fa-times"></i></button>
+					
+				</div>
+			</div>
+		</div>
 		
 		<script>
             $(document).ready(function(){
-				
+		
 				
 				$("#commandeBtn").on("click", function(){
-					Validation();
-					
-				});
-				
-				
-				function ModifierInfoComm(){
 					
 					if(Validation() != null){
-					
+						
+						$('html, body').animate({
+							scrollTop: parseInt($("#header").offset().top)
+						}, 800);
+
 						var nom = $("#nom").val().trim();
 						var prenom = $("#prenom").val().trim();
 						var ville = $("#ville").val().trim();
@@ -179,10 +200,180 @@
 						var tele = $("#tele").val().trim();
 						var codePostal = $("#codePostal").val().trim();
 						
+						var info = [];
+						info.push(nom, prenom, ville, adresse, tele, codePostal);
+	
+						var error = false;
 						
+						$.ajax({
+							url: "../public-includes/ajax_queries",
+							method: "POST",
+							dataType: "JSON",
+							async: false,
+							data: {
+								function: "MiseAjourInfoCommande",
+								info: info
+							},
+							beforeSend: function(){
+								AJXCommandeMessages("Vérification et mise à jour les coordonnées de contact ...");
+							},
+							success: function(data){
+								(data == null) ? error = "Vérification et mise à jour des informations de contact echoué." : error = false;
+							},
+							complete: function(){
+								
+								if(error == false){
+									
+									setTimeout(function(){
+										$.ajax({
+											url: "../public-includes/ajax_queries",
+											method: "POST",
+											dataType: "JSON",
+											async: false,
+											data: {
+												function: "VrfDispoArtCommande",
+											},
+											beforeSend: function(){
+												AJXCommandeMessages("Confirmation de la disponibilité d'articles commandées ...");
+											},
+											success: function(data){
+												(data == null) ? error = "Une ou plusieurs articles demandées n'est plus disponible." : error = false;
+											},
+											complete: function(){
+												
+												if(error == false){	
+													
+													setTimeout(function(){
+														
+														$.ajax({
+															url: "../public-includes/ajax_queries",
+															method: "POST",
+															dataType: "JSON",
+															async: false,
+															data: {
+																function: "VrfQtyArtCommande",
+															},
+															beforeSend: function(){
+																AJXCommandeMessages("Vérification de la quantité commandées ...");
+															},
+															success: function(data){
+																(data == null) ? error = "La quantité commandée invalide." : error = false;
+															},
+															complete: function(){
+																if(error == false)
+																{	
+																	setTimeout(function(){
+																		$.ajax({
+																			url: "../public-includes/ajax_queries",
+																			method: "POST",
+																			dataType: "JSON",
+																			async: false,
+																			data: {
+																				function: "CreationCommande",
+																			},
+																			beforeSend: function(){
+																				AJXCommandeMessages("Création du commande en cours  ...");
+																			},
+																			success: function(data){
+																				(data == null) ? error = "Création du commande à été echoué." : error = false;
+																			},
+																			complete: function(){
+																				if(error == false){
+																					setTimeout(function(){
+																						$.post(
+																							"includes/confirmationform",
+																							function(data){
+																								
+																							
+																								
+																								$(".div-verif-info-ctr").html(data);
+																								
+																								$('html, body').animate({
+																									scrollTop: parseInt($("#breadcrumb").offset().top)
+																								}, 600);
+																								$("#commandeTele").text(tele);
+																							}
+																						);
+																					}, 600);
+																				}
+																			}
+																		});
+																	}, 700);
+																}
+															}
+														});
+														
+													}, 700);
+													
+												}
+												
+											}
+										});
+										
+									}, 700);
+								}
+							}
+							
+						});
+					}
+					
+				});
+				
+				$(document).on("click", "#changerTeleBtnToggle", function(){	
+					$(".changetele-overlay").show();
+				});
+				
+				$(document).on("click", "#closeOverlay", function(){	
+					$(".changetele-overlay").hide();
+				});
+				
+				$("#changerTeleBtn").on("click", function(){
+			
+					var checkNumTele = check_numberPhone($("#numTele"));
+					
+					if(checkNumTele){
 						
-					}									 
-				}
+						$(".changeTele-msg").hide();
+						
+						var numTele = $("#numTele").val();
+						
+						$.ajax({
+							url: "../public-includes/ajax_queries",
+							method: "POST",
+							dataType: "html",
+							data: { 
+								function: "ChangerNumTele",
+								numTele: numTele
+							},
+							async: false,
+							beforeSend: function(){
+								$("#numTele").prop("disabled", true);
+								$("#changerTeleBtn").prop("disabled", true);
+							},
+							success: function(data){
+								if(data != null){
+									$("#numTele").prop("disabled", false);
+									$("#changerTeleBtn").prop("disabled", false);
+									$(".changeTele-msg").show();
+									$("#teleValidateMsg").attr("class", "changetele-msg-success");
+									$("#teleValidateMsg").text("Votre numéro téléphone a été changé avec succès.");
+									$("#commandeTele").text(numTele);
+								}
+							},
+							complete: function(){
+								setTimeout(function(){
+									$(".changeTele-msg").hide();
+								}, 2300);
+							}
+						});
+						
+					}
+					else{
+						$(".changeTele-msg").show();
+						$("#teleValidateMsg").attr("class", "changetele-msg-invalide");
+						$("#teleValidateMsg").text("Numéro téléphone invalide.");
+					}
+				});
 				
 				function Validation(){
 
@@ -229,24 +420,18 @@
 						return true;
 					
 					return null;
+				}			
+				
+				function AJXCommandeMessages(msg){
+					$(".div-verif-info, .previous-page-btn").hide();
+					$(".loading-verif-ctr").fadeIn();
+					$("#ajx_message").text(msg);
 				}
 				
-				
-				
-				
-				
-				
-				
-					/*
-					$.ajax({
-						url: "includes/confirmationform",
-						method: "POST",
-						success: function(data){
-							$(".div-verif-info-ctr").html(data);
-						}
-					});*/
 					
 				
 			});
 		</script>
+	
+		
 		<?php include_once "includes/footer.php" ?>

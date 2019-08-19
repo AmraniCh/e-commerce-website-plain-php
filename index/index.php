@@ -1,5 +1,11 @@
 <?php include_once "includes/header.php" ?>
-
+	
+	<?php
+	
+		 unset($_SESSION['coupon']);
+	
+	?>
+	
 		<?php include_once "includes/navigation.php" ?>
 		
 			<div class="section">
@@ -275,9 +281,6 @@
 			});
 			
 		</script>
-		
-		
-		<?php include_once "includes/loading.html" ?>
 		
 		<?php include_once "includes/footer.php" ?>
 		

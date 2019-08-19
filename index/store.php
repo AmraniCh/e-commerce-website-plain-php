@@ -142,24 +142,25 @@
 							<div class="store-sort">
 								<label>
 									Sort By : 
-									<select id="filtrerPar" class="input-select">
+									<select id="filtrerPar" class="input-smp">
 										<option value="Nouveau">Nouveau</option>
 										<option value="Recommonde">Recommonde</option>
 									
-								
+									</select>
+								</label>
 
 								<label>
 									Afficher : 
-									<select id="afficherNbr" class="input-select">
-										<option value="2">2</option>
-										<option value="4">4</option>
-										<option value="8">8</option>
-									
+									<select id="afficherNbr" class="input-smp">
+										<option value="10">10</option>
+										<option value="20">20</option>
+										<option value="50">50</option>
+									</select>
+								</label>
 								
 							</div>
 							<ul class="store-grid">
 								<li class="active"><i class="fa fa-th"></i></li>
-								<li><a href="#"><i class="fa fa-th-list"></i></a></li>
 							</ul>
 						</div>
 						
@@ -191,8 +192,6 @@
 		</div>
 
 		<?php include_once "includes/newsletter.php" ?>
-		
-		<?php include_once "includes/loading.html" ?>
 		
 		<script>
 		$(document).ready(function(){

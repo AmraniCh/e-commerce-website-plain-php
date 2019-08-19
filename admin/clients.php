@@ -110,6 +110,7 @@
         function dataTableInitialize(){
             $('#dt_clients').dataTable({
                 destroy: true,
+                "order":[],
                 "pagingType": "simple_numbers",
                 "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Tous"] ],
                 "language": {

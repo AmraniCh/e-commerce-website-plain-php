@@ -13748,6 +13748,13 @@ input:focus {
         line-height: 1;
         font-size: 18px;
         color: #979797; }
+.sidebar .nav .nav-item .nav-link .mdi-menu-icon{
+  margin-right: 1.25rem;
+        width: 16px;
+        line-height: 1;
+        font-size: 22px;
+        color: #979797;
+}
         .rtl .sidebar .nav .nav-item .nav-link .menu-icon {
           margin-right: 0;
           margin-left: 1.25rem; }
@@ -14503,7 +14510,7 @@ pre {
     margin-bottom: auto;
     margin-top: auto;
     color: #ffffff;
-    font-weight: 400;
+    font-weight: 500;
     vertical-align: middle;
     line-height: 1; }
   .purchace-popup > div > span i {
@@ -15350,7 +15357,7 @@ pre {
   border: 0;
   border-radius: 2px; }
   .card .card-body {
-    padding: 1.88rem 1.81rem; }
+    padding: 1.5rem 1rem; }
     .card .card-body + .card-body {
       padding-top: 0; }
   .card.card-outline-success {
@@ -15884,7 +15891,8 @@ ul {
       right: auto; }
     .nav .nav-item.dropdown .navbar-dropdown .badge,
     .navbar-nav .nav-item.dropdown .navbar-dropdown .badge {
-      margin-left: 2.5rem; }
+      margin-left: 2.5rem;
+  cursor: pointer}
       .rtl .nav .nav-item.dropdown .navbar-dropdown .badge, .rtl
       .navbar-nav .nav-item.dropdown .navbar-dropdown .badge {
         margin-left: 0;

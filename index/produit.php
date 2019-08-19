@@ -3,19 +3,30 @@
 <?php include_once "includes/navigation.php" ?>
 
 <?php
-	if(!isset($_GET['id']) && empty($_GET['id']) || !is_numeric($_GET['id'])):
-		header('Location: ../login.php');
+	if(!isset($_GET['produit']) && empty($_GET['produit']) || !is_string($_GET['produit'])):
+		header('Location: ../index.php');
 		exit();
 	else:
 
-		$get = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+		$get = filter_var($_GET['produit'], FILTER_SANITIZE_STRING);
 
-		$result = ArticleParID($get);
-		if(mysqli_num_rows($result)>0) {
+		$articleID_get = explode('-', $get)[0];
 
-			$article = new Article();
+		$article = new Article();
 
-			$row = mysqli_fetch_assoc($result);
+		if( $get != $article->urlProduitParameterValue($articleID_get) ){
+			header('Location: ../index/');
+			exit();
+		}
+
+		$query = $con->query("SELECT *
+							FROM article 
+							WHERE articleID = $articleID_get");
+
+		if ( $query->num_rows > 0 ) {
+
+			$row = $query->fetch_assoc();
+			
 			$articleID = $row['articleID'];
 			$articleNom = $row['articleNom'];
 			$articlePrix = $row['articlePrix'];
@@ -28,14 +39,12 @@
 			$remiseDisponible = $row['remiseDisponible'];
 			$unitesEnStock = $row['unitesEnStock'];
 			$articleDisponible = $row['articleDisponible'];
-			$niveau = $article->echoNiveau($get);
+			$niveau = $article->echoNiveau($articleID_get);
 			$categorieID = $row['categorieID'];
 
-			$colors = echocolors($get);
-			$images = echoImages($get);
+			$colors = echocolors($articleID_get);
+			$images = $article->echoImages($articleID_get);
 			
-			// nbr reviews
-			$article = new Article();
 			$nbr_reviews = $article->NbrArticleReviews($articleID);
 
 			$result = $con->query("SELECT categorieNom from categorie WHERE categorieID = $categorieID");
@@ -81,9 +90,7 @@
                             ?>
 						</div>
 					</div>
-					
 
-					
 					<div class="col-md-2 col-md-pull-5">
 						<div id="product-imgs">
                             <?php
@@ -91,9 +98,7 @@
                             ?>
 						</div>
 					</div>
-					
 
-					
 					<div class="col-md-5">
 						<div class="product-details">
 							<h2 class="product-name"><?php echo $articleNom?></h2>
@@ -109,22 +114,7 @@
 							</div>
 							<p><?php echo $articleDescription?></p>
 							
-							<?php 
-								if($colors != ''):
-							?>
 							<div class="product-options">
-								<label>
-									Color
-									<select class="input-select">
-                                        <?php
-                                        echo $colors;
-                                        ?>
-									</select>
-								</label>
-							</div>
-							<?php endif; ?>
-
-							<div class="add-to-cart">
 								<div class="qty-label">
 									Quantité : 
 									<div class="input-number">
@@ -133,9 +123,30 @@
 										<span class="qty-down">-</span>
 									</div>
 								</div>
+				            <?php if($colors != ''): ?>
+								<label>
+									Couleurs : 
+									<select id="couleurPrd" class="input-smp">
+                                        <?php
+                                        echo $colors;
+                                        ?>
+									</select>
+								</label>
+                            <?php else: ?>
+            
+                                <label>
+									Couleurs : 
+									<select id="couleurPrd" class="input-smp">
+                                        <option value="N/A">N/A</option>
+									</select>
+								</label>
+                                
+                                
+                            <?php endif;  ?>
+                            </div>
+							<ul class="product-btns">
 								<button id="<?php echo $articleID ?>" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Ajouter au panier</button>
-							</div>
-
+							</ul>
 							<ul class="product-btns">
 								<li><button type="button" id="<?php echo $articleID ?>" class="btn add-to-wishlist"><i class="fa fa-heart-o"></i> Ajouter aux Favoris</button></li>
 							</ul>
@@ -162,11 +173,9 @@
 							
 							<ul class="tab-nav">
 								<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
-								<li><a data-toggle="tab" href="#tab3">Reviews (3)</a></li>
+								<li><a data-toggle="tab" href="#tab3">Reviews (<?php echo $nbr_reviews ?>)</a></li>
 							</ul>
-							
-
-							
+						
 							<div class="tab-content">
 								
 								<div id="tab1" class="tab-pane fade in active">
@@ -176,9 +185,7 @@
 										</div>
 									</div>
 								</div>
-								
-
-								
+									
 								<div id="tab3" class="tab-pane fade in">
 									<div class="row">
 										
@@ -258,9 +265,7 @@
 												</ul>
 											</div>
 										</div>
-										
 
-										
 										<div class="col-md-6">
 											<div class="reviews-container">
 												<ul class="reviews">
@@ -269,8 +274,6 @@
 												</ul>
 											</div>
 										</div>
-										
-
 										
 										<div class="col-md-3">
 											<div id="review-form">
@@ -459,8 +462,6 @@
 
 <?php include_once "includes/newsletter.php" ?>
 
-<?php include_once "includes/loading.html" ?>
-
 <script>
 	window.onload = function(){
 		ReviewsPagination();
@@ -498,7 +499,6 @@
 			var titre = $("#reviewTitle").val();
 			var commentaire = $("#reviewText").val();
 			var articleID = $(".add-to-cart-btn").attr("id");
-			
 			$.ajax({
 				url: "../public-includes/ajax_queries",
 				method: "POST",
@@ -517,13 +517,11 @@
 				success: function(data){
 					$("#btnSendReview").remove();
 					setTimeout(function(){
-						
-						if(data != null)
+						if(data != null && data != -1)
 							$("#review-form").load(" #review-form");
-						else
+						if(data == -1)
 							$(location).attr("href", "../register.php");
-						
-					}, 1800);
+					}, 800);
 				}
 				
 			});

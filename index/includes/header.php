@@ -6,10 +6,28 @@
 	include_once "../public-includes/classes.php";
 
 	if(isset($_POST['submit']) && !empty($_POST['search'])):
+
 		$search = $_POST['search'];
 		$categorie = $_POST['categorie'];
 		header('location: rechercher.php?categorie='.$categorie.'&rechercher='.$search);
+        exit();
+
     endif;
+    
+    if(isset($_POST['sbmlogout'])):
+    
+        header('Location: ../public-includes/logout.php');
+        exit();
+
+    endif;
+
+	if(!isset($_SESSION['vst'])){
+		$_SESSION['vst'] = true;
+		$con->query(" INSERT INTO statistiques VALUES (NULL, 'visite', default) ");
+	}
+
+	
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -42,37 +60,44 @@
 		<!-- scripts -->
    		<script src="js/jquery.min.js"></script>
 		<script src="js/functions.js"></script>
+   <noscript>
+   <style>
+	   #overlayLoadingPage, body{
+		   display: none;
+	   }
+	   </style>
+			
+		</noscript>
     </head>
 	<body>
-		<!-- HEADER -->
 		<header>
-			<!-- TOP HEADER -->
 			<div id="top-header">
 				<div class="container">
-					<ul class="header-links pull-left">
-						<li><a><i class="fa fa-phone"></i> 0522 50 30 30</a></li>
-						<li><a><i class="fa fa-envelope-o"></i> contact@mga.ma</a></li>
-						<li><a><i class="fa fa-map-marker"></i> Hay Moulay Abdellah Rue 74 N°54 ,Casablanca</a></li>
-					</ul>
-					<ul class="header-links pull-right">
-						<li><a><i class="fa fa-dollar"></i> MAD</a></li>
-						<?php
-							if(isset($_SESSION['clientID']))
-								echo '<li><a href="profile.php?client='.$_SESSION['clientUserName'].'"><i class="fa fa-user-o"></i> Mon compte</a></li>';
-							else
-								echo '<li><a href="../login.php"><i class="fa fa-sign-in"></i>Se connecter</a></li>';
-						?>
-					</ul>
+				    <form action="" method="post">
+                        <ul class="header-links pull-left">
+                            <li><a><i class="fa fa-phone"></i> 0522 50 30 30</a></li>
+                            <li><a><i class="fa fa-envelope-o"></i> contact@mga.ma</a></li>
+                            <li><a><i class="fa fa-map-marker"></i> Hay Moulay Abdellah Rue 74 N°54 ,Casablanca</a></li>
+                        </ul>
+                        <ul class="header-links pull-right">
+                            <li><a><i class="fa fa-dollar"></i> MAD</a></li>
+                            <?php
+                                if(isset($_SESSION['clientID'])):
+                                    echo '<li><a href="commandes.php"><i class="fa fa-th-list"></i> Mes commandes</a></li>';
+                                    echo '<li><a href="profile.php"><i class="fa fa-user-o"></i> Mon compte</a></li>';
+                                    echo '<li><a><button type="submit" name="sbmlogout" class="ovr-button-styles"><i class="fa fa-sign-in"></i> Se déconnecter</button></a></li>';
+                                else:
+                                    echo '<li><a href="../login.php"><i class="fa fa-sign-in"></i> Se connecter</a></li>';
+                                endif;
+                            ?>
+                        </ul>
+                    </form>
 				</div>
 			</div>
-			<!-- /TOP HEADER -->
-			<!-- MAIN HEADER -->
 			<div id="header">
-				<!-- container -->
 				<div class="container">
 					<!-- row -->
 					<div class="row">
-						<!-- LOGO -->
 						<div class="col-md-3">
 							<div class="header-logo">
 								<a href="index.php" class="logo">
@@ -80,13 +105,11 @@
 								</a>
 							</div>
 						</div>
-						<!-- /LOGO -->
 
-						<!-- SEARCH BAR -->
 						<div class="col-md-6">
 							<div class="header-search">
 								<form action="" method="post">
-									<select name="categorie" class="input-select" style="width:23%">
+									<select name="categorie" class="input-select form-control">
 										<option value="tout">Tout</option>
 										<?php
 											$query = $con->query("SELECT * FROM categorie ORDER BY categorieNom");
@@ -111,9 +134,7 @@
 								</form>
 							</div>
 						</div>
-						<!-- /SEARCH BAR -->
 
-						<!-- ACCOUNT -->
 						<div class="col-md-3 clearfix">
 							<div class="header-ctn">
 								<!-- Favoris -->
@@ -131,7 +152,7 @@
 										<div class="cart-summary">
 											<small>
 											<span id="nbrArticlesFavoris"></span>
-											Artiles(s)
+											Articles(s)
 											</small>
 										</div>
 										<div class="cart-btns">
@@ -139,22 +160,21 @@
 										</div>
 									</div>
 								</div>
-								<!-- /Favoris -->
-								<!-- Cart -->
+
 								<div class="dropdown pan-toggle">
 									<a class="dropdown-toggle">
 										<i class="fa fa-shopping-cart"></i>
 										<span>Panier</span>
 										<div class="qty qty-panier"></div>
 									</a>	
-									<div class="cart-dropdown pan-dropdown" >
+									<div id="pd" class="cart-dropdown pan-dropdown" >
 										<div class="cart-list cart-list-panier">
 											
 										</div>
 										<div class="cart-summary">
 											<small>
-											<span id="nbrArticlesPanier"></span>
-											Artiles(s)
+												<span id="nbrArticlesPanier"></span>
+												Articles(s)
 											</small>
 											<h5>Total: <span id="prixTotal">0 DHS</span></h5>
 										</div>
@@ -163,24 +183,16 @@
 										</div>
 									</div>
 								</div>
-								<!-- /Cart -->
 
-								<!-- Menu Toogle -->
 								<div class="menu-toggle">
 									<a href="#">
 										<i class="fa fa-bars"></i>
 										<span>Menu</span>
 									</a>
 								</div>
-								<!-- /Menu Toogle -->
 							</div>
 						</div>
-						<!-- /ACCOUNT -->
 					</div>
-					<!-- row -->
 				</div>
-				<!-- container -->
 			</div>
-			<!-- /MAIN HEADER -->
 		</header>
-		<!-- /HEADER -->

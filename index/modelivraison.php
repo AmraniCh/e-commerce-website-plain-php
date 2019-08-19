@@ -28,14 +28,14 @@
 				break;
 				
 				case isset($_POST['c1']):
-					$_SESSION['modelivraison'] = "c1";
-					header('Location: verification.php');
+					$_SESSION['typelivraison'] = "gratuit";
+					header('Location: confirmation.php');
 					exit();
 				break;
 					
 				case isset($_POST['c2']):
-					$_SESSION['modelivraison'] = "c1";
-					header('Location: verification.php');
+					$_SESSION['typelivraison'] = "amana";
+					header('Location: confirmation.php');
 					exit();
 				break;
 			}	
@@ -101,8 +101,7 @@
 			</div>
 			
 		</div>
-		
-		<?php include_once "includes/loading.html" ?>
+	
 		
 		<script>
             $(document).ready(function(){

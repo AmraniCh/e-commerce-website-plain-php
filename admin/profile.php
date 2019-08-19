@@ -7,19 +7,21 @@
 		{
             if(isset($_POST['submit']))
             {
-                echo $_SESSION['admin'];
                 $nom = $_POST['nom'];
                 $prenom = $_POST['prenom'];
                 $motdepasse = $_POST['motdepasse'];
-                $adminname  = $_GET['admin'];
+                $adminname  = filter_var($_GET['admin'], FILTER_SANITIZE_STRING);
 
-                $con->query("UPDATE admin SET nom = '$nom', prenom = '$prenom', motdepasse = '$motdepasse' where adminName='$adminname' ");
+                $con->query(" UPDATE admin SET nom = '$nom', prenom = '$prenom', motdepasse = '$motdepasse' WHERE adminName='$adminname' "); 
                 
+                echo $adminname;
             }
             
             
             $result = mysqli_query($con,"SELECT * FROM admin WHERE adminName = '".$_SESSION['admin']."'");
+            
             if(mysqli_num_rows($result)>0){
+                
                 $row = mysqli_fetch_assoc($result);
                 $adminame = $row['adminName'];
                 $prenom = $row['prenom'];
@@ -43,10 +45,10 @@
               <div class="col-12">
                   <div class="card">
                       <div class="header">
-                          <h3 class="title">Edit Profile</h3>
+                          <h3 class="title">Modifier Profile</h3>
                       </div>
                       <div class="profile-content">
-                          <form action="profile.php?admin=<?php   ?>" id="profile" method="post">
+                          <form action="" id="profile" method="post">
                               <div class="row">
                                   <div class="col-md-12">
                                       <div class="form-group">

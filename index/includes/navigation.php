@@ -40,15 +40,6 @@
 			<!-- /container -->
 		</nav>
 		<!-- /NAVIGATION -->
-		<script>
-			$(document).ready(function(){
-				// Mobile Nav toggle
-				$('.menu-toggle > a').on('click', function (e) {
-					e.preventDefault();
-					$('#responsive-nav').toggleClass('active');
-				});
-			});
-		</script>
 		
 		<!-- full container -->
 		<div class="full-container">

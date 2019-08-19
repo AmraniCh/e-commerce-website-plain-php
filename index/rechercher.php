@@ -87,6 +87,4 @@
 
 		<?php include_once "includes/newsletter.php" ?>
 		
-		<?php include_once "includes/loading.html" ?>
-		
 		<?php include_once "includes/footer.php" ?>

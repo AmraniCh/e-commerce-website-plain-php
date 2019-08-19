@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    
+
     RemplirPanier();
     RemplirFavoris();
     StorePagination();
@@ -7,23 +7,47 @@ $(document).ready(function(){
     AfficherMarques();  
     
     $(".pan-toggle").on("click", function () {
-        $(".fav-dropdown").css("display","none");
-        $(".pan-dropdown").toggle();
+        $(".fav-dropdown").css("display", "none");
+        if($(".pan-dropdown").css("display") == "none"){
+            $(".pan-dropdown").css("animation", "dropdownAnimation .3s");
+            $(".pan-dropdown").show();
+        }
+        else
+            $(".pan-dropdown").hide();
+    });
+
+    $(".fav-toggle").click(function () {
+        $(".pan-dropdown").css("display", "none");
+        if($(".fav-dropdown").css("display") == "none"){
+            $(".fav-dropdown").css("animation", "dropdownAnimation .3s");
+            $(".fav-dropdown").show();
+        }
+        else
+            $(".fav-dropdown").hide();
     });
     
-    $(".fav-toggle").click(function(){
-        $(".pan-dropdown").css("display","none");
-        $(".fav-dropdown").toggle();
+    $('.cart-summary, .cart-btns').on('click', function (e) {
+        e.stopPropagation();
     });
 
 });
 
-    
-$('.cart-summary, .cart-btns').on('click', function (e) {
-	e.stopPropagation();
+$(window).load(function () {
+    $('#overlayLoadingPage').fadeOut();
 });
     
-$(document).on("click",".add-to-cart-btn", function(e){
+$(document).on("click", function(event){
+    element = $(event.target);
+    
+    if( !element.parents().hasClass("pan-toggle"))
+        $(".pan-dropdown").hide();
+    
+    if( !element.parents().hasClass("fav-toggle"))
+        $(".fav-dropdown").hide();
+
+});
+
+$(document).on("click", ".add-to-cart-btn", function(){
 
 	$(this).children(".fa-shopping-cart").removeClass("produit-panier-icon");
 	$(this).removeClass("produit-panier");
@@ -35,33 +59,48 @@ $(document).on("click",".add-to-cart-btn", function(e){
 	
     var articleID = $(this).attr("id");
 	var qty = 1;
-	if(location.pathname.split('/').slice(-1)[0] === "produit.php")
+	var couleur = "N/A";
+    
+	if(location.pathname.split('/').slice(-1)[0] === "produit.php"){
 		qty = parseInt($(".qty-article").val());
+        couleur = $("#couleurPrd option:selected").val().trim();
+    }
 	
-	if(qty > 0 && qty < 20){
-		$.ajax({
-			url: '../public-includes/ajax_queries',
-			method: 'POST',
-			data: {
-				function: 'AjouterAuPanier', 
-				articleID: articleID,
-				qty: qty
-			},
-			dataType: 'JSON',
-			success: function(data){
-				if(data != null && data != false){      
-				    $("#audio")[0].play();
-					RemplirPanier();
-				}
-				else
-					 $(location).attr('href', '../login.php');
-			}
-		});
-	}
+    $.ajax({
+        url: '../public-includes/ajax_queries',
+        method: 'POST',
+        data: {
+            function: 'AjouterAuPanier', 
+            articleID: articleID,
+            qty: qty,
+            couleur: couleur
+        },
+        dataType: 'JSON',
+        success: function(data){
+            //alert(data);
+            if(data != null && data != false && data != -1){      
+                $("#popupSound")[0].currentTime = 0;
+                $("#popupSound")[0].play();
+                RemplirPanier();
+            }
+            if(data == -1)
+            {
+                $(".produit-panier").css("animation", "none");
+                $(".produit-panier-icon").css("animation", "none");
+                if($("#overlayAjaxError").css("display") == "none"){
+                    $("#overlayAjaxError").show();
+                    $("#ajaxErrorText").text("Il n'y a pas assez de produits en stock.");
+                    hideErrorDiv();
+                }
+            }
+            if(data == false)
+                 $(location).attr('href', '../login.php');
+        }
+    });
         
 }); 
     
-$(document).on("click",".add-to-wishlist", function(){
+$(document).on("click", ".add-to-wishlist", function(){
 	
 	$(this).removeClass('favoris-anim');
     setTimeout(function(){
@@ -79,17 +118,51 @@ $(document).on("click",".add-to-wishlist", function(){
         dataType: 'JSON',
         success: function (data) {
             if (data != false) {
-                $("#audio")[0].play();
+                $("#popupSound")[0].currentTime = 0;
+                $("#popupSound")[0].play();
                 RemplirFavoris();
-            } else
+            } 
+            else
                 $(location).attr('href', '../login.php');
         }
     });   
 });
+
+$(document).on("click",".supp-favoris",function(){
     
-$(document).on("click",".supp-panier",function(){
     var articleID = $(this).attr("id");
     
+    $.ajax({
+        url: "../public-includes/ajax_queries",
+        method: "POST",
+        data: {
+            function: "SupprimerAuFavoris",
+            articleID: articleID
+        },
+        dataType: 'JSON',
+        beforeSend: function () {
+            $('#overlayAjaxLoading').show();
+        },
+        success: function (data) {
+            if (data != false) {
+                $("div#" + articleID + ".pw-favoris").remove();
+                RemplirFavoris();
+                $(".fav-dropdown").css("animation", "none");
+            }
+        },
+        complete: function () {
+            setTimeout(function () {
+                $('#overlayAjaxLoading').hide();
+                $(".fav-dropdown").show();
+            }, 300);
+        }
+    });
+});
+
+$(document).on("click", ".supp-panier", function(){
+
+    var articleID = $(this).attr("id");
+
     $.ajax({
         url: "../public-includes/ajax_queries",
         method: "POST",
@@ -98,39 +171,34 @@ $(document).on("click",".supp-panier",function(){
             articleID: articleID
         },
         dataType: 'JSON',
+        async: false,
+        beforeSend: function () {
+            $('#overlayAjaxLoading').show();
+        },
         success: function (data) {
             if (data != false) {
                 $("div#" + articleID + ".pw-panier").remove();
                 RemplirPanier();
-                $(".pan-dropdown").toggle();
-
+                $(".pan-dropdown").css("animation", "none");
+                
                 var url = location.pathname.split('/').slice(-1)[0];
                 if (url == 'panier.php')
                     RemplirPagePanier();
             }
-        }
-    });
-});
-    
-$(document).on("click",".supp-favoris",function(){
-    var articleID = $(this).attr("id");
-    
-    $.ajax({
-        url: "../public-includes/ajax_queries",
-        method: "POST",
-        data: {
-            function: "SupprimerAuxFavoris",
-            articleID: articleID
         },
-        dataType: 'JSON',
-        success: function (data) {
-            if (data != false) {
-                $("div#" + articleID + ".pw-favoris").remove();
-                RemplirFavoris();
-                $(".fav-dropdown").toggle();
-            }
+        complete: function () {
+            setTimeout(function () {
+                $('#overlayAjaxLoading').hide();
+                $(".pan-dropdown").show();
+            }, 300);
         }
     });
+        
+});
+
+$('.menu-toggle > a').on('click', function (e) {
+    e.preventDefault();
+    $('#responsive-nav').toggleClass('active');
 });
 
 function StorePagination(){
@@ -212,6 +280,7 @@ function AfficherProduitsFiltrer() {
     var page_nbr = $(".store-pagination li[class*='active']").attr("id");   
     if(page_nbr === undefined) // cannot page_nbr be undefined or null
         page_nbr = 1;
+    
     if (categoriesIDs[0] != null && minPrix != '' && maxPrix != '') {
         $.ajax({
             url: '../public-includes/ajax_queries',
@@ -237,10 +306,10 @@ function AfficherProduitsFiltrer() {
                     for(var i=0;i<data.length - 2;i++)
                     {
                         if(data[i].remiseDisponible == true){
-                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='sale'>"+data[i].tauxRemise+"%</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrixRemise+" DHS<del class='product-old-price'>"+data[i].articlePrix+"</del></h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
+                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><a href='produit.php?produit=" + data[i].param + "'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='sale'>"+data[i].tauxRemise+"%</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='produit.php?produit=" + data[i].param + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrixRemise+" DHS<del class='product-old-price'>"+data[i].articlePrix+"</del></h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
                         }
                         else
-                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrix+" DHS</h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
+                            $(".produits-filter").append("<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><div class='product pro-tab1'><a href='produit.php?produit=" + data[i].param + "'><div class='product-img no-slick-product' style='background-image:url("+data[i].imageArticle+")'><div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>"+data[i].categorieNom+"</p><h3 class='product-name'><a href='produit.php?produit=" + data[i].param + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'>"+data[i].articlePrix+" DHS</h4><div class='product-rating'>"+data[i].niveau+"</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='"+data[i].articleID+"' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>");
                     }
                     $(".store-qty").html("Affichés "+data[data.length - 1] +" Sur "+data[data.length -2 ]);
                 }
@@ -265,7 +334,6 @@ function AfficherMarques() {
             categoriesIDs.push($(this).attr("id"));
         }
     });
-
     $.ajax({
         url: '../public-includes/ajax_queries',
         method: 'POST',
@@ -295,12 +363,13 @@ function RemplirFavoris(){
 	    data: {
 	        function: 'RemplirFavoris'
 	    },
+        async: false,
 	    dataType: 'JSON',
 	    success: function (data) {
             if(data != null){
                 $(".cart-list-favori").empty();
                 for(var i=0;i<data.length - 1;i++){
-                    $(".cart-list-favori").append("<div id='"+data[i].articleID+"' class='product-widget pw-favori'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body' style='text-align:left'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'></span>"+data[i].prix+" DHS</h4></div><button id='"+data[i].articleID+"' class='delete supp-favoris'><i class='fa fa-close'></i></button></div>");
+                    $(".cart-list-favori").append("<div id='"+data[i].articleID+"' class='product-widget pw-favori'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'></span>"+data[i].prix+" DHS</h4></div><button id='"+data[i].articleID+"' class='delete supp-favoris ovr-button-styles'><i class='fa fa-times-circle'></i></button></div>");
                 }
                 $(".qty-favori, #nbrArticlesFavoris").html(data[data.length - 1]);
             }
@@ -320,14 +389,15 @@ function RemplirPanier(){
 	        function: 'RemplirPanier'
 	    },
 	    dataType: 'JSON',
+        async: false,
 	    success: function (data) {
             if(data != null){
                 $(".cart-list-panier").empty();
                 for(var i=0;i<data.length - 2;i++){
                     if(data[i].remiseDisponible == 1)
-                        $(".cart-list-panier").append("<div id='"+data[i].articleID+"' class='product-widget pw-panier'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'>"+data[i].quantite+"x</span>" + data[i].prixRemise + " DHS<del class='product-old-price'> " + data[i].prix + " DHS</del></h4></div><button id='"+data[i].articleID+"' class='delete supp-panier'><i class='fa fa-close'></i></button></div>");
+                        $(".cart-list-panier").append("<div id='"+data[i].articleID+"' class='product-widget pw-panier'><a href='produit.php?produit=" + data[i].param + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body'><h3 class='product-name'><a href='produit.php?produit=" + data[i].param + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'>"+data[i].quantite+"x</span>" + data[i].prixRemise + " DHS<del class='product-old-price'> " + data[i].prix + " DHS</del></h4></div><button id='"+data[i].articleID+"' class='delete supp-panier ovr-button-styles'><i class='fa fa-times-circle'></i></button></div>");
                     else
-                        $(".cart-list-panier").append("<div id='"+data[i].articleID+"' class='product-widget pw-panier'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body'><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'>"+data[i].quantite+"x</span>"+data[i].prixRemise+" DHS</h4></div><button id='"+data[i].articleID+"' class='delete supp-panier'><i class='fa fa-close'></i></button></div>");
+                        $(".cart-list-panier").append("<div id='"+data[i].articleID+"' class='product-widget pw-panier'><a href='produit.php?produit=" + data[i].param + "'><div class='product-img'><img src='"+data[i].imageArticle+"' alt=''></div></a><div class='product-body'><h3 class='product-name'><a href='produit.php?produit=" + data[i].param + "'>"+data[i].articleNom+"</a></h3><h4 class='product-price'><span class='qty'>"+data[i].quantite+"x</span>"+data[i].prixRemise+" DHS</h4></div><button id='"+data[i].articleID+"' class='delete supp-panier ovr-button-styles'><i class='fa fa-times-circle'></i></button></div>");
                 }
                 $("#prixTotal").html(data[data.length - 2]+ " DHS");
                 $(".qty-panier, #nbrArticlesPanier").html(data[data.length - 1]);
@@ -477,10 +547,10 @@ function LoadSildeData(data, ele){
         ele.empty();
         for (var i = 0; i < data.length; i++) {
             if (data[i].remiseDisponible == true) {
-                ele.append("<div class='product pro-tab1' style='visibility:hidden'><a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='sale'>" + data[i].tauxRemise + "%</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrixRemise + " DHS<del class='product-old-price'>" + data[i].articlePrix + "</del></h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
+                ele.append("<div class='product pro-tab1' style='visibility:hidden'><a href='produit.php?produit=" + data[i].param + "'><div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='sale'>" + data[i].tauxRemise + "%</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='produit.php?produit=" + data[i].param + "'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrixRemise + " DHS<del class='product-old-price'>" + data[i].articlePrix + "</del></h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
             }
             else
-                ele.append("<div class='product pro-tab1' style='visibility:hidden'> <a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'> <p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='produit.php?id=" + data[i].articleID + "'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrix + " DHS</h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
+                ele.append("<div class='product pro-tab1' style='visibility:hidden'> <a href='produit.php?produit=" + data[i].param + "'><div class='product-img'><img src='" + data[i].imageArticle + "' alt='" + data[i].imageArticle + "'> <div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'> <p class='product-category'>" + data[i].categorieNom + "</p><h3 class='product-name'><a href='produit.php?produit=" + data[i].param + "'>" + data[i].articleNom + "</a></h3> <h4 class='product-price'>" + data[i].articlePrix + " DHS</h4> <div class='product-rating'>" + data[i].niveau + "</div><div class='product-btns'><button id='" + data[i].articleID + "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div></div><div class='add-to-cart'><button id='" + data[i].articleID + "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div>");
         }
         UnslickSlide(ele);
     }
@@ -496,9 +566,9 @@ function LoadSlideWidgetData(data, ele){
             if(i === 0)
                 html+= "<div>";
             if(json[i].remiseDisponible == true)
-                html+= "<div class='product-widget'> <a href='produit.php?id=" + json[i].articleID + "'><div class='product-img'> <img src='"+json[i].imageArticle+"' alt='"+json[i].imageArticle+"'> </div></a><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?id=" + json[i].articleID + "'>"+json[i].articleNom+"</a></h3> <h4 class='product-price'>"+json[i].articlePrix+"<del class='product-old-price'>"+json[i].articlePrixRemise+"</del></h4> </div></div>";
+                html+= "<div class='product-widget'> <a href='produit.php?produit=" + json[i].param + "'><div class='product-img'> <img src='"+json[i].imageArticle+"' alt='"+json[i].imageArticle+"'> </div></a><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?produit=" + json[i].param + "'>"+json[i].articleNom+"</a></h3> <h4 class='product-price'>"+json[i].articlePrix+"<del class='product-old-price'>"+json[i].articlePrixRemise+"</del></h4> </div></div>";
             else
-                html+= "<div class='product-widget'> <a href='produit.php?id=" + json[i].articleID + "'><div class='product-img'> <img src='"+json[i].imageArticle+"' alt='"+json[i].imageArticle+"'> </div></a><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?id=" + json[i].articleID + "'>"+json[i].articleNom+"</a></h3> <h4 class='product-price'>"+json[i].articlePrix+"</h4> </div></div>";
+                html+= "<div class='product-widget'> <a href='produit.php?produit=" + json[i].param + "'><div class='product-img'> <img src='"+json[i].imageArticle+"' alt='"+json[i].imageArticle+"'> </div></a><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?id=" + json[i].articleID + "'>"+json[i].articleNom+"</a></h3> <h4 class='product-price'>"+json[i].articlePrix+"</h4> </div></div>";
             if(i=== json.length - 1)
                 html+= "</div>";
         }
@@ -512,9 +582,9 @@ function LoadAsideData(data, ele) {
         var html = "";
         for (var i = 0; i < json.length; i++) {
             if (json[i].remiseDisponible == true)
-                html += "<div class='product-widget'> <a href='produit.php?id=" + json[i].articleID + "'><div class='product-img'><img src='" + json[i].imageArticle + "' alt='" + json[i].imageArticle + "'> </div><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?id=" + json[i].articleID + "'>" + json[i].articleNom + "</a></h3> <h4 class='product-price'>" + json[i].articlePrix + "<del class='product-old-price'>" + json[i].articlePrixRemise + "</del></h4> </div></div>";
+                html += "<div class='product-widget'> <a href='produit.php?produit=" + data[i].param + "'><div class='product-img'><img src='" + json[i].imageArticle + "' alt='" + json[i].imageArticle + "'> </div><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?produit=" + data[i].param + "'>" + json[i].articleNom + "</a></h3> <h4 class='product-price'>" + json[i].articlePrix + "<del class='product-old-price'>" + json[i].articlePrixRemise + "</del></h4> </div></div>";
             else
-                html += "<div class='product-widget'> <a href='produit.php?id=" + data[i].articleID + "'><div class='product-img'> <img src='" + json[i].imageArticle + "' alt='" + json[i].imageArticle + "'> </div></a><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?id=" + json[i].articleID + "'>" + json[i].articleNom + "</a></h3> <h4 class='product-price'>" + json[i].articlePrix + "</h4> </div></div>";
+                html += "<div class='product-widget'> <a href='produit.php?produit=" + data[i].param + "'><div class='product-img'> <img src='" + json[i].imageArticle + "' alt='" + json[i].imageArticle + "'> </div></a><div class='product-body'> <p class='product-category'><img src='img/new.png'></p><h3 class='product-name'><a href='produit.php?produit=" + data[i].param + "'>" + json[i].articleNom + "</a></h3> <h4 class='product-price'>" + json[i].articlePrix + "</h4> </div></div>";
         }
         ele.append(html);
     }
@@ -540,6 +610,13 @@ function UnslickSlideWidget(){
     $("div[data-nav='#slick-nav-4']").slick('unslick');
     $("div[data-nav='#slick-nav-5']").slick('unslick');
     $('<script>').attr('src', "js/refersh-slick.js").appendTo('.scripts');
+}
+
+function hideErrorDiv(){
+    setTimeout(function(){
+        $("#overlayAjaxError").hide();
+        $("#ajaxErrorText").empty();
+    }, 1500);
 }
 
 /****** VALIDATION FUNCTIONS *****/
@@ -571,6 +648,15 @@ function validLength(input, min, max) {
         return false;
 }
 
+function validName(name) {
+    var regex =  /^[a-zA-Z ]{3,30}$/;
+    if (name.val().match(regex))
+        return true;
+    else
+        return false;
+}
+
+
 // check if all letters are string words without space
 function allLetters(name) {
     var letters = /^[A-Za-z]+$/;
@@ -598,8 +684,7 @@ function check_numberPhone(number) {
         return false;
 }
 
-function validNumber(number)
-{
+function validNumber(number){
     var numbers = /^\d+$/g;
     if(number.val().match(numbers))
         return true;
@@ -627,8 +712,7 @@ function icon_change_color(span, icon, ifcorrect) {
     }
 }
 
-function compteIntrouvable()
-{
+function compteIntrouvable(){
     $("#username_error").css("visibility", "visible");
     $("#username_error").html("* Nom d'utilisateur ou le mot de passe est incorrect");
 }

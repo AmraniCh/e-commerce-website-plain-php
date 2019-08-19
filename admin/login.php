@@ -32,6 +32,7 @@
             if($query->num_rows > 0){
               
                 $_SESSION['admin'] = $adminame;
+                $_SESSION['not_vu'] = 0;
                 header ('Location: index.php?admin='.$adminame);
             }
             else

@@ -8760,7 +8760,9 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 
 .form-text {
   display: block;
-  margin-top: 0.25rem; }
+  margin-top: 0.25rem; 
+  margin-bottom: .5rem
+}
 
 .form-row {
   display: flex;

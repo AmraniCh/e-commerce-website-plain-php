@@ -31,34 +31,6 @@
                                   <div class="col-md-12">
                                      <div class="table-responsive">
                                           <table id="dt_categories" class="table table-hover categories-table">
-                                             <!--
-                                              <thead>
-                                                  <tr>
-                                                      <th>ID</th>
-                                                      <th>Nom Catégorie</th>
-                                                      <th>Description</th>
-                                                      <th>Status</th>
-                                                      <th class="font-awsome-large"><i class="fas fa-edit"></i></th>
-                                                      <th class="font-awsome-large"><i class="fas fa-trash"></i></th>
-                                                  </tr>
-                                              </thead>
-                                              <tbody>
-                                                 <?php 
-                                                    $categorie = new Categorie();
-                                                    $result = $categorie->AfficherCategories();
-                                                    while($row = $result->fetch_row()){
-                                                        $badge = $categorie->echoBadge($row[3]);
-                                                        echo '<tr><td class="id" id="'.$row[0].'">'.$row[0].'</td>';
-                                                        echo '<td class="nom">'.$row[1].'</td>';
-                                                        echo '<td class="description">'.$row[2].'</td>';
-                                                        echo '<td class="active" id='.$row[3].'>'.$badge.'</td>';
-                                                        echo '<td><button type="button" class="btn btn-blue btn-update-dialog open-dialog" data-toggle="modal" data-target="#modifierCategorie"><i class="fas fa-edit icon-col"></i></button></td>';
-                                                        echo '<td><button type="button" class="btn btn-red open-dialog" data-toggle="modal" data-target="#suppressionCategorie"><i class="fas fa-trash icon-col"></i></button></td>';
-                                                        echo '</tr>';
-                                                    }
-                                                ?>                                  
-                                              </tbody>
-                                              -->
                                           </table>
                                       </div>
                                   </div>
@@ -289,6 +261,7 @@
             function dataTableInitialize(){
                 $('#dt_categories').dataTable({
                     destroy: true,
+                    "order":[[1, "asc"]],
                     "pagingType": "simple_numbers",
                     "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Tous"] ],
                     "language": {
@@ -357,7 +330,7 @@
                         }
                     }
                 });
-            };
+            }
 
                         
         </script>

@@ -1,5 +1,6 @@
 <?php
     require_once 'public-includes/config.php';
+    require_once 'public-includes/classes.php';
     require_once 'public-includes/PHPMAILER.php';
     session_start();
 ?>
@@ -39,13 +40,26 @@
         $reponse = $con->escape_string($_POST['reponse']);
         $password = password_hash($_POST['password2'], PASSWORD_DEFAULT, array('cost' => 10));
         
-        $query = $con->query("INSERT INTO client VALUES(NULL,'$username','$prenom','$nom','$email','$adresse','$ville',default,NULL,$codepostal,'$tele','$password','$question','$reponse',NULL)");   
-        if($con->affected_rows){
+        $query = $con->query("INSERT INTO client VALUES(NULL,'$username', '$prenom', '$nom', '$email', '$adresse', '$ville', default, NULL, NULL, $codepostal, '$tele', '$password', '$question', '$reponse', NULL)");   
+        if($con->affected_rows > 0){
           $_SESSION['clientUserName'] = $username;
-          header ('location: emailconfirmation.php');
+          if(sendEmail($email,$nom)):
+            
+            // notification
+            $notification = new Notification();
+            $notification->NouveauNotification('client', $clientID);
+          
+            header ('location: emailconfirmation.php');
+            exit();
+          
+          else:
+          
+            echo "Une erreur à été produite essayez plus tard.";
+          
+          endif;
         }
 
-        sendEmail($email,$nom);
+
       }
     
     ?>
@@ -57,7 +71,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-xl-8 mx-auto">
                <form id="register-form" action="register.php" method="post">
                   <div class="auto-form-wrapper" style="border-radius:30px;">
-                    <h2 class="text-center mb-4">Creér un compte maintenant</h2>
+                    <h2 class="text-center mb-4">Créer un compte maintenant</h2>
                     <!-- LEFT CONTAINER -->
                     <div class="flex-container" style="overflow: hidden">
                      <!-- LEFT CONTAINER -->

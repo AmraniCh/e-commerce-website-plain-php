@@ -1,7 +1,8 @@
 <?php
     require_once 'public-includes/config.php';
     session_start();
-    session_unset(); 
+    unset($_SESSION['clientID']);
+    unset($_SESSION['clientUserName']);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -14,25 +15,58 @@
         <link href="index/css/mainstyle.css" rel="stylesheet" />		
         <link href="index/css/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
    	    <script src="index/js/jquery.min.js"></script>
+   	    <noscript>
+   	      <span class="no-javascript-text">veuillez activer javascript</span>
+   	      <style>
+/*
+            .container-scroller{
+              display: none;
+            }
+*/
+          </style>
+   	      
+   	    </noscript>
     </head>
   <body>
   <?php
+    
+      if(isset($_POST['recSbm'])):
+    
+        header("Location: recuperation.php");
+        exit();
+      
+      endif;
+        
+    
       // login
-      if(isset($_POST['submit']))
+      if(isset($_POST['submit']) && isset($_POST['username-lg']) && isset($_POST['password-lg']))
       {
-          $clientUserName = $con->escape_string($_POST['username-lg']);
-          $motdepass = $con->escape_string($_POST['password-lg']);
+        
+          $clientUserName = filter_var($con->escape_string($_POST['username-lg']), FILTER_SANITIZE_STRING);
+          $motdepass = filter_var($con->escape_string($_POST['password-lg']), FILTER_SANITIZE_STRING);
           
-          $query = $con->query("SELECT * FROM client WHERE clientUserName = '$clientUserName'");
-          if($query->num_rows >0):
+          $query = $con->query(" SELECT * 
+                            FROM client 
+                            WHERE clientUserName = '$clientUserName' ");
+        
+          if( $query->num_rows >0 ):
+        
               $row = $query->fetch_assoc();
+        
               if(password_verify($motdepass, $row['motdepasse'])):
+        
                 $_SESSION['clientUserName'] = $row['clientUserName'];
                 $_SESSION['clientID'] = $row['clientID'];
+        
                 header ('location: index/index.php');
+                exit();
+        
               else:
+        
                 echo '<script>$(document).ready(function(){ compteIntrouvable() });</script>';
+        
               endif;
+        
           endif;
       }
     ?>
@@ -41,12 +75,12 @@
       <div class="content-wrapper d-flex align-items-center auth auth-bg-1 theme-one">
         <div class="row w-100">
           <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 mx-auto">
-           <form id="login-form" action="login.php" method="post">
             <div class="auto-form-wrapper">
+              <form id="login-form" method="post">
                 <div class="form-group" style="margin-bottom: 0!important;">
                   <label for="username-lg" class="label">Nom d'utilisateur :</label>
                   <div class="input-group">
-                    <input id="username-lg" name="username-lg" type="text" class="form-control" placeholder="Nom d'utilisateur" style="border-right:1px solid #e5e5e5">
+                    <input id="username-lg" name="username-lg" type="text" class="form-control" placeholder="Nom d'utilisateur" value="<?php if(isset($_SESSION['rec_clientUserName']) && isset($_GET['rec'])) echo $_SESSION['rec_clientUserName'] ?>" style="border-right:1px solid #e5e5e5">
                     <div id="username-ic-span" class="input-group-append">
                       <span class="input-group-text">
                         <i id="username-ic-i" class="mdi mdi-check-circle-outline"></i>
@@ -60,7 +94,7 @@
                 <div id="fx-firefox-mg" class="form-group" style="margin-bottom: 0!important;">
                   <label for="password-lg" class="label">Mot de passe</label>
                   <div class="input-group">
-                    <input id="password-lg" name="password-lg" type="password" class="form-control" placeholder="*********" style="border-right:1px solid #e5e5e5">
+                    <input id="password-lg" name="password-lg" type="password" class="form-control" placeholder="*********" style="border-right:1px solid #e5e5e5" value="<?php if(isset($_SESSION['rec_motdepasse']) && isset($_GET['rec'])) echo $_SESSION['rec_motdepasse'] ?>">
                     <div id="password-ic-span" class="input-group-append">
                       <span class="input-group-text">
                         <i id="password-ic-i" class="mdi mdi-check-circle-outline"></i>
@@ -82,16 +116,19 @@
                     </label>
                   </div>
                 </div>
+              </form>
                 <div class="form-group">
-                  <button class="btn btn-block g-login" type="button">
-                    <i class="mdi mdi-lock-open-outline"></i>J'ai oublié mon mot de passe !</button>
+                 <form action="" method="post">
+                  <button class="btn btn-block g-login" type="submit" name="recSbm">
+                    <i class="mdi mdi-lock-open-outline"></i>J'ai oublié mon mot de passe !
+                  </button>
+                  </form>
                 </div>
                 <div class="text-block text-center my-3">
                   <span class="text-small font-weight-semibold">Pas un membre ?</span>
                   <a href="register.php" class="text-black text-small">Créer un nouveau compte</a>
               </div>
             </div>
-            </form>
             <p class="footer-text text-center">copyright © 2019 M.G.A All rights reserved.</p>
           </div>
         </div>
