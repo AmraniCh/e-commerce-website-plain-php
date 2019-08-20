@@ -454,6 +454,17 @@
 		
 			return null;
 		}
+        
+        function RandomCategoriesNav(){
+            $result = $this->con->query("SELECT categorieNom FROM categorie ORDER BY RAND() LIMIT 4");
+            return $result;
+        }
+        
+        function RandomCategoriesWidget(){
+            $result = $this->con->query("SELECT categorieNom FROM categorie ORDER BY RAND() LIMIT 1");
+            $row = $result->fetch_row();		
+            return $row[0];
+        }
 	}
 		
 	final class Panier{
@@ -677,41 +688,5 @@
 			
 			return null;
 		}
-	}
-
-    final class Notification{
-      private $con;
-		
-      public function __construct(){
-          global $con;
-          $this->con = $con;
-      }
+	}     
       
-      public function NouveauNotification($type, $clientID){
-        
-        $client = new Client();
-        $nom_prenom = $client->ClientNomPrenom($clientID);
-        
-        switch($type){
-          case "client":
-            $titre = "Nouveau Client Enregistré";
-          break;
-          case "commande":
-            $titre = "Nouveau Commande de [".$nom_prenom."]";
-          break;
-          case "commentaire":
-            $titre = "Nouveau Commentaire de [".$nom_prenom."]";
-          break;
-        }
-        
-        $this->con->query(" INSERT INTO notification VALUES(
-                        null,
-                        '$titre',
-                        default,
-                        '$type',
-                        default) ");
-        
-      }
-      
-      
-    }

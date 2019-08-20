@@ -1,4 +1,4 @@
-<?php require_once 'includes/header.php' ?>
+<?php include_once 'includes/header.php' ?>
 
  <?php
   if(isset($_GET['admin']) && isset($_SESSION['admin'])){
@@ -9,12 +9,12 @@
   ?>
   <div class="container-scroller">
   
-    <?php require_once 'includes/navigation.php' ?>
+    <?php include_once 'includes/navigation.php' ?>
   
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
       
-      <?php require_once 'includes/sidebar.php' ?>
+      <?php include_once 'includes/sidebar.php' ?>
       
       <!-- partial -->
       <div class="main-panel">
@@ -83,7 +83,7 @@
         function dataTableInitialize(){
             $('#dt_notification').dataTable({
                 destroy: true,
-                "order":[[2, "asc"]],
+                "order":[[0, "desc"]],
                 "pagingType": "simple_numbers",
                 "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Tous"] ],
                 "language": {
@@ -111,11 +111,11 @@
                 },
                 columns: [
                     { title: 'ID' },
-                    { title: 'Titre' },
+                    { title: 'Contenu' },
                     { title: 'Temps écoulé' }
                 ],
                 ajax: {
-                    url: "../public-includes/notifications",
+                    url: "includes/notifications_xhr",
                     data: {
                         function: "AfficherNotificationsTable"
                     },
@@ -128,7 +128,7 @@
                         
     </script>
         
-    <?php require_once 'includes/footer.php' ?>
+    <?php include_once 'includes/footer.php' ?>
     <?php
             }
           else

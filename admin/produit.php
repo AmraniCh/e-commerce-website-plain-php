@@ -1,4 +1,4 @@
-<?php require_once 'includes/header.php' ?>
+<?php include_once 'includes/header.php' ?>
 
  <?php
   if(isset($_GET['admin']) && isset($_SESSION['admin'])){
@@ -45,12 +45,12 @@
   ?>
   <div class="container-scroller">
   
-    <?php require_once 'includes/navigation.php' ?>
+    <?php include_once 'includes/navigation.php' ?>
   
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
       
-      <?php require_once 'includes/sidebar.php' ?>
+      <?php include_once 'includes/sidebar.php' ?>
       
       <!-- partial -->
       <div class="main-panel">
@@ -238,7 +238,7 @@
                                              <div class="add-photos-canvas col-xs-6">
                                                  <div class="form-group">
                                                      <label for="photoPr">
-                                                         <img src="plus.png" class="img-responsive img-upload">
+                                                         <img src="images/plus.png" class="img-responsive img-upload">
                                                      </label>
                                                      <input id="photoPr" name="files[]" type="file" multiple>
                                                  </div>
@@ -314,10 +314,6 @@
               <div class="modal-body">
                 <h5>Produit modifié avec success !</h5>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-light btn-red" data-dismiss="modal"><i class="fas fa-arrow-circle-left"></i>Ok</button>
-
-              </div>
             </div>
           </div>
         </div>
@@ -385,7 +381,6 @@
                    var formData = new FormData();
                    
                    [].forEach.call(this.files, function (file) {
-                       console.log(file)
                         formData.append('files[]', file);
                     });
                    
@@ -432,7 +427,7 @@
                     var selected_image_name = image_nom($(".selected-image"));
                     
                     if($(this).attr("id") == "btnAjouter"){
-                    
+                        
                         $.ajax({
                            url: '../public-includes/ajax_queries',
                             method: "POST",
@@ -453,13 +448,12 @@
                                 categorieID: categorieID
                             },
                             success: function(data){
-                                alert(data);
                                 if(data != null){
                                     $('#messageAjoute').modal('toggle');
                                     var admin  = $("#HSV").val();
                                     setTimeout(function(){
                                        $(location).attr("href", "produits.php?admin="+admin); 
-                                    }, 800);
+                                    }, 600);
                                 }
                             }
                         });
@@ -472,8 +466,6 @@
                         $(".photo-produit").each(function(){
                             images_names.push(image_nom($(this)));
                         });
-                        
-                        console.log(images_names);
                         
                         var articleID = $("#articleID").val();
                         
@@ -499,8 +491,13 @@
                                 categorieID: categorieID
                             },
                             success: function(data){
-
-                                (data == true) ? $('#messageModification').modal('toggle') : null;
+                                if(data != null){
+                                    $('#messageModification').modal('toggle');
+                                    var admin  = $("#HSV").val();
+                                    setTimeout(function(){
+                                       $(location).attr("href", "produits.php?admin="+admin); 
+                                    }, 600);
+                                }
                             }
                         });
                     }
@@ -508,17 +505,20 @@
                 });
                 
                 function image_nom(ele){
-                    var array = ele.css("background-image").split("/");
-                    var filter = array[array.length - 1];
-                    var name = filter.substr(0, filter.length - 2);
+                    if(ele != null){
+                        var array = ele.css("background-image").split("/");
+                        var filter = array[array.length - 1];
+                        var name = filter.substr(0, filter.length - 2);
 
-                    return name;
+                        return name;
+                    }
+                    return null;
                 }
             });
         </script>
                     
         
-    <?php require_once 'includes/footer.php' ?>
+    <?php include_once 'includes/footer.php' ?>
 <?php
         }
       else

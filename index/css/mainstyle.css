@@ -861,11 +861,12 @@ input.qty-article[type='number']:disabled{
 .div-cnf-dem, .div-verif-info{
     box-shadow: 0 0 2px 1px #eee;
     width: 48%;
-    padding: 20px 20px 0;
+    padding: 20px 10px 0;
     margin: 0 auto!important;
     border-radius: 10px;
-    font-size: 80%;
-	text-align: left
+    font-size: 95%;
+	text-align: left;
+    border: 1px solid #eee
 }
 
 .div-cnf-dem{
@@ -876,25 +877,24 @@ input.qty-article[type='number']:disabled{
     text-align: center;
 }
 
-.title-verif-info{
-    font-size: 120%;
-    font-weight: 500;
+.title-verif-info > h3{
+    font-weight: 400;
 }
 
 .astuce-verif-info{
     text-align: center;
     font-weight: 500;
-    padding: 0 20px;
+    padding: 12px;
+    box-shadow: 0 0 1px 1px #e0e0e0;
+    -webkit-box-shadow: 0 0 1px 1px #e0e0e0;
+    margin-bottom: 18px;
+    color: #e67777;
+    background-color: #f3ffcb
 }
 
-.body-verif-info input {
-    padding: 6px 12px
-}
-
-.title-cnf-dem, .title-verif-info{
-    font-size: 140%;
-    font-weight: 500;
-    margin: 10px 0;
+.astuce-verif-info > p > i{
+    color: #928484;
+    font-size: 110%;
 }
 
 .action-verif-info{
@@ -933,7 +933,9 @@ input.qty-article[type='number']:disabled{
 
 .verif-info-panier-details-ctr{
     text-align: left;
-    line-height: 220%
+    line-height: 220%;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px
 }
 
 .verif-info-panier-details{
@@ -975,7 +977,17 @@ span.active {
 }
 
 #commandeBtn{
-    width:100%
+    width:36%;
+    display: block;
+    margin: 0 auto;
+    background: transparent;
+    border: 1px solid #999;
+    color: #333;
+}
+
+#commandeBtn:hover{
+    background-color: #15161d;
+    color: #fff
 }
 
 .icons-coupon-div{
@@ -1596,19 +1608,43 @@ label[for='question']{
     font-size: 115%!important
 }
 
-
 .blue-sky{
     color: #1083ac;
 }
 
-.card-performance, .card-weather, .card-body{
-    height: 92%
-}
-
-.card-performance{
-    padding: 0 10px
-}
-
 .stat-success{
     color: #25d57e
+}
+
+.side-right div {
+    text-align: right
+}
+
+.aucun-commentaire-msg{
+    font-size: 90% 
+}
+
+.prd-avail-stock{
+    padding: 5px 10px;
+    color: #fff!important;
+    background: #23ef82;
+}
+
+.prd-avail-rapture{
+    padding: 5px 10px;
+    color: #fff!important;
+    background: #f2701e;
+}
+
+.new-product-badge{
+    padding: 4px 10px;
+    background-color: var(--dark-red-color);
+    color: #fff;
+    border-radius: 5px;
+    font-size: 90%;
+    font-weight: 900;
+}
+
+.notification-li{
+    cursor: pointer
 }

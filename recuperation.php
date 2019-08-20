@@ -63,6 +63,7 @@
                                                     FROM client
                                                     WHERE email = '$email'");
                                 $row = $query->fetch_assoc();
+                                $nom = $row['nom'];
 
                                 if( $query->num_rows > 0 ):
 
@@ -80,9 +81,11 @@
                                                         SET codeRec = '$codeRec'
                                                         WHERE clientID = $clientID");
 
-                                  if(recupererMotdepasse($row['email'], $row['nom'])){
+                                  if(recupererMotdepasse($email, $nom)){
+                                      
                                     $_SESSION['rec_clientID'] = $row['clientID'];
                                     $_SESSION['rec_clientUserName'] = $row['clientUserName'];
+                                      
                                     echo '<small class="form-text text-muted email-rec-success">Veuillez vérifiez votre email pour terminer le processus de récupération de compte.</small>';
                                   }
                                   else

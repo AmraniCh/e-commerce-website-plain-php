@@ -19,6 +19,20 @@
 			exit();
 		}
 
+        function echocolors($idarticle){
+            global $con;
+            
+            $result = $con->query("SELECT nomCouleur FROM couleurarticle WHERE articleID = $idarticle");
+
+            $Couleurs = '';
+
+            while ($rows = mysqli_fetch_array($result)){
+            $Couleurs = $Couleurs . '<option value="'.$rows['nomCouleur'].'">'.$rows['nomCouleur'].'</option>';
+
+            }
+            return $Couleurs;
+        }
+
 		$query = $con->query("SELECT *
 							FROM article 
 							WHERE articleID = $articleID_get");
@@ -50,6 +64,7 @@
 			$result = $con->query("SELECT categorieNom from categorie WHERE categorieID = $categorieID");
 			$row2 = mysqli_fetch_assoc($result);
 			$categoryName = $row2['categorieNom']; 
+        
 			
 ?>
 		<div id="breadcrumb" class="section">
@@ -106,11 +121,28 @@
 								<div class="product-rating">
 									<?php echo $niveau?>
 								</div>
-								<a class="review-link" href="#"><?php echo $nbr_reviews ?> Review(s) | Add your review</a>
+								<a class="review-link"><?php echo $nbr_reviews ?> Review(s) | Add your review</a>
 							</div>
 							<div>
 								<h3 class="product-price"> <?php  if ($articlePrixRemise!=''){echo $articlePrixRemise.' DHS ';} else{echo $articlePrix.' DHS '; }?><del class="product-old-price"><?php if ($articlePrixRemise!=''){echo $articlePrix.' DHS';} ?></del></h3>
-								<span class="product-available">In Stock</span>
+								<span class="product-available">
+								    
+								    <?php
+                                        
+                                        $query = $con->query(" SELECT unitesEnStock 
+                                                            FROM article
+                                                            WHERE articleID = $articleID ");
+                                        $row = $query->fetch_row();
+                                        $unitesEnStock = $row[0];
+                                        
+                                        if( $unitesEnStock != 0)
+                                            echo '<span class="prd-avail-stock">En Stock</span>';
+                                        else
+                                            echo '<span class="prd-avail-rapture">En rupture de stock<span>';
+                
+                                    ?>
+								    
+								</span>
 							</div>
 							<p><?php echo $articleDescription?></p>
 							
@@ -173,7 +205,7 @@
 							
 							<ul class="tab-nav">
 								<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
-								<li><a data-toggle="tab" href="#tab3">Reviews (<?php echo $nbr_reviews ?>)</a></li>
+								<li><a data-toggle="tab" href="#tab2">Reviews (<?php echo $nbr_reviews ?>)</a></li>
 							</ul>
 						
 							<div class="tab-content">
@@ -186,7 +218,7 @@
 									</div>
 								</div>
 									
-								<div id="tab3" class="tab-pane fade in">
+								<div id="tab2" class="tab-pane fade in">
 									<div class="row">
 										
 										<div class="col-md-3">
@@ -331,123 +363,54 @@
 						</div>
 					</div>
 
-					
-					<div class="col-md-3 col-xs-6">
-						<div class="product">
-							<div class="product-img">
-								<img src="./img/product01.png" alt="">
-								<div class="product-label">
-									<span class="sale">-30%</span>
-								</div>
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name"><a href="#">product name goes here</a></h3>
-								<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								<div class="product-rating">
-								</div>
-								<div class="product-btns">
-									<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Ajouter aux Favoris</span></button>
-									<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-									<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-								</div>
-							</div>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Ajouter au panier</button>
-							</div>
-						</div>
-					</div>
-					
+					<?php
+                        
+                        $query = $con->query("SELECT *
+                                            FROM article 
+                                            WHERE articleID = $articleID_get");
+                        $row = $query->fetch_assoc();
+                        $categorieID = $row['categorieID'];
+                        $articleID = $row['articleID'];
+            
+                        $query = $con->query(" SELECT * 
+                                            FROM article
+                                            WHERE articleDisponible = 1
+                                            AND categorieID = $categorieID
+                                            AND articleID <> $articleID
+                                            LIMIT 4");
+            
+                        if( $query->num_rows > 0 ):
+                            
+                            $categorie = new Categorie();
+            
+                            while($row = $query->fetch_assoc()){
 
-					
-					<div class="col-md-3 col-xs-6">
-						<div class="product">
-							<div class="product-img">
-								<img src="./img/product02.png" alt="">
-								<div class="product-label">
-									<span class="new">NEW</span>
-								</div>
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name"><a href="#">product name goes here</a></h3>
-								<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-								</div>
-								<div class="product-btns">
-									<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Ajouter aux Favoris</span></button>
-									<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-									<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-								</div>
-							</div>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Ajouter au panier</button>
-							</div>
-						</div>
-					</div>
-					
-
-					<div class="clearfix visible-sm visible-xs"></div>
-
-					
-					<div class="col-md-3 col-xs-6">
-						<div class="product">
-							<div class="product-img">
-								<img src="./img/product03.png" alt="">
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name"><a href="#">product name goes here</a></h3>
-								<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-								<div class="product-btns">
-									<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Ajouter aux Favoris</span></button>
-									<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-									<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-								</div>
-							</div>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Ajouter au panier</button>
-							</div>
-						</div>
-					</div>
-					
-
-					
-					<div class="col-md-3 col-xs-6">
-						<div class="product">
-							<div class="product-img">
-								<img src="./img/product04.png" alt="">
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name"><a href="#">product name goes here</a></h3>
-								<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								<div class="product-rating">
-								</div>
-								<div class="product-btns">
-									<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Ajouter aux Favoris</span></button>
-									<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-									<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-								</div>
-							</div>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Ajouter au panier</button>
-							</div>
-						</div>
-					</div>
-					
+                                $imageArticle = $article->ImageArticle($row['articleID']);
+                                $niveau = $article->echoNiveau($row['articleID']);
+                                $categorieNom = $categorie->CategorieNomParID($row['categorieID']);
+                                
+                                $param = $article->urlProduitParameterValue($row['articleID']);
+                                
+                                if(strlen($row['articleNom']) > 38)
+                                    $articleNom = substr($row['articleNom'], 0, 38).' ...';
+                                else
+                                    $articleNom = $row['articleNom'];
+                                
+                                if($row['remiseDisponible'] == 1)
+                                {
+                                    
+                                    echo "<div class='col-md-3 col-xs-6'><div class='product'><a href='produit.php?produit=".$param."'><div class='product-img'><img src='".$imageArticle."' alt='".$articleNom."'> <div class='product-label'><span class='sale'>".$row['tauxRemise']." %</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>".$categorieNom."</p><h3 class='product-name'><a href='produit.php?produit=".$param."'>".$articleNom."</a></h3> <h4 class='product-price'>" .$row['articlePrixRemise']. " DHS<del class='product-old-price'>" .$row['articlePrix']. "</del></h4> <div class='product-rating'>" .$niveau. "</div><div class='product-btns'><button id='" .$row['articleID']. "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='quick-view'><a href='produit.php?produit=".$param."'><i class='fa fa-eye'></i><span class='tooltipp'>aperçu rapide</span></a></button></div></div><div class='add-to-cart'><button id='" .$row['articleID']. "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>";
+                                    
+                                }
+                                else{
+                                    echo "<div class='col-md-3 col-xs-6'><div class='product'> <a href='produit.php?produit=".$param."'><div class='product-img'><img src='".$imageArticle."' alt='".$articleNom."'> <div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'> <p class='product-category'>".$categorieNom."</p><h3 class='product-name'><a href='produit.php?produit=".$param."'>".$articleNom."</a></h3> <h4 class='product-price'>" .$row['articlePrix']. " DHS</h4> <div class='product-rating'>" .$niveau. "</div><div class='product-btns'><button id='" .$row['articleID']. "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='quick-view'><a href='produit.php?produit=".$param."'><i class='fa fa-eye'></i><span class='tooltipp'>aperçu rapide</span></a></button></div></div><div class='add-to-cart'><button id='" .$row['articleID']. "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>";
+                                }
+                                
+                            }
+            
+                        endif;
+            
+                    ?>
 
 				</div>
 				
@@ -468,6 +431,18 @@
 		AfficherReviews();
 		ReviewsTotalStars();
 	}
+
+    $(".review-link").click(function(){
+       
+        $("a[data-toggle='tab'], [href='#tab2']").click();
+        
+        
+        $('html, body').animate({
+            scrollTop: parseInt($(".tab-content").offset().top - 100)
+        }, 600);
+        
+        
+    });
 	
 	$(document).on("click", ".pagination", function(){
 		

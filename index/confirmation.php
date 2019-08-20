@@ -90,53 +90,44 @@
 						<div class="row div-verif-info">			
 							<div class="hdr-verif-info">
 								<span class="title-verif-info">
-									<p>Confirmation des information du commande</p>
+									<h3>Vérification des information de contact</h3>
 								</span>
-								<div class="img-verif-info-ctr">
-									<img class="img-verif-info" src="img/confirm.png">
-								</div>
 							</div>
 							<div class="body-verif-info">
 								<div class="astuce-verif-info">
-									<p>S'il vous plaît vérifier vos informations de contact avant d'envoyer la demande</p>
+									<p><i class="fa fa-info-circle"></i> S'il vous plaît vérifier vos informations de contact avant d'envoyer le demande</p>
 								</div>
 								<div class="form-group">
-									<label class="label-verif-info">Nom : </label>
 									<input class="form-control" id="nom" type="text" name="nom" placeholder="nom" value="<?php echo $nom?>">
 									<div class="container text-error-ctr">
                             			<small id="erreurNom" class="form-text text-muted erreur-info"></small>
                         			</div>
 								</div>
 								<div class="form-group">
-									<label class="label-verif-info">Prenom : </label>
 									<input class="form-control" id="prenom" type="text" name="prenom" placeholder="Prenom" value="<?php echo $prenom?>">
 									<div class="container text-error-ctr">
                             			<small id="erreurPrenom" class="form-text text-muted erreur-info"></small>
                         			</div>
 								</div>
 								<div class="form-group">
-									<label class="label-verif-info">Ville : </label>
 									<input class="form-control" id="ville" type="text" name="ville" placeholder="Ville" value="<?php echo $ville?>">
 									<div class="container text-error-ctr">
                             			<small id="erreurVille" class="form-text text-muted erreur-info"></small>
                         			</div>
 								</div>
 								<div class="form-group">
-									<label class="label-verif-info">Adresse : </label>
 									<input class="form-control" id="adresse" type="text" name="adresse" placeholder="Adresse" value="<?php echo $adresse?>">
 									<div class="container text-error-ctr">
                             			<small id="erreurAdresse" class="form-text text-muted erreur-info"></small>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="label-verif-info">Téléphone : </label>
 									<input class="form-control" id="tele" type="text" name="tele" placeholder="Téléphone" value="<?php echo $tele?>">
 									<div class="container text-error-ctr">
                             			<small id="erreurNumTele" class="form-text text-muted erreur-info"></small>
                         			</div>
 								</div>
 								<div class="form-group">
-									<label class="label-verif-info">Code Postal : </label>
 									<input class="form-control" id="codePostal" type="text" name="codePostal" placeholder="Code postal" value="<?php echo $code_postal?>">
 									<div class="container text-error-ctr">
                             			<small id="erreurCodePostal" class="form-text text-muted erreur-info"></small>
@@ -150,7 +141,7 @@
                             		<small id="erreurInfo" class="form-text text-muted erreur-info"></small>
                         		</div>
 								<div class="action-verif-info">
-									<button type="button" id="commandeBtn" class="btn btn-dark-red etapes-btn blue-idx">Commander</button>
+									<button type="button" id="commandeBtn" class="btn">Commander</button>
 								</div>
 							</div>
 						</div>
@@ -184,6 +175,12 @@
 		<script>
             $(document).ready(function(){
 		
+                setTimeout(function(){
+                    
+                    $('html, body').animate({
+                        scrollTop: parseInt($(".div-verif-info").offset().top - 15)
+                    }, 600);
+                }, 800);
 				
 				$("#commandeBtn").on("click", function(){
 					

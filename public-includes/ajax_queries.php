@@ -1,7 +1,7 @@
 <?php 
     require_once 'config.php';
-    require_once 'functions.php';
     require_once 'classes.php';
+    include "notification.class.php";
     session_start();
 
     if(isset($_POST['function']))
@@ -196,6 +196,9 @@
         
         case "AccepterCommentaire":
             echo $_POST['function']($_POST['commID']);break;
+        
+        case "CommentairesAdmin":
+            echo $_POST['function']();break;
     }
 
     // global functions
@@ -792,8 +795,10 @@
             if( $query->num_rows > 0 ):
         
                 while($row = $query->fetch_row()){
-                    $nbr_produits = $article->NbrProduitsParMarque($row[0]);
-                    $data[] = ['articleMarque' => $row[0], 'nbr_produits' => $nbr_produits];
+                    if($row[0] != ''):
+                        $nbr_produits = $article->NbrProduitsParMarque($row[0]);
+                        $data[] = ['articleMarque' => $row[0], 'nbr_produits' => $nbr_produits];
+                    endif;
                 }
         
                 return json_encode($data);
@@ -817,8 +822,7 @@
         $query_string = " SELECT * 
                         FROM article 
                         WHERE articleDisponible = true 
-                        AND (  ( articlePrix BETWEEN $minPrix AND $maxPrix )
-                        OR ( articlePrixRemise BETWEEN $minPrix AND $maxPrix ) )";
+                        AND ( IF(remiseDisponible = 0, articlePrix, articlePrixRemise) BETWEEN $minPrix AND $maxPrix ) ";
         
         if(!in_array('-1',$categoriesIDs_array)) // filter categorie
             $query_string.= " AND categorieID IN($categoriesIDs_implode)";
@@ -829,7 +833,14 @@
         // fitrerPar
         switch($filrerPar){
             case "Nouveau":
-                $query_string.= " ORDER BY dateAjoute Desc ";
+                $query_string.= " ORDER BY dateAjoute DESC ";
+            break;
+            case "Prix-high":
+                $query_string.= " ORDER BY IF(remiseDisponible = 0, articlePrix,0) DESC, articlePrixRemise DESC ";
+            break;
+            case "Prix-low":
+                $query_string.= " ORDER BY IF(remiseDisponible = 0, articlePrix,0) ASC, articlePrixRemise ASC ";
+            break;
         }
         
         if($page_nbr == 1)
@@ -838,8 +849,11 @@
             $limitRange= ($page_nbr -1) * $afficherNbr;
       
         $query_string.= "LIMIT $limitRange,$afficherNbr";
+        
         $query = $con->query($query_string);
+        
         $data = array();
+        
         if($query->num_rows > 0){
             while($row = $query->fetch_array())
             {
@@ -1072,16 +1086,20 @@
         
         $clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);
         
-        $_prenom = $con->escape_string($prenom);
-        $_nom = $con->escape_string($nom);
-        $_email = $con->escape_string($email);
-        $_adresse = $con->escape_string($adresse);
-        $_ville = $con->escape_string($ville);
-        $_postal = $con->escape_string($postal);
-        $_tele = $con->escape_string($tele);
-        $_question = $con->escape_string($question);
-        $_reponse = $con->escape_string($reponse);
-        $_motdepasse = $con->escape_string($motdepasse);
+        $_prenom = filter_var($con->escape_string($prenom), FILTER_SANITIZE_STRING);
+        $_nom = filter_var($con->escape_string($nom), FILTER_SANITIZE_STRING);
+        $_email = filter_var($con->escape_string($email), FILTER_SANITIZE_EMAIL);
+        $_adresse = filter_var($con->escape_string($adresse), FILTER_SANITIZE_STRING);
+        $_ville = filter_var($con->escape_string($ville), FILTER_SANITIZE_STRING);
+        $_postal = filter_var($con->escape_string($postal), FILTER_SANITIZE_NUMBER_INT);
+        $_tele = filter_var($con->escape_string($tele), FILTER_SANITIZE_STRING);
+        $_question = filter_var($con->escape_string($question), FILTER_SANITIZE_STRING);
+        $_reponse = filter_var($con->escape_string($reponse), FILTER_SANITIZE_STRING);
+        $_motdepasse = filter_var($con->escape_string($motdepasse), FILTER_SANITIZE_STRING);
+        
+        $query = $con->query(" SELECT * FROM client WHERE email = '$_email' AND clientID <> $clientID ");
+        if( $query->num_rows > 0 )
+            return json_encode(-1);
         
         if($_motdepasse != ''):
             $crypt_password = password_hash($_motdepasse, PASSWORD_DEFAULT, array('cost' => 10));
@@ -1095,7 +1113,6 @@
         $con->query(" UPDATE client
                     SET prenom = '".$_prenom."',
                     nom = '".$_nom."',
-                    email = '$_email',
                     adresse = '".$_adresse."',
                     ville = '$_ville',
                     codePostal = $_postal,
@@ -1103,6 +1120,21 @@
                     questionSecurite = '".$_question."',
                     reponseQuestion = '".$_reponse."'
                     WHERE clientID = $clientID ");
+        
+        // update email
+        
+        $query = $con->query(" SELECT * FROM client WHERE clientID = $clientID ");
+        $row = $query->fetch_assoc();
+        $email_original = $row['email'];
+        
+        if( $_email != $email_original ):
+        
+            $con->query(" UPDATE client
+                    SET email = '".$email."',
+                    emailValid = 0
+                    WHERE clientID = $clientID ");
+        
+        endif;
         
         if( $con->affected_rows )
             return json_encode(true);
@@ -1184,7 +1216,7 @@
           
             // notification
             $notification = new Notification();
-            $notification->NouveauNotification('commentaire', $clientID);
+            $notification::NouveauNotification('commentaire', $clientID, null);
           
             return json_encode(true);
         }
@@ -1652,7 +1684,7 @@
           
             // notification
             $notification = new Notification();
-            $notification->NouveauNotification('commande', $clientID);
+            $notification::NouveauNotification('commande', $clientID, null);
             
             return json_encode(true);
             
@@ -2417,6 +2449,94 @@
             if( $con->affected_rows > 0 )
                 return json_encode(true);    
         }
+        
+        return json_encode(null);
+    }
+
+    // index.php [dashboard]
+    function CommentairesAdmin(){
+        global $con;
+        
+        $query = $con->query(" SELECT * 
+                            FROM commentaire
+                            WHERE accepte <> 1
+                            ORDER BY dateComm DESC");
+        if( $query->num_rows > 0 ):
+        
+            $data = array();
+            while($row = $query->fetch_assoc()){
+                
+                $client = new Client();
+                $nom_prenom = $client->ClientNomPrenom($row['clientID']);
+                
+                if(strlen($row['titre']) > 60)
+                    $titre = substr($row['titre'], 0, 60).'...';
+                else
+                    $titre = $row['titre'];
+                
+                if(strlen($row['commentaire']) > 150)
+                    $comm = substr($row['commentaire'], 0, 150).'...';
+                else
+                    $comm = $row['commentaire'];
+                
+                setlocale(LC_TIME, 'french.UTF-8', 'fr_FR.UTF-8');
+                $date = strftime('%A %d %B %Y, %H:%M', strtotime($row['dateComm']));
+                
+                $data[] = [ 
+                    'id' => $row['commentaireID'],
+                    'nom_prenom' => $nom_prenom,
+                    'titre' => $titre,
+                    'text' => $comm,
+                    'date' => $date
+                ];
+                
+            }
+        
+            return json_encode($data);
+            
+        endif;
+        
+        return json_encode(null);
+   
+    }
+
+    function LivraisonsAdmin(){
+        global $con;
+        
+        $livraison = new Livraison();
+        $client = new Client();
+        
+        $query = $con->query(" SELECT * 
+				            FROM livraison l INNER JOIN commande c
+				            ON l.commandeID = c.commandeID
+                            WHERE c.status = 1
+                            ORDER BY confirmationDate DESC
+                            lIMIT 7 ");
+        
+        if($query != null):
+        
+            $data = array();
+            while($row = $query->fetch_assoc()){
+                
+                // client nom & prenom
+                $nom_prenom = $client->ClientNomPrenom($row['clientID']);
+                
+                $data[] = [
+                    $row['livraisonID'],
+                    $row['confirmationDate'],
+                    $row['commandeID'],
+                    $nom_prenom,
+                    $row['commandeDate'],
+                    '<label class="badge badge-success">Confirmé</label>',
+                    ucfirst($row['typeLivraison']),
+                    $row['nbrArticles'],
+                    $row['totalApayer']." DHS",
+                ];
+            }
+        
+            return json_encode(array('data' => $data));
+        
+        endif;
         
         return json_encode(null);
     }

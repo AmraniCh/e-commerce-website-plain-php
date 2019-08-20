@@ -1,5 +1,5 @@
 <?php include_once "includes/header.php" ?>
-<?php include_once 'includes/PHPMAILER_EMAIL_CONFIRMATION.php' ?>
+<?php require_once 'includes/PHPMAILER_EMAIL_CONFIRMATION.php' ?>
     
 		<?php include_once "includes/navigation.php" ?>
 
@@ -53,11 +53,11 @@
 
     if(isset($_POST['submit'])):
 
-        if(sendEmail($email,$nom)):
+        if(sendEmail($email, $nom)):
             header ('location: ../emailconfirmation.php');
             exit();
         else:
-            echo "Une erreur à été produite essayez plus tard.";
+            $erreur = "Une erreur à été produite essayez plus tard.";
         endif;
 
 
@@ -108,7 +108,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email :</label>
-                                    <input class="form-control" id="email" type="email" name="email" placeholder="Nom" value="<?php echo $email?>">
+                                    <input class="form-control" id="email" type="email" name="email" placeholder="Adresse e-mail" value="<?php echo $email?>">
                                 </div>
 							</div>
 							<div class="col-sm-6">
@@ -152,6 +152,7 @@
                                             endif;
                                        ?>
                                        </form>
+                                       <?php if(isset($erreur)) echo $erreur ?>
                                    </div>
                                 </div>
                                 <div class="form-group">
@@ -216,10 +217,14 @@
                             $('#overlayAjaxLoading').show();
                         },
                         success: function(data){
-                            console.log(data);
                             if(data != null){
+                                $(".email-verif-status").load(" .email-verif-status");
                                 $("#validMsg").removeClass("valid-msg-error").addClass("valid-msg-success");
                                 $("#validMsg").text("Profil modifié avec succès.");
+                            }
+                            if(data == -1){
+                                $("#validMsg").removeClass("valid-msg-success").addClass("valid-msg-error");
+                                $("#validMsg").text("L'adresse e-mail est déja utilisé. Essayez au autre.");
                             }
                         },
                         complete: function(){

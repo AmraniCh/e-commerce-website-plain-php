@@ -173,15 +173,17 @@
 							$('#overlayAjaxLoading').show();
 						},
 						success: function(data){
-							console.log(data);
+                            var div_input_number = $(event.target).closest(".input-number");
 							if(data != true && data != null){
-								$(event.target).val(data);
+								div_input_number.css("border", "2px solid #d10024");
 								if($("#overlayAjaxError").css("display") == "none"){
 									$("#overlayAjaxError").show();
 									$("#ajaxErrorText").text("Il n'y a pas assez de produits en stock.");
 									hideErrorDiv();
 								}
 							}
+                            else
+                                div_input_number.css("border", "none");
 						},
 						complete: function(){
 							setTimeout(function () {

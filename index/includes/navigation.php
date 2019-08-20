@@ -8,8 +8,6 @@
 					<ul class="main-nav nav navbar-nav">
 						<?php
 							$href = 'index.php';
-							if(isset($_SESSION['clientUserName']))
-								$href.= '?client='.$_SESSION['clientUserName'];
 											
 							if(isset($_GET['categorie']))
 								echo '<li><a href='.$href.'>Accueil</a></li>';

@@ -1,6 +1,5 @@
 "use strict";
 
-// register page validation
 (function () {
 
     // validation variables
@@ -285,7 +284,6 @@
     });
 }());
 
-// login page validation
 (function(){
 
     // validation variables
@@ -359,7 +357,6 @@
     });
 }());
 
-// emailconfirmation validation
 (function(){
     
     // validation variables
@@ -412,7 +409,6 @@
     
 }());
 
-// profile validation
 function ValidationProfile(){
     
     $("#validMsg").empty();
@@ -466,7 +462,7 @@ function ValidationProfile(){
     
     function check_email() {
         
-        if (!validLength(email, 3, 30)) {
+        if (!validEmail(email)) {
             showValidationMsg("* Adresse email incorrect.");
             email_error = true;
         }

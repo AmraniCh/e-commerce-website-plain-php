@@ -1,5 +1,5 @@
 $(function(){
-        
+
     Notifications();
     NotificationsCout();
 
@@ -14,8 +14,27 @@ $(function(){
     $(document).on("click", function(event){
         var element = $(event.target);
 
-        if( !element.parents().hasClass("notification-li"))
-          $(".notification-ctr").hide();
+        if( !element.parents().hasClass("notification-li")){
+            
+            if($(".notification-ctr").css("display") == "block"){
+
+                $.post(
+                  "includes/notifications_xhr",
+                  { function: "NotificationsVues" },
+                  function(data){
+                    NotificationsCout();
+                  },
+                  "JSON"
+                );
+              }
+            
+            $(".notification-ctr").hide();
+        
+            
+            
+        }
+        
+
 
     });
 
@@ -23,7 +42,7 @@ $(function(){
       $(".notification-ctr").toggle();
       if($(".notification-ctr").css("display") == "none"){
         $.post(
-          "../public-includes/notifications",
+          "includes/notifications_xhr",
           { function: "NotificationsVues" },
           function(data){
             NotificationsCout();
@@ -37,10 +56,12 @@ $(function(){
 
 function Notifications(){
   $.post(
-    "../public-includes/notifications", {
+    "includes/notifications_xhr", 
+    {
       function: "AfficherNotifications"
     },
     function (data) {
+        console.log(data);
       if(data != null){
         $.each(data.data, function (index, element) {
 
@@ -63,7 +84,18 @@ function Notifications(){
 
               $(".notification-ctr").append(html);
               break;
-
+              
+            case "stock":
+              var html = '<div class="dropdown-divider"></div><a class="dropdown-item preview-item"> <div class="preview-thumbnail"> <div class="preview-icon bg-danger"> <i class="mdi mdi-alert-circle-outline mx-0"></i> </div></div><div class="preview-item-content"><h6 class="preview-subject font-weight-medium text-dark">' + data.data[index]['titre'] + '</h6> <p class="font-weight-light small-text">' + data.data[index]['passed_time'] + ' ' + data.data[index]['unit'] + '</p></div></a>';
+              
+              $(".notification-ctr").append(html);
+              break;
+                  
+            case "erreur[php_mailer]":
+              var html = '<div class="dropdown-divider"></div><a class="dropdown-item preview-item"> <div class="preview-thumbnail"> <div class="preview-icon bg-danger"> <i class="mdi mdi-alert-circle-outline mx-0"></i> </div></div><div class="preview-item-content"><h6 class="preview-subject font-weight-medium text-dark">' + data.data[index]['titre'] + '</h6> <p class="font-weight-light small-text">' + data.data[index]['passed_time'] + ' ' + data.data[index]['unit'] + '</p></div></a>';
+              
+              $(".notification-ctr").append(html);
+              break;
 
           }
 
@@ -76,7 +108,7 @@ function Notifications(){
 
 function NotificationsCout(){
   $.post(
-    "../public-includes/notifications", {
+    "includes/notifications_xhr", {
       function: "NbNotification"
     },
     function (data) {

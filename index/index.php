@@ -3,6 +3,8 @@
 	<?php
 	
 		 unset($_SESSION['coupon']);
+
+         $categorie = new Categorie();
 	
 	?>
 	
@@ -76,7 +78,8 @@
 									<ul class="section-tab-nav tab-nav">
 										<li class="tab1 active" id="aleatoire"><a data-toggle="tab" href="#">Aléatoire</a></li>
 										<?php
-											$result = RandomCategoriesNav();
+                                            $categorie = new Categorie();
+											$result = $categorie->RandomCategoriesNav();
 											while($row = $result->fetch_row()){
 												echo '<li class="tab1" id="'.$row[0].'"><a data-toggle="tab" href="#">'.$row[0].'</a></li>';
 											}
@@ -172,7 +175,8 @@
 									<ul class="section-tab-nav tab-nav">
 										<li class="tab2 active" id="aleatoire"><a data-toggle="tab" href="#">Aléatoire</a></li>
 										<?php
-											$result = RandomCategoriesNav();
+											$categorie = new Categorie();
+											$result = $categorie->RandomCategoriesNav();
 											while($row = $result->fetch_row()){
 												echo '<li class="tab2" id="'.$row[0].'"><a data-toggle="tab" href="#">'.$row[0].'</a></li>';
 											}
@@ -215,7 +219,7 @@
 					<div class="row">
 						<div class="col-md-4 col-xs-6">
 							<div class="section-title">
-								<h4 id="<?php $randomCat = RandomCategoriesWidget(); echo $randomCat ?>" class="title categorie-widget1"><?php echo $randomCat ?></h4>
+								<h4 id="<?php $randomCat = $categorie->RandomCategoriesWidget(); echo $randomCat ?>" class="title categorie-widget1"><?php echo $randomCat ?></h4>
 								<div class="section-nav">
 									<div id="slick-nav-3" class="products-slick-nav"></div>
 								</div>
@@ -228,7 +232,7 @@
 
 						<div class="col-md-4 col-xs-6">
 							<div class="section-title">
-								<h4 id="<?php $randomCat = RandomCategoriesWidget(); echo $randomCat ?>" class="title categorie-widget2"><?php echo $randomCat ?></h4>
+								<h4 id="<?php $randomCat = $categorie->RandomCategoriesWidget(); echo $randomCat ?>" class="title categorie-widget2"><?php echo $randomCat ?></h4>
 								<div class="section-nav">
 									<div id="slick-nav-4" class="products-slick-nav"></div>
 								</div>
@@ -243,7 +247,7 @@
 
 						<div class="col-md-4 col-xs-6">
 							<div class="section-title">
-								<h4 id="<?php $randomCat = RandomCategoriesWidget(); echo $randomCat ?>" class="title categorie-widget3"><?php echo $randomCat ?></h4>
+								<h4 id="<?php $randomCat = $categorie->RandomCategoriesWidget(); echo $randomCat ?>" class="title categorie-widget3"><?php echo $randomCat ?></h4>
 								<div class="section-nav">
 									<div id="slick-nav-5" class="products-slick-nav"></div>
 								</div>

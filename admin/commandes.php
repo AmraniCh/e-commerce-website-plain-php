@@ -1,4 +1,4 @@
-<?php require_once 'includes/header.php' ?>
+<?php include_once 'includes/header.php' ?>
 
  <?php
   if(isset($_GET['admin']) && isset($_SESSION['admin'])){
@@ -11,12 +11,12 @@
   ?>
   <div class="container-scroller">
   
-    <?php require_once 'includes/navigation.php' ?>
+    <?php include_once 'includes/navigation.php' ?>
   
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
       
-      <?php require_once 'includes/sidebar.php' ?>
+      <?php include_once 'includes/sidebar.php' ?>
       
       <!-- partial -->
       <div class="main-panel">
@@ -231,7 +231,7 @@
                 
                 (function(){
                     $.post(
-                        "../public-includes/notifications",
+                        "includes/notifications_xhr",
                         { function: "CommandesVues" },
                     )
                 }());
@@ -484,7 +484,7 @@
          
         </script>
         
-    <?php require_once 'includes/footer.php' ?>
+    <?php include_once 'includes/footer.php' ?>
     <?php
             }
           else

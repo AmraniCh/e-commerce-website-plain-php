@@ -27,7 +27,7 @@
           
           
           <li class="nav-item dropdown notification-li">
-            <a class="nav-link count-indicator dropdown-toggle" href="#">
+            <a class="nav-link count-indicator dropdown-toggle">
               <i class="mdi mdi-bell"></i>
               <span class="count not-count"></span>
             </a>

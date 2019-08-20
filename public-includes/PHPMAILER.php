@@ -1,10 +1,14 @@
 <?php 
-    require 'config.php';
+    require_once 'config.php';
+
+    require_once 'notification.class.php';
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
-    require 'PHPMailer/src/Exception.php';
-    require 'PHPMailer/src/PHPMailer.php';
-    require 'PHPMailer/src/SMTP.php';
+    require_once 'PHPMailer/src/Exception.php';
+    require_once 'PHPMailer/src/PHPMailer.php';
+    require_once 'PHPMailer/src/SMTP.php';
+    require_once 'PHPMailer/src/SMTP.php';
+
 /************************
       PHPMailer ********/
 function sendEmail($RecipientEmail, $Nom){
@@ -12,6 +16,7 @@ function sendEmail($RecipientEmail, $Nom){
     $code = null;
 // Instantiation and passing `true` enables exceptions
     $mail = new PHPMailer(true);
+    $mail->CharSet = "utf-8";
     try {
         //Server settings
         $mail->SMTPDebug = 0;                                       // Enable verbose debug output
@@ -31,37 +36,81 @@ function sendEmail($RecipientEmail, $Nom){
         //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
         // Content
         $mail->isHTML(true);                                  // Set email format to HTML
-        $mail->Subject = "Confirmation";
-        $sql = "select codeEmail from client where email='$RecipientEmail'";
-        $result = $con->query($sql);
-        if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-                $code = $row["codeEmail"];
-            }
-        }
-        /////////Message body (html)/////////
-        $mail->Body    = 'code confirmation Email : <b>' . $code . '</b>';
-        $mail->AltBody = 'code confirmation Email :' . $code . '';
-        $mail->send();
+        $mail->Subject = "Confirmation d'adresse e-mail";
         
+        $query = $con->query(" SELECT * FROM client WHERE email = '$RecipientEmail' ");
+        if($query->num_rows > 0):
+            $row = $query->fetch_assoc();
+            $code = $row['codeEmail']; 
+            $nom_prenom = $row['nom'].' '.$row['prenom'];
+        endif;
+        
+        $html = '
+        <html lang="fr">
+
+        <head>
+        </head>
+
+        <body style="background-color: #fff">
+            <div style="width: 100%">
+                <div style="width: 50%; margin: 0 auto; background-color: #fff; ">
+                    <div style="background-color: #333; color: #fff; padding: 10px; text-align: center">
+                        <img src="https://i.ibb.co/qYjBP6d/logo.png">
+                    </div>
+                    <div style="background-color: #fff; padding: 30px 20px; text-align :center; direction: ltr;font-family:roboto">
+                        <div style="margin-bottom: 30px; text-align:left">
+                            Bienvenue '.$nom_prenom.' .
+                        </div>
+
+                        <div style="margin-bottom: 10px;">
+                            Voici votre code de confirmation :
+                        </div>
+
+                        <div style="    margin-bottom: 25px;padding: 10px 18px;display: inline-block;color: #999;font-size: 25px;background-color: #f5f5dc;letter-spacing: 8px;">
+                           '.$code.' 
+                        </div>
+                        
+                        
+                        <div style="margin-bottom: 10px; text-align: left">
+                            Si vous avez rencontré des problèmes veuillez nous informer sur contact@mga.ma.<br>
+                        </div>
+
+                        <div style="margin-bottom: 10px; text-align: left">
+                            Bienvenue chez M.G.A !
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </body>
+
+        </html>
+        ';
+        
+        
+        $mail->Body    = $html;
+        
+        $mail->AltBody = 'Salut '.$nom_prenom.', Voici votre code de confirmation : '.$code;
+        
+        $mail->send();
         return true;
         
     } catch (Exception $e) {
-        session_unset();
-        $_SESSION['msg'] = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-        header('Location: login.php');
-        exit();
+        $notification = new Notification();
+        $notification::NouveauNotification('erreur', null, $mail->ErrorInfo);
         return false;
     }
 }
 
+
 function recupererMotdepasse($RecipientEmail, $Nom){
     global $con;
     $code = null;
-// Instantiation and passing `true` enables exceptions
+    // Instantiation and passing `true` enables exceptions
     $mail = new PHPMailer(true);
+    $mail->CharSet = "utf-8";
     try {
+        
         //Server settings
         $mail->SMTPDebug = 0;                                       // Enable verbose debug output
         $mail->isSMTP();                                            // Set mailer to use SMTP
@@ -69,8 +118,9 @@ function recupererMotdepasse($RecipientEmail, $Nom){
         $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
         $mail->Username   = 'mgaservicegroup@gmail.com';                     // SMTP username
         $mail->Password   = '123456789Kamal';                               // SMTP password
-        $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
-        $mail->Port       = 587;                                    // TCP port to connect to
+        $mail->SMTPSecure = 'TLS';                                  // Enable TLS encryption, `ssl` also accepted
+        $mail->Port       = 587;       
+        // TCP port to connect to
         //Recipients
         $mail->setFrom('MGAnoreply@example.com', 'M.G.A service');
         $mail->addAddress($RecipientEmail, $Nom);     // Add a recipient
@@ -82,25 +132,79 @@ function recupererMotdepasse($RecipientEmail, $Nom){
         $mail->isHTML(true);                                  // Set email format to HTML
         $mail->Subject = "Récuperation de compte";
         
-        $query = $con->query(" SELECT codeRec 
+        $query = $con->query(" SELECT * 
                             FROM client 
-                            WHERE email = '$RecipientEmail'");
-        $row = $query->fetch_row();
-        $lien = '<a href="localhost/commerceProject/reinitialisation-mot-de-passe.php?code='.$row[0].'">click</a>';
+                            WHERE email = '$RecipientEmail' ");
+        $row = $query->fetch_assoc();
         
-        /////////Message body (html)/////////
-        $mail->Body    = 'lien :' . $lien;
-        $mail->AltBody = 'lien :' . $code . '';
+        $lien = '<a href="localhost/commerceProject/reinitialisation-mot-de-passe.php?code='.$row['codeRec'].'">click</a>';
+        
+        $nom_prenom = $row['nom'].' '.$row['prenom'];
+        
+        $html = '
+        <html lang="fr">
+
+        <head>
+        </head>
+
+        <body style="background-color: #fff">
+            <div style="width: 100%">
+                <div style="width: 50%; margin: 0 auto; background-color: #fff; ">
+                    <div style="background-color: #333; color: #fff; padding: 10px; text-align: center">
+                        <img src="https://i.ibb.co/qYjBP6d/logo.png">
+                    </div>
+                    <div style="background-color: #fff; padding: 30px 20px; text-align :center; direction: ltr;font-family:roboto">
+                        <div style="margin-bottom: 30px; text-align:left">
+                            Bienvenue '.$nom_prenom.' .
+                        </div>
+
+                        <div style="margin-bottom: 10px;">
+                            Voici le lien de récuperation de votre compte :
+                        </div>
+
+                        <div style="margin-bottom: 10px; padding:10px; color: #999; background-color: #f5f5dc;">
+                            localhost/commerceProject/reinitialisation-mot-de-passe.php?code='.$row['codeRec'].'
+                        </div>
+                        
+                        <div style="margin-bottom: 10px;">
+                            Ou 
+                        </div>
+
+                        <div style="margin-bottom: 25px;">
+                            <a href="localhost/commerceProject/reinitialisation-mot-de-passe.php?code='.$row['codeRec'].'" style="padding: 10px 20px; background-color:#b55050; color: #fff;border:none; cursor: pointer; text-decoration: none">Cliquer Ici</a>
+                        </div>
+                        
+                        <div style="margin-bottom: 10px; text-align: left">
+                            Si vous avez rencontré des problèmes veuillez nous informer sur contact@mga.ma.<br>
+                        </div>
+
+                        <div style="margin-bottom: 10px; text-align: left">
+                            Bienvenue chez M.G.A !
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </body>
+
+        </html>
+        ';
+        
+        
+        $mail->Body    = $html;
+        
+        $mail->AltBody = 'Salut '.$nom_prenom.', Voici votre lien de récuperation de votre compte : localhost/commerceProject/reinitialisation-mot-de-passe.php?code='.$row['codeRec'];
+        
         $mail->send();
-        
+
         return true;
         
     } catch (Exception $e) {
-        session_unset();
-        header('Location: login.php');
-        exit();
+        $notification = new Notification();
+        $notification::NouveauNotification('erreur[php_mailer]', null, $mail->ErrorInfo);
         return false;
     }
 }
+
 /************************
       PHPMailer ********/

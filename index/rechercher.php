@@ -28,8 +28,8 @@
 						if(isset($_GET['categorie']) && isset($_GET['rechercher'])){
 							$article = new article();
 							$categorie = new categorie();
-							$categorieID = $con->escape_string($_GET['categorie']);
-							$mot = $con->escape_string($_GET['rechercher']);
+							$categorieID = filter_var($con->escape_string($_GET['categorie']), FILTER_SANITIZE_NUMBER_INT);
+							$mot = filter_var($con->escape_string($_GET['rechercher']), FILTER_SANITIZE_STRING);
 							$res_query = $article->RechercherArticle($categorieID,$mot);
 							if($res_query){
 								while($row = $res_query->fetch_array())
@@ -37,38 +37,20 @@
 									$imageArticle = $article->ImageArticle($row['articleID']);
 									$niveau = $article->echoNiveau($row['articleID']);
 									$categorieNom = $categorie->CategorieNomParID($row['categorieID']);
+                                    
+                                    $param = $article->urlProduitParameterValue($row['articleID']);
+                                    
+                                    if(strlen($row['articleNom']) > 38)
+                                        $articleNom = substr($row['articleNom'], 0, 38).' ...';
+                                    else
+                                        $articleNom = $row['articleNom'];
+                                    
 									if ($row['remiseDisponible'] == true) {
-										echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'><div class='product pro-tab1'>
-												<div class='product-img no-slick-product' style='background-image:url($imageArticle)'>
-													<div class='product-label'><span class='sale'>".$row['tauxRemise']."%</span><span class='new'>Nouveau</span></div>
-												</div>
-												<div class='product-body'>
-													<p class='product-category'>".$categorieNom."</p>
-													<h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
-													<h4 class='product-price'>".$row['articlePrixRemise']." DHS<del class='product-old-price'>". $row['articlePrix']."</del></h4>
-													<div class='product-rating'>".$niveau."</div>
-													<div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div>
-												</div>
-												<div class='add-to-cart'><button id=".$row['articleID']." class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div>
-												</div>
-											</div>";
+										echo "<div class='col-md-3 col-xs-6'><div class='product'><a href='produit.php?produit=".$param."'><div class='product-img'><img src='".$imageArticle."' alt='".$articleNom."'> <div class='product-label'><span class='sale'>".$row['tauxRemise']." %</span><span class='new'>Nouveau</span></div></div></a><div class='product-body'><p class='product-category'>".$categorieNom."</p><h3 class='product-name'><a href='produit.php?produit=".$param."'>".$articleNom."</a></h3> <h4 class='product-price'>" .$row['articlePrixRemise']. " DHS<del class='product-old-price'>" .$row['articlePrix']. "</del></h4> <div class='product-rating'>" .$niveau. "</div><div class='product-btns'><button id='" .$row['articleID']. "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='quick-view'><a href='produit.php?produit=".$param."'><i class='fa fa-eye'></i><span class='tooltipp'>aperçu rapide</span></a></button></div></div><div class='add-to-cart'><button id='" .$row['articleID']. "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>";
 										}
-										else
-											echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-												<div class='product pro-tab1'>
-													<div class='product-img no-slick-product' style='background-image:url($imageArticle)'>
-														<div class='product-label'><span class='new'>Nouveau</span></div>
-													</div>
-													<div class='product-body'>
-														<p class='product-category'>".$categorieNom."</p>
-														<h3 class='product-name'><a href='#'>".$row['articleNom']."</a></h3>
-														<h4 class='product-price'>".$row['articlePrix']." DHS</h4>
-														<div class='product-rating'>".$niveau."</div>
-														<div class='product-btns'><button class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='add-to-compare'><i class='fa fa-exchange'></i><span class='tooltipp'>add to compare</span></button><button class='quick-view'><i class='fa fa-eye'></i><span class='tooltipp'>quick view</span></button></div>
-													</div>
-													<div class='add-to-cart'><button id=".$row['articleID']." class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div>
-												</div>
-											</div>";
+										else{
+											echo "<div class='col-md-3 col-xs-6'><div class='product'> <a href='produit.php?produit=".$param."'><div class='product-img'><img src='".$imageArticle."' alt='".$articleNom."'> <div class='product-label'><span class='new'>Nouveau</span></div></div></a><div class='product-body'> <p class='product-category'>".$categorieNom."</p><h3 class='product-name'><a href='produit.php?produit=".$param."'>".$articleNom."</a></h3> <h4 class='product-price'>" .$row['articlePrix']. " DHS</h4> <div class='product-rating'>" .$niveau. "</div><div class='product-btns'><button id='" .$row['articleID']. "' class='add-to-wishlist'><i class='fa fa-heart-o'></i><span class='tooltipp'>Ajouter aux Favoris</span></button><button class='quick-view'><a href='produit.php?produit=".$param."'><i class='fa fa-eye'></i><span class='tooltipp'>aperçu rapide</span></a></button></div></div><div class='add-to-cart'><button id='" .$row['articleID']. "' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> Ajouter au panier</button></div></div></div>";
+                                        }
 								}
 							}
 							else

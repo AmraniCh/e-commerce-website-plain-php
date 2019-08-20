@@ -2,8 +2,8 @@
 	ob_start();
 	session_start();
 	require_once "../public-includes/config.php";
-	include_once "../public-includes/functions.php";
-	include_once "../public-includes/classes.php";
+	require_once "../public-includes/classes.php";
+	require_once "../public-includes/notification.class.php";
 
 	if(isset($_POST['submit']) && !empty($_POST['search'])):
 
@@ -21,12 +21,26 @@
 
     endif;
 
-	if(!isset($_SESSION['vst'])){
-		$_SESSION['vst'] = true;
-		$con->query(" INSERT INTO statistiques VALUES (NULL, 'visite', default) ");
-	}
+    $sessionID = session_id();
 
-	
+    $query = $con->query(" SELECT * FROM visiteursenligne WHERE sessionID = '$sessionID' ");
+
+    if( $query->num_rows == 0 ):
+
+        $con->query(" INSERT INTO visiteursenligne VALUES('$sessionID', default) ");
+    
+    else:
+        
+        $con->query(" UPDATE visiteursenligne SET dateVisite = now() WHERE sessionID = '$sessionID' ");
+
+    endif;
+
+    $con->query(" DELETE FROM visiteursenligne WHERE dateVisite < dateVisite - INTERVAL 1 MINUTE ");
+
+
+	$con->query(" UPDATE statistiques
+				SET valeur = valeur + 1
+				WHERE type = 'page vues' ");
 
 ?>
 <!DOCTYPE html>

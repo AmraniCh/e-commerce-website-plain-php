@@ -1,6 +1,7 @@
 <?php
     require_once 'public-includes/config.php';
     require_once 'public-includes/classes.php';
+    require_once 'public-includes/notification.class.php';
     require_once 'public-includes/PHPMAILER.php';
     session_start();
 ?>
@@ -39,25 +40,56 @@
         $question = $con->escape_string($_POST['question']);
         $reponse = $con->escape_string($_POST['reponse']);
         $password = password_hash($_POST['password2'], PASSWORD_DEFAULT, array('cost' => 10));
-        
-        $query = $con->query("INSERT INTO client VALUES(NULL,'$username', '$prenom', '$nom', '$email', '$adresse', '$ville', default, NULL, NULL, $codepostal, '$tele', '$password', '$question', '$reponse', NULL)");   
-        if($con->affected_rows > 0){
-          $_SESSION['clientUserName'] = $username;
-          if(sendEmail($email,$nom)):
-            
-            // notification
-            $notification = new Notification();
-            $notification->NouveauNotification('client', $clientID);
           
-            header ('location: emailconfirmation.php');
-            exit();
+        // check email
+        $query = $con->query(" SELECT * FROM client WHERE email = '$email' OR clientUserName = '$username' ");
           
-          else:
+        if( $query->num_rows > 0 ):
           
-            echo "Une erreur à été produite essayez plus tard.";
+          $_SESSION['reg_username'] = $username;
+          $_SESSION['reg_email'] = $email;
+          $_SESSION['reg_nom'] = $nom;
+          $_SESSION['reg_prenom'] = $prenom;
+          $_SESSION['reg_adresse'] = $adresse;
+          $_SESSION['reg_ville'] = $ville;
+          $_SESSION['reg_tele'] = $tele;
+          $_SESSION['reg_postal'] = $codepostal;
+          $_SESSION['reg_question'] = $question;
+          $_SESSION['reg_reponse'] = $reponse;
+          $_SESSION['reg_pass'] = $password;
           
+          $row = $query->fetch_assoc();
+          
+          if( $row['email'] == $email ):
+            $email_used = "Adresse e-mail déja utilisé.";
           endif;
-        }
+          
+          if( $row['clientUserName'] == $username ):
+            $username_used = "Nom d'itulisateur déja utilisé.";
+          endif;
+        
+        else:
+        
+            $query = $con->query("INSERT INTO client VALUES(NULL, '$username', '$prenom', '$nom', '$email', '$adresse', '$ville', default, NULL, NULL, $codepostal, '$tele', '$password', '$question', '$reponse', NULL)");   
+            if($con->affected_rows > 0){
+              $_SESSION['clientUserName'] = $username;
+              if(sendEmail($email,$nom)):
+
+                // notification
+                $notification = new Notification();
+                $notification::NouveauNotification('client', $clientID, null);
+
+                header ('location: emailconfirmation.php');
+                exit();
+
+              else:
+
+                echo "Une erreur à été produite essayez plus tard.";
+
+              endif;
+            }
+        
+        endif;
 
 
       }
@@ -78,33 +110,33 @@
                       <div class="left-container col-xs-12 mx-auto">
                         <div class="form-group">
                           <div class="input-group">
-                            <input id="username" name="username" type="text" class="form-control" placeholder="Nom d'ultilisateur"/>
+                            <input id="username" name="username" type="text" class="form-control" placeholder="Nom d'ultilisateur" value="<?php if(isset($_SESSION['reg_username'])) echo $_SESSION['reg_username']; ?>" >
                             <div id="username-ic-span" class="input-group-append">
                               <span class="input-group-text">
                                 <i id="username-ic-i" class="mdi mdi-check-circle-outline"></i>
                               </span>
                             </div>
                             <div class="container" style="padding:0;text-align:left;margin:0;">
-                              <small id="username_error" class="form-text text-muted text-error">*</small>
+                              <small id="username_error" class="form-text text-muted text-error">*<?php if(isset($username_used)) echo $username_used.'<style>#username_error{ visibility: visible }</style>' ?></small>
                             </div>
                           </div>
                         </div>
                         <div class="form-group">
                           <div class="input-group">
-                            <input id="email" name="email" type="text" class="form-control" placeholder="Adresse email" />
+                            <input id="email" name="email" type="text" class="form-control" placeholder="Adresse email" value="<?php if(isset($_SESSION['reg_email'])) echo $_SESSION['reg_email']; ?>">
                             <div id="email-ic-span" class="input-group-append">
                               <span class="input-group-text">
                                 <i id="email-ic-i" class="mdi mdi-check-circle-outline"></i>
                               </span>
                             </div>
                             <div class="container" style="padding:0;text-align:left;margin:0;">
-                                <small id="email_error" class="form-text text-muted text-error">*</small>
+                                <small id="email_error" class="form-text text-muted text-error">*<?php if(isset($email_used)) echo $email_used.'<style>#email_error{ visibility: visible }</style>' ?></small>
                             </div>
                           </div>
                       </div>
                       <div class="form-group">
                         <div class="input-group">
-                          <input id="prenom" name="prenom" type="text" class="form-control" placeholder="Prenom"/>
+                          <input id="prenom" name="prenom" type="text" class="form-control" placeholder="Prenom" value="<?php if(isset($_SESSION['reg_prenom'])) echo $_SESSION['reg_prenom']; ?>">
                           <div id="prenom-ic-span" class="input-group-append">
                             <span class="input-group-text">
                               <i id="prenom-ic-i" class="mdi mdi-check-circle-outline"></i>
@@ -117,7 +149,7 @@
                     </div>
                     <div class="form-group">
                       <div class="input-group">
-                        <input id="nom" name="nom" type="text" class="form-control" placeholder="Nom"/>
+                        <input id="nom" name="nom" type="text" class="form-control" placeholder="Nom" value="<?php if(isset($_SESSION['reg_nom'])) echo $_SESSION['reg_nom']; ?>" >
                         <div id="nom-ic-span" class="input-group-append">
                           <span class="input-group-text">
                             <i id="nom-ic-i" class="mdi mdi-check-circle-outline"></i>
@@ -130,16 +162,12 @@
                     </div>
                     <div class="form-group">
                       <div class="input-group" style="padding-top:4px;margin-bottom:6.5%">
-                        <select id="ville" name="ville" class="form-control">
-                            <option>casa</option>
-                            <option>tanger</option>
-                            <option>rabat</option>
-                        </select>
+                        <input id="ville" name="ville" type="text" class="form-control" placeholder="ville" value="<?php if(isset($_SESSION['reg_ville'])) echo $_SESSION['reg_ville']; ?>" >
                       </div>
                     </div>
                     <div class="form-group">
                       <div class="input-group">
-                        <input id="adresse" name="adresse" type="text" class="form-control" placeholder="Adresse"/>
+                        <input id="adresse" name="adresse" type="text" class="form-control" placeholder="Adresse" value="<?php if(isset($_SESSION['reg_adresse'])) echo $_SESSION['reg_adresse']; ?>">
                         <div id="adresse-ic-span" class="input-group-append">
                           <span class="input-group-text">
                             <i id="adresse-ic-i" class="mdi mdi-check-circle-outline"></i>
@@ -155,7 +183,7 @@
                   <div class="right-container col-xs-12 mx-auto">
                     <div class="form-group">
                       <div class="input-group">
-                        <input id="tele" name="tele" type="text" class="form-control" placeholder="Telephone" />
+                        <input id="tele" name="tele" type="text" class="form-control" placeholder="Telephone" value="<?php if(isset($_SESSION['reg_tele'])) echo $_SESSION['reg_tele']; ?>">
                         <div id="tele-ic-span" class="input-group-append">
                           <span class="input-group-text">
                             <i id="tele-ic-i" class="mdi mdi-check-circle-outline"></i>
@@ -168,7 +196,7 @@
                     </div>
                     <div class="form-group">
                       <div class="input-group">
-                        <input id="code_postal" name="code_postal" type="text" class="form-control" placeholder="Code postal" />
+                        <input id="code_postal" name="code_postal" type="text" class="form-control" placeholder="Code postal" value="<?php if(isset($_SESSION['reg_postal'])) echo $_SESSION['reg_postal']; ?>">
                         <div id="postal-ic-span" class="input-group-append">
                           <span class="input-group-text">
                             <i id="postal-ic-i" class="mdi mdi-check-circle-outline"></i>
@@ -182,6 +210,7 @@
                     <div class="form-group">
                       <div class="input-group" style="padding-top:0px;margin-bottom:6.5%">
                         <select id="question" name="question" class="form-control">
+                         <?php if(isset($_SESSION['reg_postal'])) echo '<option value="'.$_SESSION['reg_postal'].'">'.$_SESSION['reg_postal'].'</option>' ?>
                           <option value="Quel était le nom de votre premier animal ?">Quel était le nom de votre premier animal ?</option>
                           <option value="Qui était votre héros d'enfance ?">Qui était votre héros d'enfance ?</option>
                           <option value="Quelle était le nom de votre école primaire ?">Quelle était le nom de votre école primaire ?</option>
@@ -192,7 +221,7 @@
                     </div>
                     <div class="form-group">
                       <div class="input-group">
-                        <input id="reponse" name="reponse" type="text" class="form-control" placeholder="Reponse" />
+                        <input id="reponse" name="reponse" type="text" class="form-control" placeholder="Reponse" value="<?php if(isset($_SESSION['reg_reponse'])) echo $_SESSION['reg_reponse']; ?>" >
                         <div id="reponse-ic-span" class="input-group-append">
                           <span class="input-group-text">
                             <i id="reponse-ic-i" class="mdi mdi-check-circle-outline"></i>
@@ -205,7 +234,7 @@
                     </div>
                     <div class="form-group">
                       <div class="input-group">
-                        <input id="password" type="password" class="form-control" placeholder="Mot de passe" />
+                        <input id="password" type="password" class="form-control" placeholder="Mot de passe">
                         <div id="password-ic-span" class="input-group-append">
                           <span class="input-group-text">
                             <i id="password-ic-i" class="mdi mdi-check-circle-outline"></i>
@@ -218,7 +247,7 @@
                     </div>
                     <div class="form-group">
                       <div class="input-group">
-                        <input id="password2" name="password2" type="password" class="form-control" placeholder="Confirmer mot de passe" />
+                        <input id="password2" name="password2" type="password" class="form-control" placeholder="Confirmer mot de passe">
                         <div id="password2-ic-span" class="input-group-append">
                           <span class="input-group-text">
                             <i id="password2-ic-i" class="mdi mdi-check-circle-outline"></i>

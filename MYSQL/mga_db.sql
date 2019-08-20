@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 19, 2019 at 09:18 AM
+-- Generation Time: Aug 20, 2019 at 11:08 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -75,8 +75,8 @@ DROP TABLE IF EXISTS `article`;
 CREATE TABLE IF NOT EXISTS `article` (
   `articleID` int(11) NOT NULL AUTO_INCREMENT,
   `articleNom` varchar(100) NOT NULL,
-  `articlePrix` decimal(15,2) NOT NULL,
-  `articlePrixRemise` decimal(15,2) DEFAULT NULL,
+  `articlePrix` double NOT NULL,
+  `articlePrixRemise` double DEFAULT NULL,
   `articleDescription` text,
   `articleMarque` varchar(100) DEFAULT 'N/A',
   `tauxRemise` float DEFAULT NULL,
@@ -90,16 +90,37 @@ CREATE TABLE IF NOT EXISTS `article` (
   PRIMARY KEY (`articleID`),
   UNIQUE KEY `articleNom` (`articleNom`),
   KEY `categorieID` (`categorieID`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `article`
 --
 
 INSERT INTO `article` (`articleID`, `articleNom`, `articlePrix`, `articlePrixRemise`, `articleDescription`, `articleMarque`, `tauxRemise`, `remiseDisponible`, `unitesEnStock`, `unitesCommandees`, `articleDisponible`, `niveau`, `dateAjoute`, `categorieID`) VALUES
-(46, 'HP 8741', '5000.00', '4500.00', 'Using POST as opposed to GET will “hide” the parameters in a packet and not send them in the URL. You may need to change the way your server-side code accepts the request. Java Servlets for instance, have separate method that need to be implemented for GET and POST. Furthermore if your site is HTTPS, all the traffic will be encrypted. This is assuming of course that you are not going cross domain for AJAX. In terms of hiding the actual script’s name, the best you can do is obfuscate it.', 'hp', 10, b'1', 8, 2, b'1', 5, '2019-08-09 20:49:55', 40),
-(47, 'CAMERA HD SONY 14000 CAMERA HD SONY 14000 CAMERA HD SONY 14000', '4500.00', NULL, 'CAMERA HD SONY 14000', 'sony', NULL, b'0', 8, 2, b'1', 5, '2019-08-10 07:20:34', 31),
-(48, 'Handphones 2055', '500.00', NULL, 'Handphones 2055', '', NULL, b'0', 7, 3, b'1', 5, '2019-08-14 13:54:44', 41);
+(46, 'HP 8741', 5000, 4500, 'Using POST as opposed to GET will “hide” the parameters in a packet and not send them in the URL. You may need to change the way your server-side code accepts the request. Java Servlets for instance, have separate method that need to be implemented for GET and POST. Furthermore if your site is HTTPS, all the traffic will be encrypted. This is assuming of course that you are not going cross domain for AJAX. In terms of hiding the actual script’s name, the best you can do is obfuscate it.', 'hp', 10, b'0', 10, 0, b'1', 5, '2019-08-09 20:49:55', 31),
+(47, 'CAMERA HD SONY 14000 CAMERA HD SONY 14000 CAMERA HD SONY 14000', 4700, 4600, 'CAMERA HD SONY 14000', 'sony', NULL, b'1', 10, 0, b'1', 5, '2019-08-10 07:20:34', 31),
+(48, 'Handphones 2055 HD', 4600, NULL, 'Handphones 2055 HD', '', NULL, b'0', 9, 1, b'1', 5, '2019-08-14 13:54:44', 31),
+(50, 'HP 55553', 4200, 3276, 'Using POST as opposed to GET will “hide” the parameters in a packet and not send them in the URL. You may need to change the way your server-side code accepts the request. Java Servlets for instance, have separate method that need to be implemented for GET and POST. Furthermore if your site is HTTPS, all the traffic will be encrypted. This is assuming of course that you are not going cross domain for AJAX. In terms of hiding the actual script’s name, the best you can do is obfuscate it.', 'hp', 22, b'1', 22, 0, b'1', 5, '2019-08-09 20:49:55', 31);
+
+--
+-- Triggers `article`
+--
+DROP TRIGGER IF EXISTS `notification_qty_stock_insuffisante_trigger`;
+DELIMITER $$
+CREATE TRIGGER `notification_qty_stock_insuffisante_trigger` BEFORE UPDATE ON `article` FOR EACH ROW BEGIN
+
+	DECLARE article_nom varchar(100);
+    set @article_nom = new.articleNom;
+
+    IF (NEW.unitesEnStock = 0)  THEN
+    
+      INSERT INTO notification VALUES(null, concat("Stock Insuffissante Pour l'article [ ", @article_nom, " ]"), default, 'stock', default );
+      
+     END IF;
+     
+end
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -157,16 +178,16 @@ CREATE TABLE IF NOT EXISTS `client` (
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `clientUserName` (`clientUserName`),
   KEY `fk_panierID_client` (`panierID`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `client`
 --
 
 INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codeRec`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
-(46, 'chou500', 'EL AMRANI', 'CHAKIR', '', 'BNI MAKADA', 'Tanger', b'1', '247001', NULL, 90002, '0651487088', '$2y$10$bSlqi8xJEeyek62yrnleie6eo4r3XRdo6anKBwq/RomgU0Pq0/SFi', 'Quel était le nom de votre premier animal ?', 'orioo', 130),
-(63, 'ahmed', 'ahmed', 'el amrani', 'ahmed@gmail.com', 'tanger', 'casa', b'0', '928322', NULL, 445585, '+212144710547', '$2y$10$MOOoqR0/lknqaALxuB41b.FB67cmvO3gsNHolD2LmVm.tdek5Vqt2', 'Quel était le nom de votre premier animal ?', 'oodf', 133),
-(70, 'chou500d', 'chakira', 'qsdqsdqsdqs', 'elamrani.sv.laza@gmail.com', 'qsdqsqsddqs', 'casa', b'1', '787235', NULL, 2312321, '+212144710547', '$2y$10$oc8t0d7s.XpU6rOjDMFtgepTFovk4V0v2j6yvFPEzhweBthz0HXXC', 'Quel était le nom de votre premier animal ?', 'DDSQD', 134);
+(46, 'chou500', 'EL AMRANI', 'CHAKIR', 'elamrani.sv.laza@gmail.com', 'BNI MAKADA', 'Tanger', b'0', '247001', 'Y7C39D0KM40M7E3BGPYB9R1NHH4OFJXEK1TN', 90002, '0651487088', '$2y$10$bSlqi8xJEeyek62yrnleie6eo4r3XRdo6anKBwq/RomgU0Pq0/SFi', 'Quel était le nom de votre premier animal ?', 'orioo', 130),
+(63, 'ahmed', 'ahmed', 'el amrani', 'chakir_alhoceima_rifi8@hotmail.fr', 'tanger', 'casa', b'0', '928322', 'YC0CG08JQXB9ZDK2LA97BIPYZID1TVUDOLJF', 445585, '+212144710547', '$2y$10$MOOoqR0/lknqaALxuB41b.FB67cmvO3gsNHolD2LmVm.tdek5Vqt2', 'Quel était le nom de votre premier animal ?', 'oodf', 133),
+(77, 'qsdqsdqs', 'dsqqdsqdqs', 'dqsdsq', 'elamrani_ch@hotmail.com', 'Lyon', 'casa', b'0', '527005', 'VGX6BLWWRS348A7LH322TJTOWE35MP53TNEJ', 90002, '0693792055', '$2y$10$wIfFm7Wdz8eKzvwVjV0F2uQT0tavcOI8qvgllaKOU3MXHre72i4Gu', 'Quel était le nom de votre premier animal ?', 'qsdqsdqs', NULL);
 
 --
 -- Triggers `client`
@@ -196,15 +217,15 @@ CREATE TABLE IF NOT EXISTS `commande` (
   `vu` bit(1) DEFAULT b'0',
   PRIMARY KEY (`commandeID`),
   KEY `fk_clientID_commande` (`clientID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10089 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10095 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `commande`
 --
 
 INSERT INTO `commande` (`commandeID`, `clientID`, `commandeDate`, `status`, `nbrArticles`, `totalApayer`, `typeLivraison`, `couponUtilise`, `vu`) VALUES
-(10087, 46, '2019-08-18 11:40:56', 1, 1, 500, 'amana', b'0', b'1'),
-(10088, 46, '2019-08-17 11:59:04', 1, 3, 9500, 'gratuit', b'0', b'1');
+(10089, 46, '2019-08-20 01:07:32', 1, 1, 4600, 'gratuit', b'0', b'1'),
+(10094, 46, '2019-08-20 15:25:56', 0, 2, 44676, 'gratuit', b'0', b'0');
 
 -- --------------------------------------------------------
 
@@ -227,10 +248,9 @@ CREATE TABLE IF NOT EXISTS `commandedetails` (
 --
 
 INSERT INTO `commandedetails` (`commandeID`, `articleID`, `quantite`, `couleur`) VALUES
-(10087, 48, 1, 'Noir'),
-(10088, 46, 1, 'Gris'),
-(10088, 47, 1, 'Blue'),
-(10088, 48, 1, 'Noir');
+(10089, 48, 1, 'Noir'),
+(10094, 48, 9, 'Noir'),
+(10094, 50, 1, 'N/A');
 
 -- --------------------------------------------------------
 
@@ -251,15 +271,15 @@ CREATE TABLE IF NOT EXISTS `commentaire` (
   PRIMARY KEY (`commentaireID`),
   KEY `fk_articleID_commentaire` (`articleID`),
   KEY `fk_clientID_commentaire` (`clientID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `commentaire`
 --
 
 INSERT INTO `commentaire` (`commentaireID`, `clientID`, `articleID`, `accepte`, `niveau`, `commentaire`, `titre`, `dateComm`) VALUES
-(3, 46, 46, b'1', 3, '\r\nUsing POST as opposed to GET will “hide” the parameters in a packet and not send them in the URL. You may need to change the way your server-side code accepts the request. Java Servlets for instance, have separate method that need to be implemented for GET and POST. Furthermore if your site is HTTPS, all the traffic will be encrypted. This is assuming of course that you are not going cross domain for AJAX. In terms of hiding the actual script’s name, the best you can do is obfuscate it.\r\n', '  Using POST as opposed to GET will “hide” the parameters in a packet and not send them in the URL. You may need to change the way your server-side code accepts the request. Java Servlets for instance, have separate method that need to be implemented for GET and POST. Furthermore if your site is HTTPS, all the traffic will be encrypted. This is assuming of course that you are not going cross domain for AJAX. In terms of hiding the actual script’s name, the best you can do is obfuscate it.', '2019-08-18 00:32:18'),
-(5, 46, 48, b'1', 3, 'Bon produit', 'Bon produit', '2019-08-18 06:49:04');
+(16, 46, 46, b'1', 3, 'dqsdqsdqs', '', '2019-08-19 19:13:04'),
+(17, 46, 48, b'1', 3, 'sdfsdf', 'sdffsdf', '2019-08-20 22:48:40');
 
 -- --------------------------------------------------------
 
@@ -361,7 +381,10 @@ INSERT INTO `favoridetails` (`articleID`, `clientID`, `dateAjoute`) VALUES
 (30, 40, '2019-07-27 22:54:55'),
 (31, 40, '2019-07-26 19:38:54'),
 (32, 40, '2019-07-27 19:51:01'),
-(46, 46, '2019-08-17 11:21:52');
+(46, 46, '2019-08-20 12:19:24'),
+(47, 46, '2019-08-20 12:21:36'),
+(48, 46, '2019-08-20 12:23:00'),
+(50, 46, '2019-08-20 12:27:09');
 
 -- --------------------------------------------------------
 
@@ -388,7 +411,8 @@ INSERT INTO `imagearticle` (`imageArticleNom`, `articleID`, `principale`) VALUES
 ('product03.png', 48, b'0'),
 ('product04.png', 48, b'0'),
 ('product08.png', 46, b'1'),
-('product09.png', 47, b'1');
+('product09.png', 47, b'1'),
+('product09.png', 50, b'1');
 
 -- --------------------------------------------------------
 
@@ -403,23 +427,14 @@ CREATE TABLE IF NOT EXISTS `livraison` (
   `confirmationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`livraisonID`,`commandeID`),
   KEY `fk_commandeID_livraison` (`commandeID`)
-) ENGINE=MyISAM AUTO_INCREMENT=79 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `livraison`
 --
 
 INSERT INTO `livraison` (`livraisonID`, `commandeID`, `confirmationDate`) VALUES
-(42, 10074, '2019-08-16 09:55:47'),
-(41, 10072, '2019-08-15 07:39:59'),
-(43, 10074, '2019-08-16 10:04:47'),
-(44, 10074, '2019-08-16 10:14:42'),
-(45, 10074, '2019-08-16 10:16:40'),
-(46, 10074, '2019-08-16 10:17:44'),
-(47, 10073, '2019-08-16 10:22:38'),
-(67, 10085, '2019-08-18 11:38:40'),
-(77, 10088, '2019-08-18 17:30:16'),
-(78, 10087, '2019-08-18 17:30:17');
+(79, 10089, '2019-08-20 01:08:09');
 
 -- --------------------------------------------------------
 
@@ -435,21 +450,38 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `type` varchar(100) DEFAULT NULL,
   `vu` bit(1) DEFAULT b'0',
   PRIMARY KEY (`notID`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `notification`
 --
 
 INSERT INTO `notification` (`notID`, `titre`, `dateNot`, `type`, `vu`) VALUES
-(9, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-17 18:32:49', 'commande', b'1'),
-(10, 'Nouveau Commentaire de [CHAKIR EL AMRANI]', '2019-08-18 06:49:04', 'commentaire', b'1'),
-(11, 'Nouveau Client Enregistré', '2019-08-18 10:50:58', 'client', b'1'),
-(12, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-18 11:38:08', 'commande', b'1'),
-(13, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-18 11:39:44', 'commande', b'1'),
-(14, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-18 11:40:56', 'commande', b'1'),
-(15, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-18 11:59:04', 'commande', b'1'),
-(16, 'Nouveau Commentaire de [CHAKIR EL AMRANI]', '2019-08-18 11:59:20', 'commentaire', b'1');
+(79, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 21:08:52', 'erreur[php_mailer]', b'1'),
+(78, 'Nouveau Client Enregistré', '2019-08-20 21:02:36', 'client', b'1'),
+(77, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 20:50:10', 'erreur[php_mailer]', b'1'),
+(76, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 20:45:42', 'erreur[php_mailer]', b'1'),
+(75, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 20:19:41', 'erreur[php_mailer]', b'1'),
+(74, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 20:13:21', 'erreur[php_mailer]', b'1'),
+(73, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 20:12:29', 'erreur[php_mailer]', b'1'),
+(72, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 20:09:39', 'erreur[php_mailer]', b'1'),
+(71, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 20:09:06', 'erreur[php_mailer]', b'1'),
+(70, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 18:40:50', 'erreur[php_mailer]', b'1'),
+(69, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-20 18:10:17', 'erreur[php_mailer]', b'1'),
+(68, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 18:09:13', 'erreur[php_mailer]', b'1'),
+(67, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-20 18:07:52', 'erreur[php_mailer]', b'1'),
+(66, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-20 18:06:43', 'erreur[php_mailer]', b'1'),
+(65, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-20 15:25:56', 'commande', b'1'),
+(64, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-20 12:16:26', 'commande', b'1'),
+(63, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-20 12:05:42', 'commande', b'1'),
+(62, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-20 12:03:08', 'commande', b'1'),
+(61, 'Nouveau Commentaire de [CHAKIR EL AMRANI]', '2019-08-20 12:02:14', 'commentaire', b'1'),
+(80, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-20 21:10:01', 'erreur[php_mailer]', b'1'),
+(81, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 21:17:50', 'erreur[php_mailer]', b'1'),
+(82, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 21:19:17', 'erreur[php_mailer]', b'1'),
+(83, 'Nouveau Client Enregistré', '2019-08-20 21:20:17', 'client', b'1'),
+(84, '', '2019-08-20 22:11:26', 'erreur', b'1'),
+(85, 'Nouveau Commentaire de [CHAKIR EL AMRANI]', '2019-08-20 22:48:40', 'commentaire', b'1');
 
 -- --------------------------------------------------------
 
@@ -462,7 +494,7 @@ CREATE TABLE IF NOT EXISTS `panier` (
   `panierID` int(11) NOT NULL AUTO_INCREMENT,
   `dateAjoute` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`panierID`)
-) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `panier`
@@ -473,7 +505,8 @@ INSERT INTO `panier` (`panierID`, `dateAjoute`) VALUES
 (131, '2019-08-15 09:55:09'),
 (132, '2019-08-15 12:35:29'),
 (133, '2019-08-16 08:05:59'),
-(134, '2019-08-18 10:51:06');
+(134, '2019-08-18 10:51:06'),
+(135, '2019-08-20 21:20:41');
 
 -- --------------------------------------------------------
 
@@ -492,6 +525,14 @@ CREATE TABLE IF NOT EXISTS `panierdetails` (
   KEY `fk_articleID_panierdetails` (`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `panierdetails`
+--
+
+INSERT INTO `panierdetails` (`panierID`, `articleID`, `quantite`, `dateAjoute`, `couleur`) VALUES
+(130, 48, 9, '2019-08-20 11:59:34', 'Noir'),
+(130, 50, 1, '2019-08-20 13:56:58', 'N/A');
+
 -- --------------------------------------------------------
 
 --
@@ -500,19 +541,41 @@ CREATE TABLE IF NOT EXISTS `panierdetails` (
 
 DROP TABLE IF EXISTS `statistiques`;
 CREATE TABLE IF NOT EXISTS `statistiques` (
-  `valeur` int(11) NOT NULL AUTO_INCREMENT,
+  `idStat` int(11) NOT NULL AUTO_INCREMENT,
+  `valeur` double DEFAULT '0',
   `type` varchar(100) DEFAULT NULL,
-  `dateStat` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`valeur`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`idStat`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `statistiques`
 --
 
-INSERT INTO `statistiques` (`valeur`, `type`, `dateStat`) VALUES
-(1, 'visite', '2019-08-18 08:29:36'),
-(2, 'visite', '2019-08-19 08:29:36');
+INSERT INTO `statistiques` (`idStat`, `valeur`, `type`) VALUES
+(1, 73, 'page vues');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `visiteursenligne`
+--
+
+DROP TABLE IF EXISTS `visiteursenligne`;
+CREATE TABLE IF NOT EXISTS `visiteursenligne` (
+  `sessionID` varchar(100) NOT NULL,
+  `dateVisite` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`sessionID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `visiteursenligne`
+--
+
+INSERT INTO `visiteursenligne` (`sessionID`, `dateVisite`) VALUES
+('es9p7qh73a4q4eq1g9o75albfv', '2019-08-20 17:05:45'),
+('6ov9sofdfou231et7ralkhuk23', '2019-08-20 23:02:05'),
+('3bbb4tpkf3l3ddm0mo4tm84g99', '2019-08-20 17:13:01'),
+('0032hug98bp6mlh13bqbo3ifkv', '2019-08-20 21:27:12');
 
 --
 -- Constraints for dumped tables

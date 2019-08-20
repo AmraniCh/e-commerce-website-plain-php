@@ -1,4 +1,0 @@
-{
-    "data": ["46","47"],
-    "filter":"articles"
-}

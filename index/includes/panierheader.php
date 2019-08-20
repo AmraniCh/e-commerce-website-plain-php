@@ -2,8 +2,7 @@
 	ob_start();
 	session_start();
 	require_once "../public-includes/config.php";
-	include_once "../public-includes/functions.php";
-	include_once "../public-includes/classes.php";
+	require_once "../public-includes/classes.php";
 
 	if(isset($_POST['submit']) && !empty($_POST['search'])):
 		$search = $_POST['search'];
