@@ -111,9 +111,9 @@
             $("#prenom_error").html("* Un prenom doit contenir entre entre 3-30 caractères !");
             prenom_error = true;
             icon_change_color(span, icon);
-        } else if (!allLetters(prenom)) {
+        } else if (!allLettersWithSpace(prenom)) {
             $("#prenom_error").css("visibility", "visible");
-            $("#prenom_error").html("* Un nom ne contient pas des numéros ou des espaces !");
+            $("#prenom_error").html("* Un prenom ne contient pas de chiffres !");
             prenom_error = true;
             icon_change_color(span, icon);
         } else {
