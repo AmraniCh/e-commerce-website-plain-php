@@ -26,7 +26,19 @@ $(document).ready(function(){
     $('.cart-summary, .cart-btns').on('click', function (e) {
         e.stopPropagation();
     });
+    
+    $(".scroll-top-body").click(function () {
+        $("html, body").animate({
+            scrollTop: 0
+        }, "slow");
+    });
 
+    $(window).scroll(function () {
+        if ($(window).scrollTop() > 0)
+            $(".scroll-top-body").show();
+        else
+            $(".scroll-top-body").hide();
+    });
 });
 
 $(window).load(function () {

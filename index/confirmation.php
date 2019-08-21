@@ -173,10 +173,10 @@
 		</div>
 		
 		<script>
+			
             $(document).ready(function(){
 		
                 setTimeout(function(){
-                    
                     $('html, body').animate({
                         scrollTop: parseInt($(".div-verif-info").offset().top - 15)
                     }, 600);
@@ -424,10 +424,9 @@
 					$(".loading-verif-ctr").fadeIn();
 					$("#ajx_message").text(msg);
 				}
-				
-					
-				
+		
 			});
+			
 		</script>
 	
 		

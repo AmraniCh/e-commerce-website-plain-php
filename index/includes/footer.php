@@ -95,6 +95,12 @@
 			
 		</footer>
 		
+		<div class="scroll-top-div">
+			<div class="scroll-top-body">
+				<i class="fa fa-arrow-up" aria-hidden="true"></i>
+			</div>
+		</div>
+		
 		<div id="overlayAjaxLoading">
 			<div class="progstatContent">
 				<img src="img/5-1">

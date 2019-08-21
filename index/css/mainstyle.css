@@ -1675,3 +1675,21 @@ label[for='question']{
     color: #db4747;
     font-size: 13px
 }
+
+.scroll-top-div {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    z-index: 9999
+}
+
+.scroll-top-body {
+    display: none;
+    opacity: .8;
+    padding: 2px 12px;
+    color: #fff;
+    background-color: #D10024;
+    font-size: 20px;
+    border-radius: 4px;
+    cursor: pointer
+}
