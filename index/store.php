@@ -11,6 +11,9 @@
 				$categorieID = filter_var($_GET['categorie'], FILTER_SANITIZE_NUMBER_INT);
 
                 $categorie = new Categorie();
+
+            $statistique = new Statistique();
+            $statistique::MSJ_page_vues();
 			
 		?>
 

@@ -5,9 +5,9 @@
 		if($_GET['admin'] == $_SESSION['admin'])
 		{
           
-          $statistiques = new Statistiques();
-          $profit_data = $statistiques::profit_statistiques();
-          $visites_data = $statistiques::visites_statistiques();
+          $statistique = new Statistique();
+          $profit_data = $statistique::profit_statistiques();
+          $visites_data = $statistique::visites_statistiques();
           
         
           $query = $con->query(" SELECT COUNT(*)
@@ -82,7 +82,7 @@
                     <div class="float-right">
                       <p class="mb-0 text-right">Revenu Total</p>
                       <div class="fluid-container">
-                        <h3 class="font-weight-medium text-right mb-0 revenu-total font-115"><?php echo $statistiques->revenut_total(). ' DHS' ?></h3>
+                        <h3 class="font-weight-medium text-right mb-0 revenu-total font-115"><?php echo $statistique->revenu_total(). ' DHS' ?></h3>
                       </div>
                     </div>
                   </div>
@@ -102,7 +102,7 @@
                     <div class="float-right">
                       <p class="mb-0 text-right">Commandes</p>
                       <div class="fluid-container">
-                        <h3 class="font-weight-medium text-right mb-0 total-commandes font-115"><?php echo $statistiques->total_commandes() ?></h3>
+                        <h3 class="font-weight-medium text-right mb-0 total-commandes font-115"><?php echo $statistique->total_commandes() ?></h3>
                       </div>
                     </div>
                   </div>
@@ -122,7 +122,7 @@
                     <div class="float-right">
                       <p class="mb-0 text-right">Total Ventes</p>
                       <div class="fluid-container">
-                        <h3 class="font-weight-medium text-right mb-0 total-ventes font-115"><?php echo $statistiques->total_ventes() ?></h3>
+                        <h3 class="font-weight-medium text-right mb-0 total-ventes font-115"><?php echo $statistique->total_ventes() ?></h3>
                       </div>
                     </div>
                   </div>
@@ -142,7 +142,7 @@
                     <div class="float-right">
                       <p class="mb-0 text-right">Clients</p>
                       <div class="fluid-container">
-                        <h3 class="font-weight-medium text-right mb-0 tota-clients font-115"><?php echo $statistiques->total_clients() ?></h3>
+                        <h3 class="font-weight-medium text-right mb-0 tota-clients font-115"><?php echo $statistique->total_clients() ?></h3>
                       </div>
                     </div>
                   </div>
@@ -290,19 +290,19 @@
                       <h5 class="text-primary">Total Visites</h5>
                       <p>
                         <?php 
-                          echo $statistiques::total_visites();
+                          echo $statistique::total_visites();
                         ?>
                       </p>
                     </div>
                     <div class="col-4">
                       <h5 class="text-primary">Page vues</h5>
-                      <p><?php echo $statistiques::total_page_vues() ?></p>
+                      <p><?php echo $statistique::total_page_vues() ?></p>
                     </div>
                     <div class="col-4">
                       <h5 class="text-primary">Visiteurs Actuels</h5>
                       <p>
                        <?php
-                          echo $statistiques::visiteurs_actuels();
+                          echo $statistique::visiteurs_actuels();
                        ?> 
                       </p>
                     </div>

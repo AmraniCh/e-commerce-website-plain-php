@@ -156,12 +156,13 @@
                     $.ajax({
                         url: "../public-includes/ajax_queries",
                         method: "POST",
-                        dataType: "json",
+                        dataType: "JSON",
                         data: { function: "AfficherCommandesClient" },
                         beforeSend: function(){
                           $('#overlayAjaxLoading').show();  
                         },
                         success: function(data){     
+                            console.log(data);
                             if(data != null){
                                     
                                 $("#comm_tables_ctr").empty();

@@ -182,13 +182,13 @@
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Quantite Invalide</h5>
+                <h5 class="modal-title" id="warningLabel"><i class="fas fa-exclamation-triangle"></i>  Quantite Invalide</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                La quantite commandé est supérieure à la quantité en stock 
+                La quantite commandée est supérieure à la quantité en stock.
               </div>
               <div class="modal-footer">
                   <form action="" method="post">
@@ -203,7 +203,7 @@
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Suppression du commande</h5>
+                <h5 class="modal-title" id="warningLabel"><i class="fas fa-exclamation-triangle"></i> Suppression du commande</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -316,12 +316,13 @@
                     $.ajax({
                         url: "../public-includes/ajax_queries",
                         method: "POST",
-                        dataType: "JSON",
+                        dataType: "html",
                         data: {
                             function: "ConfirmerCommande",
                             commID: commID
                         },
                         success: function(data){
+                            console.log(data);
                             if( data != null && data != -1){
                                 $("button[data-dismiss]").click();
                                 NotificationsCout();
@@ -438,7 +439,7 @@
                     "language": {
                         "sProcessing": "Traitement en cours ...",
                         "sLengthMenu": "Afficher _MENU_ lignes",
-                        "sZeroRecords": "Aucun résultat trouvé",
+                        "sZeroRecords": "Les articles concernant cette commande sont supprimé.",
                         "sEmptyTable": "Aucune donnée disponible",
                         "sInfo": "Lignes _START_ à _END_ sur _TOTAL_",
                         "sInfoEmpty": "Aucune ligne affichée",

@@ -142,45 +142,72 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Ce produit est disponible maintenant?</label><br>
-                                            <input type="radio" id="radioDisOui" name="radioDis" class="form-control"<?php if(isset($_GET['edit'])) 
+                                            <label>Ce produit est disponible maintenant ?</label><br>
+
+                                            <div class="form-radio form-in-blk col-md-3">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="radioDis" id="radioDisOui" <?php if(isset($_GET['edit'])) 
                                             { 
                                                 if($articleDisponible == true) 
                                                     echo 'checked';
                                             }
                                             else 
-                                                echo 'checked' ?>>
-                                            <label class="radio-label" for="radioDisOui">Oui</label>
-                                            <input type="radio" id="radioDisNon" name="radioDis" class="form-control" <?php
+                                                echo 'checked' ?>> Oui
+                                                    <i class="input-helper"></i></label>
+                                            </div>
+
+
+                                            <div class="form-radio form-in-blk col-md-3">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="radioDis" id="radioDisNon" <?php
                                                 if(isset($_GET['edit'])) 
                                             { 
                                                 if($articleDisponible == false) 
                                                     echo 'checked';
-                                            }?>>
-                                            <label class="radio-label" for="radioDisNon">Non</label>
+                                            }?>> Non
+                                                    <i class="input-helper"></i></label>
+                                            </div>
+
                                         </div>
                                     </div>
+                                    
+                                    
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Remise disponible ?</label><br>
-                                            <input type="radio" id="radioRemOui" name="radioRemise" class="form-control"<?php if(isset($_GET['edit'])) 
-                                            { 
-                                                if($remiseDisponible == true) 
-                                                    echo 'checked';
-                                            }?>>
-                                            <label class="radio-label" for="radioDisOui">Oui</label>
-                                            <input type="radio" id="radioRemNon" name="radioRemise" class="form-control" <?php if(isset($_GET['edit'])) 
-                                            { 
-                                                if($remiseDisponible == false) 
-                                                    echo 'checked';
-                                            }
-                                            else 
-                                                echo 'checked' ?>>
-                                            <label class="radio-label" for="radioDisNon">Non</label>
+
+                                            <div class="form-radio form-in-blk col-md-3">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="radioRemise" id="radioRemOui" <?php if(isset($_GET['edit'])) 
+                                                                        { 
+                                                                            if($remiseDisponible == true) 
+                                                                                echo 'checked';
+                                                                        }?>> Oui
+                                                    <i class="input-helper"></i>
+                                                </label>
+                                            </div>
+
+
+                                            <div class="form-radio form-in-blk col-md-3">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="radioRemise" id="radioRemNon" <?php if(isset($_GET['edit'])) 
+                                                                        { 
+                                                                            if($remiseDisponible == false) 
+                                                                                echo 'checked';
+                                                                        }
+                                                                        else 
+                                                                            echo 'checked' ?>> Non
+                                                    <i class="input-helper"></i>
+                                                </label>
+                                            </div>
+
                                         </div>
                                     </div>
+                                    
                                     <div class="col-md-12">
                                         <div class="form-group">
                                            <div class="input-group inline-input-group">

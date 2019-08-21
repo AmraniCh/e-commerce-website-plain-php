@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 20, 2019 at 11:08 PM
+-- Generation Time: Aug 21, 2019 at 04:36 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -90,17 +90,14 @@ CREATE TABLE IF NOT EXISTS `article` (
   PRIMARY KEY (`articleID`),
   UNIQUE KEY `articleNom` (`articleNom`),
   KEY `categorieID` (`categorieID`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `article`
 --
 
 INSERT INTO `article` (`articleID`, `articleNom`, `articlePrix`, `articlePrixRemise`, `articleDescription`, `articleMarque`, `tauxRemise`, `remiseDisponible`, `unitesEnStock`, `unitesCommandees`, `articleDisponible`, `niveau`, `dateAjoute`, `categorieID`) VALUES
-(46, 'HP 8741', 5000, 4500, 'Using POST as opposed to GET will “hide” the parameters in a packet and not send them in the URL. You may need to change the way your server-side code accepts the request. Java Servlets for instance, have separate method that need to be implemented for GET and POST. Furthermore if your site is HTTPS, all the traffic will be encrypted. This is assuming of course that you are not going cross domain for AJAX. In terms of hiding the actual script’s name, the best you can do is obfuscate it.', 'hp', 10, b'0', 10, 0, b'1', 5, '2019-08-09 20:49:55', 31),
-(47, 'CAMERA HD SONY 14000 CAMERA HD SONY 14000 CAMERA HD SONY 14000', 4700, 4600, 'CAMERA HD SONY 14000', 'sony', NULL, b'1', 10, 0, b'1', 5, '2019-08-10 07:20:34', 31),
-(48, 'Handphones 2055 HD', 4600, NULL, 'Handphones 2055 HD', '', NULL, b'0', 9, 1, b'1', 5, '2019-08-14 13:54:44', 31),
-(50, 'HP 55553', 4200, 3276, 'Using POST as opposed to GET will “hide” the parameters in a packet and not send them in the URL. You may need to change the way your server-side code accepts the request. Java Servlets for instance, have separate method that need to be implemented for GET and POST. Furthermore if your site is HTTPS, all the traffic will be encrypted. This is assuming of course that you are not going cross domain for AJAX. In terms of hiding the actual script’s name, the best you can do is obfuscate it.', 'hp', 22, b'1', 22, 0, b'1', 5, '2019-08-09 20:49:55', 31);
+(55, 'dqsdqsdsq', 232, 2321, 'QSDQSDQS', 'N/A', NULL, b'0', 0, 0, b'1', 5, '2019-08-21 14:48:16', 31);
 
 --
 -- Triggers `article`
@@ -178,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `client` (
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `clientUserName` (`clientUserName`),
   KEY `fk_panierID_client` (`panierID`)
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `client`
@@ -217,15 +214,14 @@ CREATE TABLE IF NOT EXISTS `commande` (
   `vu` bit(1) DEFAULT b'0',
   PRIMARY KEY (`commandeID`),
   KEY `fk_clientID_commande` (`clientID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10095 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10109 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `commande`
 --
 
 INSERT INTO `commande` (`commandeID`, `clientID`, `commandeDate`, `status`, `nbrArticles`, `totalApayer`, `typeLivraison`, `couponUtilise`, `vu`) VALUES
-(10089, 46, '2019-08-20 01:07:32', 1, 1, 4600, 'gratuit', b'0', b'1'),
-(10094, 46, '2019-08-20 15:25:56', 0, 2, 44676, 'gratuit', b'0', b'0');
+(10108, 46, '2019-08-21 16:07:30', 0, 1, 232, 'gratuit', b'0', b'1');
 
 -- --------------------------------------------------------
 
@@ -239,8 +235,7 @@ CREATE TABLE IF NOT EXISTS `commandedetails` (
   `articleID` int(11) NOT NULL,
   `quantite` int(11) DEFAULT NULL,
   `couleur` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`commandeID`,`articleID`),
-  KEY `fk_articleId_commandedetails` (`articleID`)
+  PRIMARY KEY (`commandeID`,`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -248,9 +243,7 @@ CREATE TABLE IF NOT EXISTS `commandedetails` (
 --
 
 INSERT INTO `commandedetails` (`commandeID`, `articleID`, `quantite`, `couleur`) VALUES
-(10089, 48, 1, 'Noir'),
-(10094, 48, 9, 'Noir'),
-(10094, 50, 1, 'N/A');
+(10108, 55, 1, 'N/A');
 
 -- --------------------------------------------------------
 
@@ -273,14 +266,6 @@ CREATE TABLE IF NOT EXISTS `commentaire` (
   KEY `fk_clientID_commentaire` (`clientID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `commentaire`
---
-
-INSERT INTO `commentaire` (`commentaireID`, `clientID`, `articleID`, `accepte`, `niveau`, `commentaire`, `titre`, `dateComm`) VALUES
-(16, 46, 46, b'1', 3, 'dqsdqsdqs', '', '2019-08-19 19:13:04'),
-(17, 46, 48, b'1', 3, 'sdfsdf', 'sdffsdf', '2019-08-20 22:48:40');
-
 -- --------------------------------------------------------
 
 --
@@ -294,16 +279,6 @@ CREATE TABLE IF NOT EXISTS `couleurarticle` (
   PRIMARY KEY (`nomCouleur`,`articleID`),
   KEY `fk_articleID_couleurarticle` (`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `couleurarticle`
---
-
-INSERT INTO `couleurarticle` (`nomCouleur`, `articleID`) VALUES
-('Gris', 46),
-('Noir', 46),
-('Blue', 47),
-('Noir', 48);
 
 -- --------------------------------------------------------
 
@@ -347,15 +322,6 @@ CREATE TABLE IF NOT EXISTS `coupondetails` (
   PRIMARY KEY (`couponID`,`articleID`),
   KEY `fk_articleID_coupondetails` (`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `coupondetails`
---
-
-INSERT INTO `coupondetails` (`articleID`, `couponID`) VALUES
-(46, 1),
-(47, 1),
-(48, 1);
 
 -- --------------------------------------------------------
 
@@ -401,19 +367,6 @@ CREATE TABLE IF NOT EXISTS `imagearticle` (
   KEY `fk_articleID_imagearticle` (`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `imagearticle`
---
-
-INSERT INTO `imagearticle` (`imageArticleNom`, `articleID`, `principale`) VALUES
-('product01.png', 46, b'0'),
-('product02.png', 48, b'1'),
-('product03.png', 48, b'0'),
-('product04.png', 48, b'0'),
-('product08.png', 46, b'1'),
-('product09.png', 47, b'1'),
-('product09.png', 50, b'1');
-
 -- --------------------------------------------------------
 
 --
@@ -427,14 +380,7 @@ CREATE TABLE IF NOT EXISTS `livraison` (
   `confirmationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`livraisonID`,`commandeID`),
   KEY `fk_commandeID_livraison` (`commandeID`)
-) ENGINE=MyISAM AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `livraison`
---
-
-INSERT INTO `livraison` (`livraisonID`, `commandeID`, `confirmationDate`) VALUES
-(79, 10089, '2019-08-20 01:08:09');
+) ENGINE=MyISAM AUTO_INCREMENT=96 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -450,7 +396,7 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `type` varchar(100) DEFAULT NULL,
   `vu` bit(1) DEFAULT b'0',
   PRIMARY KEY (`notID`)
-) ENGINE=MyISAM AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=107 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `notification`
@@ -481,7 +427,28 @@ INSERT INTO `notification` (`notID`, `titre`, `dateNot`, `type`, `vu`) VALUES
 (82, 'PHPMailer erreur : => SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting', '2019-08-20 21:19:17', 'erreur[php_mailer]', b'1'),
 (83, 'Nouveau Client Enregistré', '2019-08-20 21:20:17', 'client', b'1'),
 (84, '', '2019-08-20 22:11:26', 'erreur', b'1'),
-(85, 'Nouveau Commentaire de [CHAKIR EL AMRANI]', '2019-08-20 22:48:40', 'commentaire', b'1');
+(85, 'Nouveau Commentaire de [CHAKIR EL AMRANI]', '2019-08-20 22:48:40', 'commentaire', b'1'),
+(86, 'Stock Insuffissante Pour l\'article [ Handphones 2055 HD ]', '2019-08-21 11:31:16', 'stock', b'1'),
+(87, 'Stock Insuffissante Pour l\'article [ Handphones 2055 HD ]', '2019-08-21 11:58:30', 'stock', b'1'),
+(88, 'Stock Insuffissante Pour l\'article [ Handphones 2055 HD ]', '2019-08-21 11:59:01', 'stock', b'1'),
+(89, 'Stock Insuffissante Pour l\'article [ Handphones 2055 HD ]', '2019-08-21 12:06:52', 'stock', b'1'),
+(90, 'Stock Insuffissante Pour l\'article [ Handphones 2055 HD ]', '2019-08-21 12:09:29', 'stock', b'1'),
+(91, 'Stock Insuffissante Pour l\'article [ Handphones 2055 HD ]', '2019-08-21 12:18:48', 'stock', b'1'),
+(92, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 12:52:36', 'commande', b'1'),
+(93, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 12:54:52', 'commande', b'1'),
+(94, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 12:55:57', 'commande', b'1'),
+(95, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 14:14:37', 'commande', b'1'),
+(96, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 14:29:32', 'commande', b'1'),
+(97, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 14:36:42', 'commande', b'1'),
+(98, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 14:40:51', 'commande', b'1'),
+(99, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 14:43:10', 'commande', b'1'),
+(100, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 14:45:55', 'commande', b'1'),
+(101, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 14:47:08', 'commande', b'1'),
+(102, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 14:49:29', 'commande', b'1'),
+(103, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 14:56:45', 'commande', b'1'),
+(104, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 15:10:11', 'commande', b'1'),
+(105, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 16:07:30', 'commande', b'1'),
+(106, 'Stock Insuffissante Pour l\'article [ dqsdqsdsq ]', '2019-08-21 16:13:24', 'stock', b'1');
 
 -- --------------------------------------------------------
 
@@ -530,8 +497,7 @@ CREATE TABLE IF NOT EXISTS `panierdetails` (
 --
 
 INSERT INTO `panierdetails` (`panierID`, `articleID`, `quantite`, `dateAjoute`, `couleur`) VALUES
-(130, 48, 9, '2019-08-20 11:59:34', 'Noir'),
-(130, 50, 1, '2019-08-20 13:56:58', 'N/A');
+(130, 55, 1, '2019-08-21 16:07:17', 'N/A');
 
 -- --------------------------------------------------------
 
@@ -541,41 +507,45 @@ INSERT INTO `panierdetails` (`panierID`, `articleID`, `quantite`, `dateAjoute`, 
 
 DROP TABLE IF EXISTS `statistiques`;
 CREATE TABLE IF NOT EXISTS `statistiques` (
-  `idStat` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(100) NOT NULL,
   `valeur` double DEFAULT '0',
-  `type` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`idStat`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `statistiques`
 --
 
-INSERT INTO `statistiques` (`idStat`, `valeur`, `type`) VALUES
-(1, 73, 'page vues');
+INSERT INTO `statistiques` (`type`, `valeur`) VALUES
+('page vues', 13),
+('revenu total', 0),
+('total commandes', 13),
+('total ventes', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `visiteursenligne`
+-- Table structure for table `visiteurs`
 --
 
-DROP TABLE IF EXISTS `visiteursenligne`;
-CREATE TABLE IF NOT EXISTS `visiteursenligne` (
+DROP TABLE IF EXISTS `visiteurs`;
+CREATE TABLE IF NOT EXISTS `visiteurs` (
   `sessionID` varchar(100) NOT NULL,
   `dateVisite` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sessionID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `visiteursenligne`
+-- Dumping data for table `visiteurs`
 --
 
-INSERT INTO `visiteursenligne` (`sessionID`, `dateVisite`) VALUES
+INSERT INTO `visiteurs` (`sessionID`, `dateVisite`) VALUES
 ('es9p7qh73a4q4eq1g9o75albfv', '2019-08-20 17:05:45'),
 ('6ov9sofdfou231et7ralkhuk23', '2019-08-20 23:02:05'),
 ('3bbb4tpkf3l3ddm0mo4tm84g99', '2019-08-20 17:13:01'),
-('0032hug98bp6mlh13bqbo3ifkv', '2019-08-20 21:27:12');
+('0032hug98bp6mlh13bqbo3ifkv', '2019-08-20 21:27:12'),
+('o1rtqfdodc2fr8ejtkm4cggcmh', '2019-08-21 16:07:33'),
+('69tsn83ima418ifdfcpddto92b', '2019-08-21 16:32:45');
 
 --
 -- Constraints for dumped tables
@@ -597,7 +567,6 @@ ALTER TABLE `commande`
 -- Constraints for table `commandedetails`
 --
 ALTER TABLE `commandedetails`
-  ADD CONSTRAINT `fk_articleId_commandedetails` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`),
   ADD CONSTRAINT `fk_commandeID_commandedetails` FOREIGN KEY (`commandeID`) REFERENCES `commande` (`commandeID`) ON DELETE CASCADE;
 
 --

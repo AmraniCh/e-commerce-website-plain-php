@@ -180,14 +180,18 @@
 		}
 
 		public function ImageArticle($articleID){
-			$result = $this->con->query("SELECT * 
+			$query = $this->con->query("SELECT * 
 								FROM imagearticle 
 								WHERE articleID = $articleID 
 								AND principale = 1");
-			if($row = $result->fetch_row())
+            
+			if($query->num_rows > 0){
+                $row = $query->fetch_row();
 				$image = '../uploaded/articles-images/'.$row[0];
+            }
 			else
 				$image = '../index/img/not-founded.jpg';
+            
 			return $image;
 		}
 

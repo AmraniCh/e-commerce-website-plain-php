@@ -3,7 +3,7 @@
 	session_start();
     require_once '../public-includes/config.php';
     require_once '../public-includes/classes.php';
-    require_once "includes/statistiques.class.php";
+    require_once "../public-includes/statistique.class.php";
 
 ?>
 <!DOCTYPE html>

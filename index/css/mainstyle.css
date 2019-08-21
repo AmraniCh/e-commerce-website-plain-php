@@ -1648,3 +1648,30 @@ label[for='question']{
 .notification-li{
     cursor: pointer
 }
+
+.form-in-blk{
+    display: inline-block
+}
+
+.form-in-blk > label{
+    padding-left: 15px!important
+}
+
+#warningLabel{
+    color: #d96d30;
+    word-spacing: 5px
+}
+
+#dt_articles_comm .dataTables_empty {
+    color: #de8787!important;
+    font-size: 95%;
+    padding: 25px;
+    font-weight: 500;
+}
+
+.comm-refused-msg{
+    display: inline-block;
+    padding-top: 10px;
+    color: #db4747;
+    font-size: 13px
+}

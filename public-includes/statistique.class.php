@@ -1,27 +1,74 @@
 <?php
-  final class Statistiques{
+  final class Statistique{
+      
+    //**** SET functions ***//
+      
+    static public function MSJ_revenu_total($revenu, $action){ /* action = 1 { incrémenter } = 0 { décémenter } */
+        global $con;
+        
+        switch($action){
+            
+            case 1:
+                $con->query(" INSERT INTO statistiques VALUES('revenu total', $revenu) ON DUPLICATE KEY UPDATE valeur = valeur + $revenu "); 
+            break;
+            case 0:
+                $con->query(" UPDATE statistiques SET valeur = valeur - $revenu WHERE type = 'revenu total' "); 
+            break;
+        }
+    }
+      
+    static public function MSJ_total_commandes(){
+        global $con;
+        
+        $con->query(" INSERT INTO statistiques VALUES('total commandes', 1) ON DUPLICATE KEY UPDATE valeur = valeur + 1 "); 
+    }
+      
+    static public function MSJ_total_ventes($action){
+        global $con;
+        
+        switch($action){
+            
+            case 1:
+                $con->query(" INSERT INTO statistiques VALUES('total ventes', 1) ON DUPLICATE KEY UPDATE valeur = valeur + 1 "); 
+            break;
+            case 0:
+                $con->query(" UPDATE statistiques SET valeur = valeur - 1 WHERE type = 'total ventes' "); 
+            break;
+        }
+        
+    }
+      
+    static public function MSJ_page_vues(){
+        global $con;
+        
+        $con->query(" INSERT INTO statistiques VALUES('page vues', 1) ON DUPLICATE KEY UPDATE valeur = valeur + 1 "); 
+    }
     
+    //**** GET functions ***//
+      
     //revenu total 
-    static public function revenut_total(){
+    static public function revenu_total(){
       global $con;
       
-      $query = $con->query(" SELECT SUM(totalApayer)
-                                FROM commande
-                                WHERE status = 1 ");
+      $query = $con->query(" SELECT valeur
+                                FROM statistiques
+                                WHERE type = 'revenu total' ");
       $row = $query->fetch_row();
-      if($row[0] != null)
-        return $row[0];
-      
-      return 0; 
+      if($row[0] == null)
+          return 0;
+      return $row[0];
     }
     
     // total commandes
     static public function total_commandes(){
       global $con;
       
-      $query = $con->query(" SELECT COUNT(*)
-                            FROM commande ");
+      $query = $con->query(" SELECT valeur
+                                FROM statistiques
+                                WHERE type = 'total commandes' ");
       $row = $query->fetch_row();
+      if($row[0] == null)
+          return 0;
       return $row[0];
     }
     
@@ -29,10 +76,12 @@
     static public function total_ventes(){
       global $con;
       
-      $query = $con->query(" SELECT COUNT(*)
-                            FROM commande 
-                            WHERE status = 1 ");
+      $query = $con->query(" SELECT valeur
+                            FROM statistiques 
+                            WHERE type = 'total ventes' ");
       $row = $query->fetch_row();
+      if($row[0] == null)
+          return 0;
       return $row[0];
     }
     
@@ -54,6 +103,8 @@
                             FROM statistiques 
                             WHERE type = 'page vues' ");
       $row = $query->fetch_row();
+      if($row[0] == null)
+          return 0;
       return $row[0];
     }
     
@@ -62,7 +113,7 @@
       global $con;
       
       $query = $con->query(" SELECT COUNT(*)
-                          FROM visiteursenligne ");
+                          FROM visiteurs ");
       $row = $query->fetch_row();
       return $row[0];
     }
@@ -72,7 +123,7 @@
       global $con;
       
       $query = $con->query(" SELECT COUNT(*) 
-                          FROM visiteursenligne 
+                          FROM visiteurs 
                           WHERE dateVisite > now() - INTERVAL 1 MINUTE ");
       $row = $query->fetch_row();
       return $row[0];
@@ -113,13 +164,13 @@
       global $con;
 
       $query = $con->query(" SELECT COUNT(*) 
-                            FROM visiteursenligne 
+                            FROM visiteurs 
                             WHERE DATE(dateVisite) = DATE( now() - INTERVAL 1 DAY ) ");
       $row = $query->fetch_row();
       $visites_hier = $row[0];
 
       $query = $con->query(" SELECT COUNT(*) 
-                            FROM visiteursenligne 
+                            FROM visiteurs 
                             WHERE DATE(dateVisite) = DATE(now()) ");
       $row = $query->fetch_row();
       $visites_aujourd = $row[0];

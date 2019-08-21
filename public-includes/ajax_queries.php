@@ -2,6 +2,7 @@
     require_once 'config.php';
     require_once 'classes.php';
     include "notification.class.php";
+    include "statistique.class.php";
     session_start();
 
     if(isset($_POST['function']))
@@ -27,7 +28,7 @@
             echo $_POST['function']($_POST['couleurs'], $_POST['imagePrincipal'], $_POST['articleNom'], $_POST['articlePrix'], $_POST['articlePrixRemise'], $_POST['artcileDescription'], $_POST['articleMarque'], $_POST['tauxRemise'], $_POST['remiseDisponible'], $_POST['unitesEnStock'], $_POST['articleDisponible'], $_POST['categorieID']);break;
             
         case "SupprimerArticle":
-            echo $_POST['function']($_POST['articleID']);break;
+            echo $_POST['function']($_POST['id']);break;
             
         case "ModifierArticle":
             echo $_POST['function']($_POST['couleurs'], $_POST['imagePrincipal'], $_POST['imagesNoms'], $_POST['articleID'], $_POST['articleNom'], $_POST['articlePrix'], $_POST['articlePrixRemise'], $_POST['artcileDescription'], $_POST['articleMarque'], $_POST['tauxRemise'], $_POST['remiseDisponible'], $_POST['unitesEnStock'], $_POST['articleDisponible'], $_POST['categorieID']);break;
@@ -199,6 +200,9 @@
         
         case "CommentairesAdmin":
             echo $_POST['function']();break;
+            
+        case "SupprimerArticleCommDetails":
+            echo $_POST['function']($_POST['id']);break;
     }
 
     // global functions
@@ -468,7 +472,13 @@
     function SupprimerArticle($articleID){
         global $con;
         
-        $query = $con->query("DELETE FROM article WHERE articleID = $articleID");
+        $_articleID = filter_var($articleID, FILTER_SANITIZE_NUMBER_INT);
+        
+        $query = $con->query(" SELECT * FROM commandedetails WHERE articleID =  $_articleID");
+        if( $query->num_rows > 0 )
+            return json_encode(-1);
+            
+        $query = $con->query("DELETE FROM article WHERE articleID = $_articleID");
         
         if($con->affected_rows > 0)
             return json_encode(true);
@@ -574,7 +584,8 @@
         $article = new Article();
         $categorie = new Categorie();
         
-        $query = $article->AfficherArticles();
+        $query = $con->query("SELECT * FROM article 
+										ORDER BY dateAjoute DESC");
         
         if($query != null):
         
@@ -593,17 +604,23 @@
                 else
                     $_couleurs = 'N/A';
                 
-                ($row['articleDisponible'] == true) ? $articleDisponibe = "oui" : $articleDisponibe = "non";
-                ($row['remiseDisponible'] == true) ? $remiseDisponible = "oui" : $remiseDisponible = "non";
+                if($row['articleDisponible'] == true)
+                    $dispo_badge = '<label class="badge badge-success">Oui</label>';
+                else
+                    $dispo_badge = '<label class="badge badge-danger">Non</label>';
+                    
+                if($row['remiseDisponible'] == true)
+                    $remise_badge = '<label class="badge badge-success">Oui</label>';
+                else
+                    $remise_badge = '<label class="badge badge-danger">Non</label>';
                 
-                
-                if($remiseDisponible == "non"){
+                if($row['remiseDisponible'] == "non"){
                     $prixRemise = 'N/A';
                     $tauxRemise = "N/A";
                 }
                 else{
                     $prixRemise = $row['articlePrixRemise'].' DHS';
-                    $tauxRemise = $row['tauxRemise'].'%';
+                    $tauxRemise = $row['tauxRemise'].' %';
                 } 
                 
                 $count = $row['niveau'];
@@ -635,12 +652,12 @@
                     $row['articleMarque'], 
                     $_couleurs, 
                     $row['articlePrix'].' DHS', 
-                    $remiseDisponible,
-                    $prixRemise, 
+                    $remise_badge,
                     $tauxRemise, 
+                    $prixRemise, 
                     $row['unitesEnStock'], 
                     $row['unitesCommandees'], 
-                    $articleDisponibe, 
+                    $dispo_badge, 
                     $niveau, 
                     $categorieNom
                 ];
@@ -1686,6 +1703,12 @@
             $notification = new Notification();
             $notification::NouveauNotification('commande', $clientID, null);
             
+            
+            // statistiques => total commandes
+            $statistique = new Statistique();
+            $statistique::MSJ_total_commandes();
+            // end
+            
             return json_encode(true);
             
         }
@@ -1813,7 +1836,7 @@
                 if( $query->num_rows > 0 ):
                 
                     while($row = $query->fetch_assoc()){
-
+                
                         $articleID = $row['articleID'];
                         $quantite_comm = $row['quantite'];
 
@@ -1824,6 +1847,18 @@
                     }
                 
                 endif;
+                // end
+                
+                // statistiques => revenu total => total des ventes
+                $query = $con->query(" SELECT totalApayer FROM commande WHERE commandeID = $commandeID ");
+                $revenu = 0;
+                while($row = $query->fetch_row()){
+                    $revenu += $row[0];
+                }
+                
+                $statistique = new Statistique();
+                $statistique::MSJ_revenu_total($revenu, 1);
+                $statistique::MSJ_total_ventes(1);
                 // end
                 
                 // vider panier
@@ -2106,6 +2141,18 @@
             endif;
             // end
         
+            // statistiques => revenu total => total des ventes
+            $query = $con->query(" SELECT totalApayer FROM commande WHERE commandeID = $commandeID ");
+            $revenu = 0;
+            while($row = $query->fetch_row()){
+                $revenu += $row[0];
+            }
+
+            $statistique = new Statistique();
+            $statistique::MSJ_revenu_total($revenu, 0);
+            $statistique::MSJ_total_ventes(0);
+            // end
+
         
             $con->query(" DELETE FROM livraison
                             WHERE livraisonID = $_livraisonID
@@ -2140,13 +2187,14 @@
                 $data = array();
                 $data2 = array();
                 $data3 =array();
+        
                 while($row = $query->fetch_assoc()){
                     
                     $commandeID = $row['commandeID'];
                     $query_2 = $con->query("SELECT COUNT(*) FROM commandedetails WHERE commandeID = $commandeID");
                     $row_2 = $query_2->fetch_row();
                                                     
-                    if($row_2[0] == 1){
+                    if( $row_2[0] == 1 ){
                         
                         $query_3 = $con->query("SELECT * 
                                             FROM commande c INNER JOIN commandedetails cd
@@ -2174,12 +2222,12 @@
                             case 2: 
                                 $status = '<span class="cart-status-text cart-status-refused">Refusé</span>';
                                 $operation = 'Aucun operation';
-                                break;
                             case -1: 
                                 $status = '<span class="cart-status-text cart-status-canceled">Annulé</span>';
                                 $operation = '<button type="button" class="btn btn-blue re-order">Redemander</button>';
                                 break;
                         }
+                        
 
                         if(strlen($row_3['articleNom']) > 60)
                             $artilceNom = substr($row_3['articleNom'], 0, 60).' ...';

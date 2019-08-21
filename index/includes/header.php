@@ -4,6 +4,7 @@
 	require_once "../public-includes/config.php";
 	require_once "../public-includes/classes.php";
 	require_once "../public-includes/notification.class.php";
+	require_once "../public-includes/statistique.class.php";
 
 	if(isset($_POST['submit']) && !empty($_POST['search'])):
 
@@ -23,24 +24,19 @@
 
     $sessionID = session_id();
 
-    $query = $con->query(" SELECT * FROM visiteursenligne WHERE sessionID = '$sessionID' ");
+    $query = $con->query(" SELECT * FROM visiteurs WHERE sessionID = '$sessionID' ");
 
     if( $query->num_rows == 0 ):
 
-        $con->query(" INSERT INTO visiteursenligne VALUES('$sessionID', default) ");
+        $con->query(" INSERT INTO visiteurs VALUES('$sessionID', default) ");
     
     else:
         
-        $con->query(" UPDATE visiteursenligne SET dateVisite = now() WHERE sessionID = '$sessionID' ");
+        $con->query(" UPDATE visiteurs SET dateVisite = now() WHERE sessionID = '$sessionID' ");
 
     endif;
 
-    $con->query(" DELETE FROM visiteursenligne WHERE dateVisite < dateVisite - INTERVAL 1 MINUTE ");
-
-
-	$con->query(" UPDATE statistiques
-				SET valeur = valeur + 1
-				WHERE type = 'page vues' ");
+    $con->query(" DELETE FROM visiteurs WHERE dateVisite < dateVisite - INTERVAL 1 MINUTE ");
 
 ?>
 <!DOCTYPE html>

@@ -2,10 +2,12 @@
 	
 	<?php
 	
-		 unset($_SESSION['coupon']);
+        unset($_SESSION['coupon']);
+        $categorie = new Categorie();
 
-         $categorie = new Categorie();
-	
+        $statistique = new Statistique();
+        $statistique::MSJ_page_vues();
+
 	?>
 	
 		<?php include_once "includes/navigation.php" ?>

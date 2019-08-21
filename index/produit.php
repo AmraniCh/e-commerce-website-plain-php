@@ -19,6 +19,9 @@
 			exit();
 		}
 
+        $statistique = new Statistique();
+        $statistique::MSJ_page_vues();
+
         function echocolors($idarticle){
             global $con;
             
