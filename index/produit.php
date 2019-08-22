@@ -124,7 +124,7 @@
 								<div class="product-rating">
 									<?php echo $niveau?>
 								</div>
-								<a class="review-link"><?php echo $nbr_reviews ?> Review(s) | Add your review</a>
+								<a class="review-link"><?php echo $nbr_reviews ?> commentaire(s) | Poster votre commentaire</a>
 							</div>
 							<div>
 								<h3 class="product-price"> <?php  if ($articlePrixRemise!=''){echo $articlePrixRemise.' DHS ';} else{echo $articlePrix.' DHS '; }?><del class="product-old-price"><?php if ($articlePrixRemise!=''){echo $articlePrix.' DHS';} ?></del></h3>
@@ -208,7 +208,7 @@
 							
 							<ul class="tab-nav">
 								<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
-								<li><a data-toggle="tab" href="#tab2">Reviews (<?php echo $nbr_reviews ?>)</a></li>
+								<li><a data-toggle="tab" href="#tab2">Commentaires (<?php echo $nbr_reviews ?>)</a></li>
 							</ul>
 						
 							<div class="tab-content">

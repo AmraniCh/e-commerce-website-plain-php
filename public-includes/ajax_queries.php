@@ -614,7 +614,7 @@
                 else
                     $remise_badge = '<label class="badge badge-danger">Non</label>';
                 
-                if($row['remiseDisponible'] == "non"){
+                if($row['remiseDisponible'] == false){
                     $prixRemise = 'N/A';
                     $tauxRemise = "N/A";
                 }

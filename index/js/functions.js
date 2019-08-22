@@ -57,10 +57,8 @@ $(document).on("click", function(event){
 });
 
 $(document).on("click", ".quick-view", function(){
-   
     var url = $(this).children("a").attr("href");
-    $(location).attr("href", url);
-    
+    $(location).attr("href", url);   
 });
 
 $(document).on("click", ".add-to-cart-btn", function(){
@@ -452,11 +450,11 @@ function LoadAsideData(data, ele) {
 }
 
 function Lodding(ele){
-    ele.html("<div class='row text-center'><img src='img/Rolling-0.7s-157px.svg' style='padding: 5% 0'></div>");
+    ele.html("<div class='row text-center'><img class='laoding-prd-image' src='img/loading_products.svg'></div>");
 }
 
 function AucunResultat(ele){
-    ele.html('<div class="row"><div class="col-12 text-center" style="padding:20% 0"><h2><img src="img/not-found.png"><span style="color:#D10024">Oups</span> ! Aucun resultat..</h2></div></div>');
+    ele.html('<div class="aucun-res-ctr"><h5><img src="img/not-found.png"><span style="color:#D10024">Oups</span> ! Aucun article pour cette categorie ...</h5></div>');
 }
 
 function UnslickSlide(ele){

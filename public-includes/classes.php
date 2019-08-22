@@ -190,7 +190,7 @@
 				$image = '../uploaded/articles-images/'.$row[0];
             }
 			else
-				$image = '../index/img/not-founded.jpg';
+				$image = '../index/img/not-founded4.png';
             
 			return $image;
 		}
@@ -396,14 +396,24 @@
 		public function echoImages($articleID){
 			$result = $this->con->query(" SELECT * 
 										FROM imagearticle
-										WHERE articleID = $articleID");
-			$images = '';
-
-			 while( $row = mysqli_fetch_array($result)){
-				 $images = $images.' <div class="product-preview">
-										<img src=img/'.$row['imageArticleNom'].'  alt="">
+										WHERE articleID = $articleID ");
+			
+			if($result->num_rows > 0){
+            
+				$images = '';
+				while( $row = mysqli_fetch_array($result)){
+				
+					$image = '../uploaded/articles-images/'.$row['imageArticleNom'];
+					
+				 	$images = $images.' <div class="product-preview">
+										<img src="'.$image.'"  alt="">
 									</div> ';
-			 }
+				}
+			}
+			else
+				$images = ' <div class="product-preview">
+										<img src="../index/img/image-not-found.jpg"  alt="image-not-found.jpg">
+									</div> ';
 
 			return $images;
 		} 

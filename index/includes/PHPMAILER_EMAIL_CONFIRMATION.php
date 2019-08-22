@@ -15,7 +15,7 @@ function sendEmail($RecipientEmail, $Nom){
     $mail->CharSet = "utf-8";
     try {
         //Server settings
-        $mail->SMTPDebug = 0;                                       // Enable verbose debug output
+        $mail->SMTPDebug = 3;                                       // Enable verbose debug output
         $mail->isSMTP();                                            // Set mailer to use SMTP
         $mail->Host       = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
@@ -93,7 +93,7 @@ function sendEmail($RecipientEmail, $Nom){
         
     } catch (Exception $e) {
         $notification = new Notification();
-        $notification::NouveauNotification('erreur', null, $mail->ErrorInfo);
+        $notification::NouveauNotification('erreur[php_mailer]', null, $mail->ErrorInfo);
         return false;
     }
 }

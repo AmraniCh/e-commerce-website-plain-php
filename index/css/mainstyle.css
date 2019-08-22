@@ -1693,3 +1693,18 @@ label[for='question']{
     border-radius: 4px;
     cursor: pointer
 }
+
+#dt_articles_comm td img{
+    width: 50px!important;
+    height: 45px!important;
+    border-radius: 0!important
+}
+
+.laoding-prd-image{
+    padding-top: 5%
+}
+
+.aucun-res-ctr{
+    text-align: center;
+    padding-top: 5%
+}
