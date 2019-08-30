@@ -122,7 +122,7 @@
 				e.stopPropagation();
 				var articleID = $(this).attr("id");
 				$.ajax({
-					url: "../public-includes/ajax_queries",
+					url: "../public-includes/ajax_queries.php",
 					method: "POST",
 					data: {
 						function: "SupprimerAuFavoris",
@@ -141,7 +141,7 @@
 
 			function AucunFavoriTrouve(){
 				$.ajax({
-					url: "../public-includes/ajax_queries",
+					url: "../public-includes/ajax_queries.php",
 					method: "POST",
 					data: { function: "AucunFavoriTrouve" },
 					dataType: 'JSON',

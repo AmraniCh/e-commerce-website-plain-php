@@ -187,7 +187,7 @@
                 $(document).on("click", ".btn-info-client", function(e){
                     var commID = $(this).closest("tr").find("td[data-src='commandeID']").attr("data-id"); 
                     $.post(
-                        "../public-includes/ajax_queries",
+                        "../public-includes/ajax_queries.php",
                         { 
                             function: "AfficherClientStat",
                             commID: commID
@@ -218,7 +218,7 @@
                 $(document).on("click", ".annuler-liv", function(){
                     var livID = $(this).closest("tr").find("td[data-src='livraisonID']").attr("data-id"); 
                     $.ajax({
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         method: "POST",
                         dataType: "JSON",
                         data: {
@@ -281,7 +281,7 @@
                         { title: 'Total payé' }
                     ],
                     ajax: {
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         data: {
                             function: "AfficherLivraisons"
                         },
@@ -348,7 +348,7 @@
                         { title: 'Prix Remise' }
                       ],
                     ajax: {
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         data: {
                             function: "AfficherArticlesComm",
                             commID: commID

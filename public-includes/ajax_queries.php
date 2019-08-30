@@ -299,8 +299,8 @@
     function SupprimerAuPanier($articleID){
         global $con;
         $clientID = filter_var($_SESSION['clientID'], FILTER_SANITIZE_NUMBER_INT);
-        $query = $con->query("DELETE FROM panierDetails WHERE articleID = $articleID");
-        if($con->affected_rows)
+        $query = $con->query("DELETE FROM panierdetails WHERE articleID = $articleID");
+        if($con->affected_rows > 0)
             return json_encode(true);
         return json_encode(false);
     }

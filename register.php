@@ -1,4 +1,5 @@
 <?php
+    ob_start();
     require_once 'public-includes/config.php';
     require_once 'public-includes/classes.php';
     require_once 'public-includes/notification.class.php';
@@ -283,3 +284,6 @@
     <script src="index/js/validation.js"></script>
   </body>
 </html>
+<?php
+  ob_end_flush();
+?>

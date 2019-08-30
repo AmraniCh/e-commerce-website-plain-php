@@ -478,7 +478,7 @@
 			var commentaire = $("#reviewText").val();
 			var articleID = $(".add-to-cart-btn").attr("id");
 			$.ajax({
-				url: "../public-includes/ajax_queries",
+				url: "../public-includes/ajax_queries.php",
 				method: "POST",
 				dataType: "JSON",
 				async: false,	
@@ -523,7 +523,7 @@
 		var page_nbr = $(".reviews-pagination > li[class*='active']").attr("id");
 		
 		$.ajax({
-			url: "../public-includes/ajax_queries",
+			url: "../public-includes/ajax_queries.php",
 			method: "POST",
 			dataType: "JSON",
 			async: false,
@@ -561,7 +561,7 @@
 	function ReviewsPagination(){
 		var articleID = $(".add-to-cart-btn").attr("id");
 		$.ajax({
-			url: "../public-includes/ajax_queries",
+			url: "../public-includes/ajax_queries.php",
 			method: "POST",
 			dataType: "JSON",
 			async: false,
@@ -588,7 +588,7 @@
 	function ReviewsTotalStars(){
 		var articleID = $(".add-to-cart-btn").attr("id");
 		$.post(
-			"../public-includes/ajax_queries",
+			"../public-includes/ajax_queries.php",
 			{ 
 				function: "ReviewsTotalStars", 
 				articleID: articleID 

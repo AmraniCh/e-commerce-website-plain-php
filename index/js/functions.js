@@ -3,6 +3,7 @@ $(document).ready(function(){
     RemplirPanier();
     RemplirFavoris();
     
+    /*
     $(".pan-toggle").on("click", function () {
         $(".fav-dropdown").css("display", "none");
         if($(".pan-dropdown").css("display") == "none"){
@@ -22,6 +23,7 @@ $(document).ready(function(){
         else
             $(".fav-dropdown").hide();
     });
+    */
     
     $('.cart-summary, .cart-btns').on('click', function (e) {
         e.stopPropagation();
@@ -45,6 +47,7 @@ $(window).load(function () {
     $('#overlayLoadingPage').fadeOut();
 });
     
+/*
 $(document).on("click", function(event){
     element = $(event.target);
     
@@ -55,13 +58,14 @@ $(document).on("click", function(event){
         $(".fav-dropdown").hide();
 
 });
+*/
 
 $(document).on("click", ".quick-view", function(){
     var url = $(this).children("a").attr("href");
     $(location).attr("href", url);   
 });
 
-$(document).on("click", ".add-to-cart-btn", function(){
+$(document).one("click", ".add-to-cart-btn", function(){
 
 	$(this).children(".fa-shopping-cart").removeClass("produit-panier-icon");
 	$(this).removeClass("produit-panier");
@@ -81,7 +85,7 @@ $(document).on("click", ".add-to-cart-btn", function(){
     }
 	
     $.ajax({
-        url: '../public-includes/ajax_queries',
+        url: '../public-includes/ajax_queries.php',
         method: 'POST',
         data: {
             function: 'AjouterAuPanier', 
@@ -91,7 +95,6 @@ $(document).on("click", ".add-to-cart-btn", function(){
         },
         dataType: 'JSON',
         success: function(data){
-            //alert(data);
             if(data != null && data != false && data != -1){      
                 $("#popupSound")[0].currentTime = 0;
                 $("#popupSound")[0].play();
@@ -114,7 +117,7 @@ $(document).on("click", ".add-to-cart-btn", function(){
         
 }); 
     
-$(document).on("click", ".add-to-wishlist", function(){
+$(document).one("click", ".add-to-wishlist", function(){
 	
 	$(this).removeClass('favoris-anim');
     setTimeout(function(){
@@ -123,7 +126,7 @@ $(document).on("click", ".add-to-wishlist", function(){
 	
     var articleID = $(this).attr("id");
     $.ajax({
-        url: '../public-includes/ajax_queries',
+        url: '../public-includes/ajax_queries.php',
         method: 'POST',
         data: {
             function: 'AjouterAuxFavoris',
@@ -147,7 +150,7 @@ $(document).on("click",".supp-favoris",function(){
     var articleID = $(this).attr("id");
     
     $.ajax({
-        url: "../public-includes/ajax_queries",
+        url: "../public-includes/ajax_queries.php",
         method: "POST",
         data: {
             function: "SupprimerAuFavoris",
@@ -178,7 +181,7 @@ $(document).on("click", ".supp-panier", function(){
     var articleID = $(this).attr("id");
 
     $.ajax({
-        url: "../public-includes/ajax_queries",
+        url: "../public-includes/ajax_queries.php",
         method: "POST",
         data: {
             function: "SupprimerAuPanier",
@@ -217,7 +220,7 @@ $('.menu-toggle > a').on('click', function (e) {
 
 function RemplirFavoris(){
 	$.ajax({
-	    url: '../public-includes/ajax_queries',
+	    url: '../public-includes/ajax_queries.php',
 	    method: 'POST',
 	    data: {
 	        function: 'RemplirFavoris'
@@ -242,7 +245,7 @@ function RemplirFavoris(){
 
 function RemplirPanier(){
 	$.ajax({
-	    url: '../public-includes/ajax_queries',
+	    url: '../public-includes/ajax_queries.php',
 	    method: 'POST',
 	    data: {
 	        function: 'RemplirPanier'

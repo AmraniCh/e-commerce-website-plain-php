@@ -362,7 +362,7 @@
                     
                     var $this = $(this);
                     $.post(
-                        "../public-includes/ajax_queries",
+                        "../public-includes/ajax_queries.php",
                         { 
                             function: "SupprimerImageArticle",
                             imageNom: imageNom
@@ -456,7 +456,7 @@
                     if($(this).attr("id") == "btnAjouter"){
                         
                         $.ajax({
-                           url: '../public-includes/ajax_queries',
+                           url: '../public-includes/ajax_queries.php',
                             method: "POST",
                             dataType: "JSON",
                             data: { 

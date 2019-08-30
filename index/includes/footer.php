@@ -103,7 +103,7 @@
 		
 		<div id="overlayAjaxLoading">
 			<div class="progstatContent">
-				<img src="img/5-1">
+				<img src="img/5-1.svg">
 			</div>
 		</div>
 		

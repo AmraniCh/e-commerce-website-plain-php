@@ -203,7 +203,7 @@
 						var error = false;
 						
 						$.ajax({
-							url: "../public-includes/ajax_queries",
+							url: "../public-includes/ajax_queries.php",
 							method: "POST",
 							dataType: "JSON",
 							async: false,
@@ -223,7 +223,7 @@
 									
 									setTimeout(function(){
 										$.ajax({
-											url: "../public-includes/ajax_queries",
+											url: "../public-includes/ajax_queries.php",
 											method: "POST",
 											dataType: "JSON",
 											async: false,
@@ -243,7 +243,7 @@
 													setTimeout(function(){
 														
 														$.ajax({
-															url: "../public-includes/ajax_queries",
+															url: "../public-includes/ajax_queries.php",
 															method: "POST",
 															dataType: "JSON",
 															async: false,
@@ -261,7 +261,7 @@
 																{	
 																	setTimeout(function(){
 																		$.ajax({
-																			url: "../public-includes/ajax_queries",
+																			url: "../public-includes/ajax_queries.php",
 																			method: "POST",
 																			dataType: "JSON",
 																			async: false,
@@ -278,7 +278,7 @@
 																				if(error == false){
 																					setTimeout(function(){
 																						$.post(
-																							"includes/confirmationform",
+																							"includes/confirmationform.php",
 																							function(data){
 																								
 																							
@@ -335,7 +335,7 @@
 						var numTele = $("#numTele").val();
 						
 						$.ajax({
-							url: "../public-includes/ajax_queries",
+							url: "../public-includes/ajax_queries.php",
 							method: "POST",
 							dataType: "html",
 							data: { 

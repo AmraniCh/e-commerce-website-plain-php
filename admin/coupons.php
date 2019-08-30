@@ -339,7 +339,7 @@
                     $(this).css("padding", "0");
 
                     $.ajax({
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         method: "POST",
                         dataType: "JSON",
                         data: { function: "GenererCodeCoupon" },
@@ -361,7 +361,7 @@
                     $(this).css("padding", "0");
 
                     $.ajax({
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         method: "POST",
                         dataType: "JSON",
                         data: { function: "GenererCodeCoupon" },
@@ -394,7 +394,7 @@
                         
                         var filterData = (cpnDataFilterCat.length > 0) ? cpnDataFilterCat : (cpnDataFilterArt.length > 0) ? cpnDataFilterArt : null;
                         $.ajax({
-                            url: "../public-includes/ajax_queries",
+                            url: "../public-includes/ajax_queries.php",
                             method: "POST",
                             data: { 
                                 function: "AjouterCoupon",
@@ -455,7 +455,7 @@
                         }
                         
                         $.ajax({
-                            url: "../public-includes/ajax_queries",
+                            url: "../public-includes/ajax_queries.php",
                             method: "POST",
                             data: { 
                                 function: "ModifierCoupon",
@@ -562,7 +562,7 @@
                     if(cpnModalPassingData[0] != "" && cpnModalPassingData[0] != NaN)
                     {
                         $.ajax({
-                            url: '../public-includes/ajax_queries',
+                            url: '../public-includes/ajax_queries.php',
                             method: "post",
                             data: { 
                                 function: "SupprimerCoupon",
@@ -629,7 +629,7 @@
                     $("#cpnDfMdf").val(cpnModalPassingData[6]);
                     
                     $.post(
-                        "../public-includes/ajax_queries",
+                        "../public-includes/ajax_queries.php",
                         { 
                             function: "FilterCoupon",
                             cpnID: cpnModalPassingData[0]
@@ -770,7 +770,7 @@
                         { title: 'Date D\'ajoute '},
                       ],
                     ajax: {
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         data: {
                             function: "AfficherCoupons"
                         },
@@ -863,7 +863,7 @@
                         { title: 'Prix Remise' }
                       ],
                     ajax: {
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         data: {
                             function: "AfficherArticlesCoupon"
                         },

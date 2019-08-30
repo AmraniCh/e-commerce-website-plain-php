@@ -167,7 +167,7 @@
                         { title: 'Categorie'}
                       ],
                     ajax: {
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         data: {
                             function: "AfficherProduits"
                         },

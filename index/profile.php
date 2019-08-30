@@ -197,7 +197,7 @@
                 if(ValidationProfile() != false){
                     
                     $.ajax({
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         method: "POST",
                         dataType: "JSON",
                         data: { 

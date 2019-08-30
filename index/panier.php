@@ -116,7 +116,7 @@
 					e.stopPropagation();
 					var articleID = $(this).attr("id");
 					$.post(
-						'../public-includes/ajax_queries',
+						'../public-includes/ajax_queries.php',
 						{ 
 							function: "SupprimerAuPanier", 
 							articleID: articleID 
@@ -160,7 +160,7 @@
 					var qty = parseInt($(event.target).val());
 				
 					$.ajax({
-						url: '../public-includes/ajax_queries',
+						url: '../public-includes/ajax_queries.php',
 						method: 'POST',
 						data: {
 							function: "IncrementArticleQtyPanier",
@@ -211,7 +211,7 @@
 					
 						if(cpnCode != ''){
 							$.ajax({
-								url: "../public-includes/ajax_queries",
+								url: "../public-includes/ajax_queries.php",
 								method: "POST",
 								dataType: "JSON",
 								async: false,
@@ -249,7 +249,7 @@
 				function RemplirPagePanier(){
 					
 					$.ajax({
-						url: '../public-includes/ajax_queries',
+						url: '../public-includes/ajax_queries.php',
 						type: 'POST',
 						data: { function: "RemplirPagePanier" },
 						dataType: "JSON",
@@ -274,7 +274,7 @@
 						}
 					}).done(function(){
 						$.ajax({
-							url: "../public-includes/ajax_queries",
+							url: "../public-includes/ajax_queries.php",
 							method: "POST",
 							dataType: "JSON",
 							async: false,
@@ -293,7 +293,7 @@
 
 				function RemplirCheckoutInfo(){
 					$.ajax({
-						url: '../public-includes/ajax_queries',
+						url: '../public-includes/ajax_queries.php',
 						type: 'POST',
 						data: { function: "RemplirPagePanier" },
 						dataType: "JSON",

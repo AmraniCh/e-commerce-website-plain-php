@@ -416,7 +416,7 @@
                 var commID = $("div[data-src='commID']").attr("data-id");
 
                 $.post(
-                    "../public-includes/ajax_queries",
+                    "../public-includes/ajax_queries.php",
                     { 
                         function: "SupprimerCommentaire",
                         commID: commID
@@ -437,7 +437,7 @@
                 var commID = $("div[data-src='commID']").attr("data-id");
                 
                 $.post(
-                    "../public-includes/ajax_queries",
+                    "../public-includes/ajax_queries.php",
                     { 
                         function: "AccepterCommentaire",
                         commID: commID
@@ -458,7 +458,7 @@
         function Commentaires(){
             
             $.ajax({
-                url: "../public-includes/ajax_queries",
+                url: "../public-includes/ajax_queries.php",
                 method: "POST",
                 dataType: "JSON",
                 data: { function: "CommentairesAdmin" },

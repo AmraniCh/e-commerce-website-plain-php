@@ -239,7 +239,7 @@
 				var categorie = $(".categorie-aside").attr("id");
 				var ele = $(".section-nav");
 				$.ajax({	
-					url: "../public-includes/ajax_queries",
+					url: "../public-includes/ajax_queries.php",
 					method: "POST",
 					dataType: "JSON",
 					data: {
@@ -285,7 +285,7 @@
 
     if(categoriesIDs != ''){
         $.ajax({
-            url: "../public-includes/ajax_queries",
+            url: "../public-includes/ajax_queries.php",
             method: "POST",
             data: {
                 function: "StorePagination",
@@ -343,7 +343,7 @@
     
     if (categoriesIDs[0] != null && minPrix != '' && maxPrix != '') {
         $.ajax({
-            url: '../public-includes/ajax_queries',
+            url: '../public-includes/ajax_queries.php',
             method: 'POST',
             data: {
                 function: "AfficherProduitsFiltrer",
@@ -395,7 +395,7 @@
         }
     });
     $.ajax({
-        url: '../public-includes/ajax_queries',
+        url: '../public-includes/ajax_queries.php',
         method: 'POST',
         data: {
             function: "AfficherMarquesFiltrer",

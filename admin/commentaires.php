@@ -83,7 +83,7 @@
                 var commID = $(this).closest("tr").find("td[data-src='id']").attr("data-id");
                 
                 $.post(
-                    "../public-includes/ajax_queries",
+                    "../public-includes/ajax_queries.php",
                     { 
                         function: "SupprimerCommentaire",
                         commID: commID
@@ -106,7 +106,7 @@
                 var commID = $(this).closest("tr").find("td[data-src='id']").attr("data-id");
                 
                 $.post(
-                    "../public-includes/ajax_queries",
+                    "../public-includes/ajax_queries.php",
                     { 
                         function: "AccepterCommentaire",
                         commID: commID
@@ -239,7 +239,7 @@
                     { title: 'Date' }
                 ],
                 ajax: {
-                    url: "../public-includes/ajax_queries",
+                    url: "../public-includes/ajax_queries.php",
                     data: {
                         function: "AfficherCommentaires"
                     },

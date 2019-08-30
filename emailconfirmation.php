@@ -1,4 +1,5 @@
 <?php
+    ob_start();
     require_once 'public-includes/config.php';
     require_once 'public-includes/PHPMAILER.php';
     session_start();
@@ -141,3 +142,6 @@
       </script>
   </body>
 </html>
+<?php
+  ob_end_flush();
+?>

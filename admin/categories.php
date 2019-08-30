@@ -296,7 +296,7 @@
                         { title: 'Supprimer' },
                       ],
                     ajax: {
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         data: {
                             function: "AfficherCategories"
                         },

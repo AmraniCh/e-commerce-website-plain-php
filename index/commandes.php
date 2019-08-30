@@ -92,7 +92,7 @@
                     
                     if( id != NaN){
                         $.ajax({
-                            url: "../public-includes/ajax_queries",
+                            url: "../public-includes/ajax_queries.php",
                             method: "POST",
                             dataType: "JSON",
                             data: { 
@@ -115,7 +115,7 @@
                     
                     if( id != NaN){
                         $.ajax({
-                            url: "../public-includes/ajax_queries",
+                            url: "../public-includes/ajax_queries.php",
                             method: "POST",
                             dataType: "JSON",
                             data: { 
@@ -137,7 +137,7 @@
                     var id = id_attribute_value.split("_")[2];
                     
                     $.ajax({
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         method: "POST",
                         dataType: "JSON",
                         data: { 
@@ -154,7 +154,7 @@
                 function AfficherCommandes(){
 
                     $.ajax({
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         method: "POST",
                         dataType: "JSON",
                         data: { function: "AfficherCommandesClient" },

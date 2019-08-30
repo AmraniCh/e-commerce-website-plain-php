@@ -1,4 +1,5 @@
 <?php
+    ob_start();
     require_once 'public-includes/config.php';
     session_start();
     unset($_SESSION['clientID']);
@@ -147,3 +148,6 @@
 		<!-- [endif]-->
   </body>
 </html>
+<?php
+  ob_end_flush();
+?>

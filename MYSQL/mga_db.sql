@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 21, 2019 at 04:36 PM
+-- Generation Time: Aug 30, 2019 at 03:36 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -90,14 +90,15 @@ CREATE TABLE IF NOT EXISTS `article` (
   PRIMARY KEY (`articleID`),
   UNIQUE KEY `articleNom` (`articleNom`),
   KEY `categorieID` (`categorieID`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `article`
 --
 
 INSERT INTO `article` (`articleID`, `articleNom`, `articlePrix`, `articlePrixRemise`, `articleDescription`, `articleMarque`, `tauxRemise`, `remiseDisponible`, `unitesEnStock`, `unitesCommandees`, `articleDisponible`, `niveau`, `dateAjoute`, `categorieID`) VALUES
-(55, 'dqsdqsdsq', 232, 2321, 'QSDQSDQS', 'N/A', NULL, b'0', 0, 0, b'1', 5, '2019-08-21 14:48:16', 31);
+(55, 'Samsung 8440', 2500, 2000, 'RAM 2 GB\nCPU 2.6 GHZ', 'Samsung', 20, b'1', 5, 0, b'1', 5, '2019-08-21 14:48:16', 36),
+(56, 'PC HP 5471', 5000, NULL, 'RAM 8GB\nGPU INTEL HD\n', 'HP', NULL, b'0', 5, 0, b'1', 5, '2019-08-22 10:57:58', 40);
 
 --
 -- Triggers `article`
@@ -132,21 +133,21 @@ CREATE TABLE IF NOT EXISTS `categorie` (
   `description` text,
   `active` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`categorieID`)
-) ENGINE=MyISAM AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `categorie`
 --
 
 INSERT INTO `categorie` (`categorieID`, `categorieNom`, `description`, `active`) VALUES
-(36, 'Tablettes &amp; Smartphones', 'Tablettes &amp; Smartphones', b'1'),
-(41, 'Accessoires &amp; Périph', 'Accessoires &amp; Périphériques', b'1'),
 (31, 'Image & Son', 'Image & Son', b'1'),
 (32, 'Serveurs', 'Serveurs', b'1'),
 (34, 'Impression', 'Impression', b'1'),
 (35, 'Réseaux', 'Réseaux', b'1'),
+(36, 'Tablettes &amp; Smartphones', 'Tablettes &amp; Smartphones', b'1'),
+(37, 'PC Bureau', 'PC Bureau', b'1'),
 (40, 'PC Portable', 'PC Portable', b'1'),
-(37, 'PC Bureau', 'PC Bureau', b'1');
+(41, 'Accessoires &amp; Périph', 'Accessoires &amp; Périphériques', b'1');
 
 -- --------------------------------------------------------
 
@@ -182,9 +183,9 @@ CREATE TABLE IF NOT EXISTS `client` (
 --
 
 INSERT INTO `client` (`clientID`, `clientUserName`, `prenom`, `nom`, `email`, `adresse`, `ville`, `emailValid`, `codeEmail`, `codeRec`, `codePostal`, `telephone`, `motdepasse`, `questionSecurite`, `reponseQuestion`, `panierID`) VALUES
-(46, 'chou500', 'EL AMRANI', 'CHAKIR', 'elamrani.sv.laza@gmail.com', 'BNI MAKADA', 'Tanger', b'0', '247001', 'Y7C39D0KM40M7E3BGPYB9R1NHH4OFJXEK1TN', 90002, '0651487088', '$2y$10$bSlqi8xJEeyek62yrnleie6eo4r3XRdo6anKBwq/RomgU0Pq0/SFi', 'Quel était le nom de votre premier animal ?', 'orioo', 130),
-(63, 'ahmed', 'ahmed', 'el amrani', 'chakir_alhoceima_rifi8@hotmail.fr', 'tanger', 'casa', b'0', '928322', 'YC0CG08JQXB9ZDK2LA97BIPYZID1TVUDOLJF', 445585, '+212144710547', '$2y$10$MOOoqR0/lknqaALxuB41b.FB67cmvO3gsNHolD2LmVm.tdek5Vqt2', 'Quel était le nom de votre premier animal ?', 'oodf', 133),
-(77, 'qsdqsdqs', 'dsqqdsqdqs', 'dqsdsq', 'elamrani_ch@hotmail.com', 'Lyon', 'casa', b'0', '527005', 'VGX6BLWWRS348A7LH322TJTOWE35MP53TNEJ', 90002, '0693792055', '$2y$10$wIfFm7Wdz8eKzvwVjV0F2uQT0tavcOI8qvgllaKOU3MXHre72i4Gu', 'Quel était le nom de votre premier animal ?', 'qsdqsdqs', NULL);
+(46, 'chou500', 'EL AMRANI', 'CHAKIR', 'elamrani.sv.laza@gmail.com', 'BNI MAKADA', 'Tanger', b'0', '247001', 'J98JGWU28HFXNVOXKNCEHFXJPCDZ9QT3KRLG', 90002, '0651487088', '$2y$10$bSlqi8xJEeyek62yrnleie6eo4r3XRdo6anKBwq/RomgU0Pq0/SFi', 'Quel était le nom de votre premier animal ?', 'orioo', 130),
+(63, 'ahmed', 'ahmed', 'el amrani', 'chakir_alhoceima_rifi8@hotmail.fr', 'tanger', 'casa', b'0', '928322', 'WFBP8J8GQY0P23Y6E7JG2PZMIC6PDI3TTDC7', 445585, '+212144710547', '$2y$10$MOOoqR0/lknqaALxuB41b.FB67cmvO3gsNHolD2LmVm.tdek5Vqt2', 'Quel était le nom de votre premier animal ?', 'oodf', 133),
+(77, 'qsdqsdqs', 'dsqqdsqdqs', 'dqsdsq', 'elamrani_ch@hotmail.com', 'Lyon', 'casa', b'0', '527005', 'P3P15YQ0X277GIS55EZIH2DWK8GWHES031KR', 90002, '0693792055', '$2y$10$wIfFm7Wdz8eKzvwVjV0F2uQT0tavcOI8qvgllaKOU3MXHre72i4Gu', 'Quel était le nom de votre premier animal ?', 'qsdqsdqs', NULL);
 
 --
 -- Triggers `client`
@@ -264,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `commentaire` (
   PRIMARY KEY (`commentaireID`),
   KEY `fk_articleID_commentaire` (`articleID`),
   KEY `fk_clientID_commentaire` (`clientID`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -279,6 +280,15 @@ CREATE TABLE IF NOT EXISTS `couleurarticle` (
   PRIMARY KEY (`nomCouleur`,`articleID`),
   KEY `fk_articleID_couleurarticle` (`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `couleurarticle`
+--
+
+INSERT INTO `couleurarticle` (`nomCouleur`, `articleID`) VALUES
+('Blue', 55),
+('Noir', 55),
+('Noir', 56);
 
 -- --------------------------------------------------------
 
@@ -367,6 +377,14 @@ CREATE TABLE IF NOT EXISTS `imagearticle` (
   KEY `fk_articleID_imagearticle` (`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `imagearticle`
+--
+
+INSERT INTO `imagearticle` (`imageArticleNom`, `articleID`, `principale`) VALUES
+('413pD2TNh8L._SX466_.jpg', 55, b'1'),
+('hp-pc-portable-17-ca0037nf-17-3-hd-amd-e2-r.jpg', 56, b'1');
+
 -- --------------------------------------------------------
 
 --
@@ -380,7 +398,7 @@ CREATE TABLE IF NOT EXISTS `livraison` (
   `confirmationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`livraisonID`,`commandeID`),
   KEY `fk_commandeID_livraison` (`commandeID`)
-) ENGINE=MyISAM AUTO_INCREMENT=96 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -396,7 +414,7 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `type` varchar(100) DEFAULT NULL,
   `vu` bit(1) DEFAULT b'0',
   PRIMARY KEY (`notID`)
-) ENGINE=MyISAM AUTO_INCREMENT=107 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=125 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `notification`
@@ -448,7 +466,25 @@ INSERT INTO `notification` (`notID`, `titre`, `dateNot`, `type`, `vu`) VALUES
 (103, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 14:56:45', 'commande', b'1'),
 (104, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 15:10:11', 'commande', b'1'),
 (105, 'Nouveau Commande de [CHAKIR EL AMRANI]', '2019-08-21 16:07:30', 'commande', b'1'),
-(106, 'Stock Insuffissante Pour l\'article [ dqsdqsdsq ]', '2019-08-21 16:13:24', 'stock', b'1');
+(106, 'Stock Insuffissante Pour l\'article [ dqsdqsdsq ]', '2019-08-21 16:13:24', 'stock', b'1'),
+(107, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:11:26', 'erreur[php_mailer]', b'1'),
+(108, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:12:15', 'erreur[php_mailer]', b'1'),
+(109, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:13:55', 'erreur[php_mailer]', b'1'),
+(110, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:17:10', 'erreur[php_mailer]', b'1'),
+(111, '', '2019-08-22 11:17:40', 'erreur', b'1'),
+(112, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:19:02', 'erreur[php_mailer]', b'1'),
+(113, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:19:29', 'erreur[php_mailer]', b'1'),
+(114, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:22:36', 'erreur[php_mailer]', b'1'),
+(115, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:23:19', 'erreur[php_mailer]', b'1'),
+(116, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:23:29', 'erreur[php_mailer]', b'1'),
+(117, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:24:35', 'erreur[php_mailer]', b'1'),
+(118, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:25:28', 'erreur[php_mailer]', b'1'),
+(119, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:32:55', 'erreur[php_mailer]', b'1'),
+(120, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:33:19', 'erreur[php_mailer]', b'1'),
+(121, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:35:19', 'erreur[php_mailer]', b'1'),
+(122, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:35:48', 'erreur[php_mailer]', b'1'),
+(123, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:36:45', 'erreur[php_mailer]', b'1'),
+(124, 'PHPMailer erreur : => SMTP Error: Could not authenticate.', '2019-08-22 11:37:05', 'erreur[php_mailer]', b'1');
 
 -- --------------------------------------------------------
 
@@ -510,14 +546,14 @@ CREATE TABLE IF NOT EXISTS `statistiques` (
   `type` varchar(100) NOT NULL,
   `valeur` double DEFAULT '0',
   PRIMARY KEY (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `statistiques`
 --
 
 INSERT INTO `statistiques` (`type`, `valeur`) VALUES
-('page vues', 13),
+('page vues', 105),
 ('revenu total', 0),
 ('total commandes', 13),
 ('total ventes', 0);
@@ -541,11 +577,19 @@ CREATE TABLE IF NOT EXISTS `visiteurs` (
 
 INSERT INTO `visiteurs` (`sessionID`, `dateVisite`) VALUES
 ('es9p7qh73a4q4eq1g9o75albfv', '2019-08-20 17:05:45'),
-('6ov9sofdfou231et7ralkhuk23', '2019-08-20 23:02:05'),
+('6ov9sofdfou231et7ralkhuk23', '2019-08-22 11:33:18'),
 ('3bbb4tpkf3l3ddm0mo4tm84g99', '2019-08-20 17:13:01'),
 ('0032hug98bp6mlh13bqbo3ifkv', '2019-08-20 21:27:12'),
 ('o1rtqfdodc2fr8ejtkm4cggcmh', '2019-08-21 16:07:33'),
-('69tsn83ima418ifdfcpddto92b', '2019-08-21 16:32:45');
+('69tsn83ima418ifdfcpddto92b', '2019-08-21 16:32:45'),
+('kan5lta9un20f1iq4tlhj52sal', '2019-08-21 16:37:02'),
+('og589033a51nuk7otc0tkbe1d8', '2019-08-21 23:52:30'),
+('n29ob3eq6290v0opd55dh6nila', '2019-08-22 00:12:19'),
+('gggig4lo3j6taiij6tph1tj3nj', '2019-08-22 00:15:53'),
+('j9scnh82fpvr5230nvmgdc4uf8', '2019-08-22 10:40:47'),
+('4e6u9pj6ndfapigogo2pviv9s4', '2019-08-22 11:03:22'),
+('i67epucku9ihqn3i63v2g44akf', '2019-08-22 11:25:24'),
+('ia65olglaene427fl0aokm8jk1', '2019-08-25 13:32:32');
 
 --
 -- Constraints for dumped tables

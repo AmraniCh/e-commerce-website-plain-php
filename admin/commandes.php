@@ -239,7 +239,7 @@
                 $(document).on("click", ".btn-info-client", function(){
                     commID = $(this).closest("tr").find("td[data-id]").attr("data-id");
                     $.post(
-                        "../public-includes/ajax_queries",
+                        "../public-includes/ajax_queries.php",
                         { 
                             function: "AfficherClientStat",
                             commID: commID
@@ -269,7 +269,7 @@
                 $(document).on("click", ".refuse-second-action", function(){
                     commID = $(this).closest("tr").find("td[data-id]").attr("data-id");
                     $.ajax({
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         method: "POST",
                         dataType: "JSON",
                         data: { 
@@ -290,7 +290,7 @@
                     
                     $.ajax({
                        
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         method: "POST",
                         dataType: "JSON",
                         data: {
@@ -314,7 +314,7 @@
                     var commID = $(this).closest("tr").find("td[data-id]").attr("data-id");
 
                     $.ajax({
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         method: "POST",
                         dataType: "html",
                         data: {
@@ -345,7 +345,7 @@
                 $("#suppCommBtn").click(function(){
                    
                     $.post(
-                        "../public-includes/ajax_queries",
+                        "../public-includes/ajax_queries.php",
                         { 
                             function: "SupprimerCommande",
                             commID: commID
@@ -407,7 +407,7 @@
                         { title: 'Supprimer' }
                     ],
                     ajax: {
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         data: {
                             function: "AfficherCommandes"
                         },
@@ -471,7 +471,7 @@
                         { title: 'Prix Remise' }
                       ],
                     ajax: {
-                        url: "../public-includes/ajax_queries",
+                        url: "../public-includes/ajax_queries.php",
                         data: {
                             function: "AfficherArticlesComm",
                             commID: commID
